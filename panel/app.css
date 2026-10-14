@@ -1,0 +1,103 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0; display: flex; height: 100vh;
+  font-family: -apple-system, 'Pretendard', sans-serif; font-size: 14px;
+  background: #e9e9ec; color: #222;
+}
+
+.panel { width: 340px; height: 100vh; flex-shrink: 0; overflow-y: auto; padding: 24px; background: #fff; border-right: 1px solid #ddd; }
+.panel h1 { font-size: 18px; margin: 0 0 20px; }
+.panel section { margin-bottom: 22px; }
+.panel h2 { font-size: 12px; color: #888; font-weight: 600; margin: 0 0 8px; }
+.panel select, .panel input:not([type=color]) {
+  width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 8px; font: inherit;
+}
+.row { display: flex; gap: 8px; }
+.fonts { display: grid; gap: 8px; }
+.fonts label { display: flex; align-items: center; gap: 10px; font-size: 12.5px; white-space: nowrap; }
+
+.seg { display: flex; background: #f1f1f3; border-radius: 10px; padding: 3px; }
+.seg button { flex: 1; border: 0; background: none; padding: 8px 0; border-radius: 8px; font: inherit; cursor: pointer; color: #666; }
+.seg-2x2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
+.panel-line { display: grid; gap: 8px; margin-top: 10px; }
+.panel-line[hidden] { display: none; }
+.panel-line label { display: flex; align-items: center; gap: 8px; font-size: 12.5px; }
+.panel-line input[type=range] { flex: 1; }
+.panel-line input[type=color] { width: 30px; height: 30px; border: 0; padding: 0; background: none; cursor: pointer; }
+.panel-line code { font-size: 11px; color: #888; min-width: 56px; }
+.seg button.on { background: #fff; color: #111; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+
+
+.colors { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.colors label { display: flex; align-items: center; gap: 6px; font-size: 12.5px; }
+.colors input { width: 30px; height: 30px; border: 0; padding: 0; background: none; cursor: pointer; }
+.colors code { font-size: 11px; color: #888; }
+
+.primary { width: 100%; padding: 13px; border: 0; border-radius: 10px; background: #111; color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+.primary:disabled { opacity: .5; }
+
+.stage { flex: 1; height: 100vh; overflow: auto; padding: 24px 32px; }
+.stage-head { color: #777; font-size: 13px; margin-bottom: 16px; }
+.deck { display: flex; flex-wrap: wrap; gap: 24px; }
+
+/* 1080x1440 원본을 0.3배로 축소 미리보기 */
+.frame { width: calc(1080px * .3); height: calc(1440px * .3); box-shadow: 0 4px 16px rgba(0,0,0,.1); }
+
+/* 미리보기에서 사진 자리 클릭 → 이미지 넣기 (내보낸 이미지에는 영향 없음) */
+.deck [data-img] { cursor: pointer; }
+.deck [data-img]:hover { outline: 12px solid color-mix(in srgb, var(--main) 55%, transparent); outline-offset: -12px; }
+.panel h2 small { font-weight: 400; color: #aaa; }
+
+/* 사진 조절 막대·사진 추가 버튼 (미리보기 전용) */
+.img-tools { position: fixed; z-index: 20; transform: translateX(-100%); display: flex; align-items: center; gap: 2px; padding: 4px;
+  background: rgba(17, 17, 17, .85); border-radius: 10px; color: #fff; font-size: 12px; box-shadow: 0 4px 12px rgba(0,0,0,.2); }
+.img-tools[hidden] { display: none; }
+.img-tools button { border: 0; background: none; color: #fff; font: inherit; padding: 4px 8px; border-radius: 6px; cursor: pointer; }
+.img-tools button:hover { background: rgba(255,255,255,.18); }
+.img-tools span { min-width: 40px; text-align: center; font-variant-numeric: tabular-nums; }
+.img-tools .zoom { display: flex; align-items: center; gap: 2px; }
+.img-tools .zoom[hidden], .img-tools .remove[hidden] { display: none; }
+.img-tools .remove { font-size: 15px; line-height: 1; padding: 4px 9px; }
+.img-tools .remove:hover { background: #e5484d; }
+.gallery-add { position: fixed; z-index: 20; transform: translateX(-100%); border: 0; border-radius: 8px; padding: 6px 12px;
+  background: #111; color: #fff; font: inherit; font-size: 12px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,.2); }
+.gallery-add[hidden] { display: none; }
+.gallery-add:hover { background: #333; }
+
+/* 내 스타일 저장 칸 */
+.my-styles { display: flex; flex-direction: column; gap: 6px; }
+.slot { display: flex; gap: 4px; }
+.slot-load { flex: 1; display: flex; align-items: center; gap: 8px; padding: 7px 10px; border: 1px solid #e3e3e8; border-radius: 8px; background: #fff; font: inherit; font-size: 13px; text-align: left; cursor: pointer; color: #222; }
+.slot-load:disabled { cursor: default; color: #aaa; background: #fafafb; }
+.slot-load span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.slot-load small { color: #888; font-size: 11px; }
+.slot.on .slot-load { border-color: #111; box-shadow: 0 0 0 1px #111 inset; }
+.slot .sw { position: relative; flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; border: 2px solid; }
+.slot .sw b { position: absolute; inset: 5px; border-radius: 50%; }
+.slot .sw.empty { border: 1px dashed #ccc; }
+.slot-save, .slot-del { border: 1px solid #e3e3e8; border-radius: 8px; background: #fff; font: inherit; font-size: 12px; padding: 0 10px; cursor: pointer; color: #444; }
+.slot-save:hover { background: #111; color: #fff; border-color: #111; }
+.slot-del { padding: 0 8px; color: #999; }
+.panel-line label[hidden] { display: none; }
+
+
+/* 컬러칩 옆 HEX 입력칸 */
+.panel input.hex { width: 84px; flex: 0 0 auto; padding: 5px 7px; border-radius: 6px; font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; color: #444; text-transform: uppercase; }
+.panel input.hex.bad { border-color: #e5484d; color: #e5484d; }
+.colors { column-gap: 10px; }
+.colors label { gap: 5px; white-space: nowrap; }
+.panel .colors input.hex { width: 72px; padding: 4px 6px; }
+
+/* 한 묶음 안의 여러 옵션 줄 (표지: 이미지·정렬·배경) */
+.opt-rows { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 8px 10px; }
+.opt-rows > span { font-size: 12.5px; color: #555; white-space: nowrap; }
+
+/* 사진 도구의 교재 목업 각도 버튼 (책에 마우스를 올렸을 때) */
+.img-tools .angles { display: flex; gap: 2px; margin-left: 4px; padding-left: 6px; border-left: 1px solid rgba(255,255,255,.25); }
+.img-tools .angles[hidden] { display: none; }
+.img-tools .angles button.on { background: rgba(255,255,255,.25); font-weight: 600; }
+.img-tools .zoom[hidden] + .remove[hidden] + .angles { margin-left: 0; padding-left: 0; border-left: 0; } /* 각도 버튼만 있을 때는 구분선 없이 */
+
+/* 사진이 들어간 강사 상반신은 끌어서 위치 조정 */
+.deck :is(.profile-figure, .book-item).has-img { cursor: grab; touch-action: none; }
+.deck :is(.profile-figure, .book-item).has-img:active { cursor: grabbing; }
