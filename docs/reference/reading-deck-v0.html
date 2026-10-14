@@ -1,0 +1,177 @@
+<!-- 표지 → 태그·제목·부제는 템플릿 표지와 같고, 오른쪽 아래 이미지는 '7. 표지 이미지' 옵션(아이콘 / 강사 사진 / 교재 사진) -->
+<div class="kcard layout-cover" id="cover">
+  <p class="cover-tag">READING CLUB</p>
+  <h1 class="title">영어책 한 권,<br>끝까지 읽는 힘</h1>
+  <p class="sub">초등 3~6학년 영어 리딩반 모집</p>
+  <div data-photo="cover" data-icon="book"></div>
+</div>
+
+<!-- A. Q&A → 실제 책 페이지로 '문맥 추론'을 보여준다 -->
+<div class="kcard" id="a">
+  <div class="k-head"><h2 class="k-title">단어를 몰라도<br>읽을 수 있어요</h2><p class="k-sub">문맥으로 뜻을 익히는 리딩</p></div>
+  <div class="k-body">
+    <div class="k-panel k-window">
+      <div class="k-window-bar"><i></i><i></i><i></i></div>
+      <div class="k-window-body" style="position:relative;padding:100px 48px 40px">
+        <p class="k-excerpt">Wilbur was <span class="k-mark k-anchor">terrified<span class="k-tip">겁에 질린</span></span>. He ran to the corner and hid under the straw.</p>
+      </div>
+    </div>
+    <div class="k-row" style="justify-content:center;gap:14px;margin-top:24px">
+      <span class="k-pill">모르는 단어</span><span class="k-arrow"></span>
+      <span class="k-pill">앞뒤 문장</span><span class="k-arrow"></span>
+      <span class="k-pill">뜻 추론</span>
+    </div>
+    <p class="k-foot" style="margin-top:20px">사전 없이도 <span class="k-hl">스스로 뜻을</span> 찾아요</p>
+  </div>
+</div>
+
+<!-- B. 막대 그래프 → 큰 숫자(8배) + 쌓여 가는 블록 -->
+<div class="kcard" id="b">
+  <div class="k-head"><h2 class="k-title">한 학기 동안<br>읽은 단어 수</h2><p class="k-sub">수강생 평균 누적</p></div>
+  <div class="k-body">
+    <div class="k-row" style="gap:36px;align-items:flex-end">
+      <span class="k-big">8배</span>
+      <div style="padding-bottom:14px">
+        <p class="k-p"><span class="k-strike">3천 단어</span> → 2.4만 단어</p>
+        <p class="k-p" style="color:var(--title);font-weight:600">4개월 만에 늘었어요</p>
+      </div>
+    </div>
+    <div class="k-panel" style="padding:48px 48px 40px">
+      <div class="k-grid" style="grid-template-columns:repeat(4,1fr);align-items:end;height:396px">
+        <!-- 블록 수 = 값 비율 (1·3·5·8) -->
+        <div class="stack" data-n="1" data-v="3천" data-l="1개월"></div>
+        <div class="stack" data-n="3" data-v="8천" data-l="2개월"></div>
+        <div class="stack" data-n="5" data-v="1.5만" data-l="3개월"></div>
+        <div class="stack hl" data-n="8" data-v="2.4만" data-l="4개월"></div>
+      </div>
+    </div>
+    <p class="k-label" style="text-align:right">※ 2025년 1학기 수강생 기준</p>
+  </div>
+</div>
+
+<!-- E. 원형 비율 → 원형 게이지 + 60분 구간 막대 -->
+<div class="kcard" id="e">
+  <div class="k-head"><h2 class="k-title">60분 수업,<br>이렇게 구성돼요</h2><p class="k-sub">읽기가 중심인 수업</p></div>
+  <div class="k-body" style="gap:56px">
+    <div class="k-row" style="gap:56px">
+      <div class="k-ring" style="--p:40;--size:340px"><div><strong>40%</strong><span>읽기</span></div></div>
+      <div><p class="k-h">수업의 절반 가까이</p><p class="k-p">아이가 <span class="k-hl">직접 책을 읽는</span><br>시간이에요</p></div>
+    </div>
+    <div>
+      <div class="k-seg">
+        <div class="hl" style="flex:24"><b>읽기</b><small>24분</small></div>
+        <div style="flex:15"><b>북토크</b><small>15분</small></div>
+        <div style="flex:12"><b>단어</b><small>12분</small></div>
+        <div style="flex:9"><b>쓰기</b><small>9분</small></div>
+      </div>
+      <div class="k-scale"><span>0분</span><span>30분</span><span>60분</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- F. 로드맵 → 레벨이 오를수록 높아지는 책등 -->
+<div class="kcard" id="f">
+  <div class="k-head"><h2 class="k-title">1년 동안<br>이만큼 읽어요</h2><p class="k-sub">레벨별 리딩 로드맵</p></div>
+  <div class="k-body">
+    <div style="position:relative">
+      <div class="k-shelf">
+        <div class="k-spine" style="flex:2;height:40%"><span class="k-tag">Lv.1</span><b>그림책</b></div>
+        <div class="k-spine" style="flex:2.4;height:58%"><span class="k-tag">Lv.2</span><b>리더스</b></div>
+        <div class="k-spine" style="flex:2.8;height:78%"><span class="k-tag">Lv.3</span><b>챕터북</b></div>
+        <div class="k-spine hl" style="flex:3.2;height:100%"><span class="k-tag solid">Lv.4</span><b>소설</b></div>
+      </div>
+      <div class="k-row" style="gap:22px;padding:0 12px;margin-top:20px">
+        <p class="k-p" style="flex:2;text-align:center">3월</p><p class="k-p" style="flex:2.4;text-align:center">6월</p>
+        <p class="k-p" style="flex:2.8;text-align:center">9월</p><p class="k-p" style="flex:3.2;text-align:center;color:var(--title);font-weight:600">12월</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- H. 교재 → 책 목업('6. 교재 목업 각도' 옵션) + 구성 두 가지 -->
+<div class="kcard" id="h">
+  <div class="k-head"><h2 class="k-title">레벨마다 따로 만든<br>리딩 노트</h2><p class="k-sub">책 한 권을 끝까지 읽게 돕는 교재</p></div>
+  <div class="k-body">
+    <div data-photo="book" data-slot="h-book" data-caption="교재 표지"></div>
+    <div class="k-grid k-cols-2">
+      <div class="k-panel"><p class="k-h">어휘 노트</p><p class="k-p">핵심 단어 정리</p></div>
+      <div class="k-panel"><p class="k-h">북토크 질문</p><p class="k-p">읽고 말하기</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- G. 허브 → 실제 진단 리포트 화면 -->
+<div class="kcard" id="g">
+  <div class="k-head"><h2 class="k-title">한 아이를 위한<br>리딩 관리</h2><p class="k-sub">매달 진단 리포트를 드려요</p></div>
+  <div class="k-body">
+    <div class="k-panel k-window">
+      <div class="k-window-bar"><i></i><i></i><i></i></div>
+      <div class="k-window-body" style="display:flex;flex-direction:column;gap:18px">
+        <p class="k-h">김지우 <span class="k-p">· 4학년</span></p>
+        <div class="k-line"></div>
+        <div class="k-stat hl"><span>이해력</span><div class="k-track"><i style="width:82%"></i></div><b>82</b></div>
+        <div class="k-stat"><span>어휘</span><div class="k-track"><i style="width:74%"></i></div><b>74</b></div>
+        <div class="k-stat"><span>읽기 속도</span><div class="k-track"><i style="width:68%"></i></div><b>68</b></div>
+        <div class="k-line"></div>
+        <div class="k-checkrow"><span class="k-check"></span>이번 달 8권 완독</div>
+        <div class="k-checkrow"><span class="k-check"></span>다음 달 추천 도서 3권</div>
+      </div>
+    </div>
+    <p class="k-foot"><span class="k-hl">월 1회</span> 학부모 상담과 함께 드려요</p>
+  </div>
+</div>
+
+<!-- I. 선생님 → 강사 상반신(사진을 넣으면 배경 자동 제거) + 왼쪽 정보 -->
+<div class="kcard" id="i">
+  <div class="k-head"><h2 class="k-title">아이 눈높이로<br>읽어 주는 선생님</h2><p class="k-sub">초등 영어 리딩 지도 12년</p></div>
+  <div class="k-body k-profile">
+    <p class="k-h">김OO 선생님</p>
+    <span class="k-tag solid">리딩 대표 강사</span>
+    <div class="k-rows"><p>TESOL 자격 보유</p><p>리딩 지도 경력 12년</p><p>前 OO어학원 팀장</p></div>
+    <p class="k-bubble">책을 좋아하게 만드는 게 먼저예요.</p>
+  </div>
+  <div data-photo="teacher" data-slot="i-teacher" data-caption="강사 사진"></div>
+</div>
+
+<!-- J. 교실 사진 → 큰 사진 1장 + 작은 사진 2장 (사진 위 캡션) -->
+<div class="kcard" id="j">
+  <div class="k-head"><h2 class="k-title">책 읽는 시간이<br>즐거운 교실</h2><p class="k-sub">반별 8명 소수정예 수업</p></div>
+  <div class="k-body">
+    <div class="k-photos">
+      <div data-photo="photo" data-slot="j-0" data-caption="리딩 수업"></div>
+      <div data-photo="photo" data-slot="j-1" data-caption="북토크"></div>
+      <div data-photo="photo" data-slot="j-2" data-caption="리딩 라운지"></div>
+    </div>
+  </div>
+</div>
+
+<!-- D. 후기 → 학부모·선생님 대화 화면 -->
+<div class="kcard" id="d">
+  <div class="k-head"><h2 class="k-title">학부모님이<br>직접 전해 주셨어요</h2><p class="k-sub">1학기 수강생 학부모 후기</p></div>
+  <div class="k-body">
+    <div class="k-panel k-window"><div class="k-window-bar"><i></i><i></i><i></i></div><div class="k-window-body" style="padding:36px 36px 40px"><div class="k-chat">
+      <div class="k-msg"><p class="k-bubble">요즘 영어책을 먼저 꺼내 읽어요. 이런 모습 처음 봐요!</p></div>
+      <div class="k-msg me"><p class="k-bubble">매일 20분 읽기 습관이 잡혔어요. 이번 달부터 챕터북으로 올라가요.</p></div>
+      <div class="k-msg"><p class="k-bubble">벌써요? 정말 기뻐요</p></div>
+    </div></div></div>
+  </div>
+</div>
+
+<!-- C. 가로 흐름 → 단계 카드 + 연결 레일 + '이전 → 이후' 대비 -->
+<div class="kcard" id="c">
+  <div class="k-head"><h2 class="k-title">상담부터 등록까지<br>3단계로 간단하게</h2><p class="k-sub">가을학기 반별 8명 모집</p></div>
+  <div class="k-body" style="gap:0">
+    <div class="k-grid" style="grid-template-columns:repeat(3,1fr);gap:24px">
+      <div class="k-panel outline step"><div class="k-row" style="justify-content:space-between"><span class="k-num">01</span></div><p class="k-h" style="margin-top:80px">상담</p><p class="k-p">전화 예약</p></div>
+      <div class="k-panel outline step"><div class="k-row" style="justify-content:space-between"><span class="k-num">02</span></div><p class="k-h" style="margin-top:80px">진단</p><p class="k-p">무료 테스트</p></div>
+      <div class="k-panel accent step"><div class="k-row" style="justify-content:space-between"><span class="k-num">03</span></div><p class="k-h" style="margin-top:80px">등록</p><p class="k-p">반 배정</p></div>
+    </div>
+    <div class="k-ticks" style="grid-template-columns:repeat(3,1fr);gap:24px"><span></span><span></span><span></span></div>
+    <div class="k-rail"></div>
+    <div class="k-row" style="justify-content:center;margin-top:64px">
+      <span class="k-pill ghost"><span class="k-strike">혼자 고민</span></span><span class="k-arrow"></span>
+      <span class="k-pill">무료 상담부터</span>
+    </div>
+    <p class="k-foot" style="margin-top:56px">등록 전 <span class="k-hl">레벨 진단</span>까지 무료예요</p>
+  </div>
+</div>

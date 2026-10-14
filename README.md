@@ -13,7 +13,7 @@ kit/
   main.js           덱 불러오기 · 옵션 적용 · 사진 넣기 · PNG/ZIP 내보내기
   kit.css           카드 부품 스타일 (.kcard · .k-* 이름공간)
   cards.html        작업 중인 덱 (카드 HTML 조각)
-  examples/*.html   예시 덱 4벌 (science · writing · math · coding)
+  examples/*.html   예시 덱 12벌 — 기준 덱은 english-grammar
   gallery/*.png     예시 덱 미리보기 (부품 도감)
   PARTS.md          부품 목록 (Claude가 카드를 만들 때 참고)
 assets/
@@ -34,6 +34,7 @@ scripts/
 docs/
   DESIGN-NOTES.md   디자인 규칙이 생긴 이유·세부 수치
   PROMPT-CACHING.md 홈페이지에서 Claude API로 덱을 만들 때 비용 줄이는 법
+  reference/        기준 덱의 원형(초기 영어 리딩 덱)
 CLAUDE.md           Claude용 작업 지침 (디자인 규칙 · 카드 만드는 순서 · 검사)
 ```
 
@@ -46,7 +47,7 @@ python3 scripts/serve.py 5173
 ```
 
 - http://localhost:5173/kit/ → 작업 덱(`kit/cards.html`)
-- http://localhost:5173/kit/?deck=examples/writing → 예시 덱
+- http://localhost:5173/kit/?deck=examples/english-grammar → 예시 덱(기준 덱)
 
 폴더 구조(`kit/`·`assets/`·`panel/`가 나란히 있는 것)는 그대로 유지해야 합니다. 서로 `../assets/...`처럼 상대 경로로 불러옵니다.
 

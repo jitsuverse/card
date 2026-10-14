@@ -173,7 +173,7 @@ async function render() {
   deck.querySelectorAll('.kcard').forEach((k, i) => {
     k.classList.toggle('dark', dark);
     Object.assign(k.dataset, { shape: state.shape, style: state.shapeStyle });
-    if (k.classList.contains('layout-cover')) { Object.assign(k.dataset, { align: state.coverAlign, bg: state.coverBg }); return; } // 표지는 항상 단색 (템플릿과 같음), 정렬 옵션
+    if (k.classList.contains('layout-cover')) { Object.assign(k.dataset, { align: state.coverAlign, bg: state.coverBg }); return; } // 표지는 항상 단색, 정렬 옵션
     k.dataset.card = state.cardStyle;
     k.insertAdjacentHTML('afterbegin', cardBackground(state.cardStyle, i)); // 흰 판·테두리 판
   });
