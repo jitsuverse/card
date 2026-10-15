@@ -52,11 +52,17 @@ body {
 .img-tools { position: fixed; z-index: 20; transform: translateX(-100%); display: flex; align-items: center; gap: 2px; padding: 4px;
   background: rgba(17, 17, 17, .85); border-radius: 10px; color: #fff; font-size: 12px; box-shadow: 0 4px 12px rgba(0,0,0,.2); }
 .img-tools[hidden] { display: none; }
+/* 사진 자리 안내: '클릭해서 사진 변경' — 클릭을 가로채지 않는다 */
+.img-hint { position: fixed; z-index: 19; transform: translate(-50%, -50%); pointer-events: none; padding: 8px 14px; border-radius: 999px;
+  background: rgba(17, 19, 24, .78); color: #fff; font-size: 13px; font-weight: 600; white-space: nowrap; box-shadow: 0 4px 14px rgba(0,0,0,.18); }
+.img-hint.bottom { transform: translate(-50%, -100%); }
+.img-hint[hidden] { display: none; }
+.deck [data-img]:hover { outline: 3px solid rgba(59, 91, 253, .55); outline-offset: -3px; } /* 바꿀 수 있는 사진 자리 테두리 */
 .img-tools button { border: 0; background: none; color: #fff; font: inherit; padding: 4px 8px; border-radius: 6px; cursor: pointer; }
 .img-tools button:hover { background: rgba(255,255,255,.18); }
 .img-tools span { min-width: 40px; text-align: center; font-variant-numeric: tabular-nums; }
 .img-tools .zoom { display: flex; align-items: center; gap: 2px; }
-.img-tools .zoom[hidden], .img-tools .remove[hidden] { display: none; }
+.img-tools .zoom[hidden], .img-tools .remove[hidden], .img-tools .fit[hidden] { display: none; }
 .img-tools .remove { font-size: 15px; line-height: 1; padding: 4px 9px; }
 .img-tools .remove:hover { background: #e5484d; }
 .gallery-add { position: fixed; z-index: 20; transform: translateX(-100%); border: 0; border-radius: 8px; padding: 6px 12px;

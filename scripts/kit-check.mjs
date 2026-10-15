@@ -45,11 +45,12 @@ let count = 0;
 async function checkDeck(page, deck, fonts, deckWide) {
   await page.goto(url(deck), { waitUntil: 'networkidle0' });
   for (const font of fonts) {
-    for (const card of ['solid', 'panel', 'split', 'outline']) {
+    for (const card of ['solid', 'panel', 'split', 'outline', 'photo']) {
       const canTitle = TITLE_FONTS.some((f) => f.id === font.id), canBody = BODY_FONTS.some((f) => f.id === font.id);
       const found = await page.evaluate(async (font, card, SIZES, LS, LHS, canTitle, canBody) => {
         for (const [id, ok] of [['fontTitle', canTitle], ['fontBody', canBody]]) { const s = document.getElementById(id); s.value = ok ? font : 'pretendard'; s.dispatchEvent(new Event('change')); } // 제목·본문 전용 폰트는 다른 쪽을 기본 폰트로
-        document.querySelector(`#cardStyle button[data-v="${card}"]`).click();
+        window.kitState.photo = card === 'photo'; // 사진 스타일은 패널의 카드 배경이 아니라 내 스타일 — 기본 배경 + 사진으로 검사
+        document.querySelector(`#cardStyle button[data-v="${card === 'photo' ? 'solid' : card}"]`).click();
         await new Promise((r) => setTimeout(r, 600)); await document.fonts.ready; await new Promise((r) => setTimeout(r, 200));
         const out = [];
         for (const c of document.querySelectorAll('.kcard')) {
@@ -100,7 +101,7 @@ async function checkDeck(page, deck, fonts, deckWide) {
     const out = new Set();
     document.querySelectorAll('.kcard *').forEach((e) => {
       if (![...e.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) return;
-      if (e.closest('.cover-icon, .k-tip, .book-item, .photo, .profile-figure, .ov')) return; // 아이콘·팁·사진 자리 안내·사진 위 글자 제외
+      if (e.closest('.cover-icon, .k-tip, .book-item, .photo, .profile-figure, .ov, .layout-cover.with-photo')) return; // 아이콘·팁·사진 자리 안내·사진 위 글자(사진 표지 포함) 제외
       const cs = getComputedStyle(e), w = +cs.fontWeight, c = cs.color;
       if (c === M || c === W) return;
       if ((w >= 600 && c !== T) || (w < 600 && c !== B)) out.add(`${e.closest('.kcard').id} 카드 "${e.textContent.trim().slice(0, 10)}" ${w >= 600 ? '굵은 글자인데 제목 컬러 아님' : '보통 글자인데 본문 컬러 아님'}`);
@@ -163,4 +164,4 @@ if (problems.length) {
   console.error(`부품 키트 검사 실패 (${lines.length}건)\n- ${lines.join('\n- ')}\n\n고치는 방법\n- ${hints.join('\n- ')}`);
   process.exit(1);
 }
-console.log(`부품 키트 검사 통과 [${DECKS.join(', ')}]: ${count}가지 조합(폰트 ${fonts.length} × 배경 4${DECKS.length > 1 ? ` × 덱 ${DECKS.length}` : ''}) — 넘침 없음, 글자 크기 5단계, 자간·줄간격 기준, 도형 모서리, 글자 색, 제목 폰트 쓰임, 오류 없음`);
+console.log(`부품 키트 검사 통과 [${DECKS.join(', ')}]: ${count}가지 조합(폰트 ${fonts.length} × 배경 5${DECKS.length > 1 ? ` × 덱 ${DECKS.length}` : ''}) — 넘침 없음, 글자 크기 5단계, 자간·줄간격 기준, 도형 모서리, 글자 색, 제목 폰트 쓰임, 오류 없음`);

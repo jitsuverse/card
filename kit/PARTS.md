@@ -3,6 +3,8 @@
 **지금 기준 덱: `examples/english-grammar.html`** (도감 `gallery/english-grammar.png`). 카드 구성 공식·비율은 CLAUDE.md B 1~4. 아래 덱별 표 중 english-v1 · english · social 의 비유 사물은 예전 기준으로 만든 것이라, 내용이 그 물건으로 바로 떠오를 때만 쓴다.
 
 카드를 새로 설계할 때 `kit.css` 전체 대신 이 목록만 읽는다.
+
+**여백 활용(`--air`)**: 콘텐츠 영역에 자리가 남으면 `fitAir`가 세로 간격을 자동으로 넓힌다. 새 부품의 줄·항목 사이 세로 간격은 `calc(값 * var(--air, 1))`로 쓰고 kit.css 맨 아래 '여백 활용'에 한 줄 넣는다(도형 안쪽 위아래 여백·차트는 넣지 않는다 — 도형을 키우지 않게).
 글자 크기·줄간격·자간·색·모서리·그림자는 부품에 이미 정해져 있으니 숫자를 쓰지 않는다. 새 부품의 글자도 기본값(본문 38·본문 컬러, `b`·`strong`·`dt`·`th`는 제목 컬러)이 자동으로 붙는다.
 
 - 예외 1: 데이터 값(`--v`, `--p`, `--a/--b`, `flex:분`)
@@ -10,7 +12,7 @@
 
 ## 부품 도감 — 먼저 그림으로 고른다
 
-- `gallery/science.png`(과학 실험반 24장), `gallery/writing.png`(글쓰기 논술반 10장), `gallery/math.png`(수학 내신 클리닉 10장), `gallery/coding.png`(코딩·로봇반 10장), `gallery/english.png`(영어 말하기반 10장 — 사물 4 + 일반 형태 5), `gallery/english-v1.png`(같은 내용 1차 — 9장 모두 사물), `gallery/social.png`(중등 사회 내신반 10장 — 사물 4 + 일반 형태 5), `gallery/math-curriculum.png`(중등 수학 커리큘럼 10장 — 시각 3 + 일반 6), `gallery/korean.png`(고등 국어 10장 — 시각 3 + 일반 6), `gallery/korean-text.png`(같은 내용 정보형 — 글 많이), `gallery/korean-formula.png`(같은 내용 **기준 덱 공식** — 주 도식 + 보조 + 한 줄), `gallery/english-grammar.png`(중등 영어 문법 10장 — 기준 공식 + 시각 30 / 정보 70, 글 넉넉히): 카드마다 id 라벨이 붙은 작은 그림. **형태(사물 또는 일반 도식)는 내용에서 먼저 정하고**, 같은 것이 이미 있는지 이 그림으로 확인한다.
+- `gallery/science.png`(과학 실험반 24장), `gallery/writing.png`(글쓰기 논술반 10장), `gallery/math.png`(수학 내신 클리닉 10장), `gallery/coding.png`(코딩·로봇반 10장), `gallery/english.png`(영어 말하기반 10장 — 사물 4 + 일반 형태 5), `gallery/english-v1.png`(같은 내용 1차 — 9장 모두 사물), `gallery/social.png`(중등 사회 내신반 10장 — 사물 4 + 일반 형태 5), `gallery/math-curriculum.png`(중등 수학 커리큘럼 10장 — 시각 3 + 일반 6), `gallery/korean.png`(고등 국어 10장 — 시각 3 + 일반 6), `gallery/korean-text.png`(같은 내용 정보형 — 글 많이), `gallery/korean-formula.png`(같은 내용 **기준 덱 공식** — 주 도식 + 보조 + 한 줄), `gallery/exam-analysis.png`(시험분석 10장 고정 구성 — 홈페이지 '시험분석' 카드 글자로 다시 짬), `gallery/exam-analysis-photo.png`(같은 덱을 사진 스타일로), `gallery/english-grammar.png`(중등 영어 문법 12장 — 기준 공식 + 시각 30 / 정보 70, 글 넉넉히): 카드마다 id 라벨이 붙은 작은 그림. **형태(사물 또는 일반 도식)는 내용에서 먼저 정하고**, 같은 것이 이미 있는지 이 그림으로 확인한다.
 - 표의 괄호 `(과학 a)`·`(글쓰기 e)`·`(수학 c)`는 덱과 카드 id다. 쓰는 법이 궁금하면 `examples/` 의 같은 이름 파일에서 그 id 카드만 찾아 읽는다(kit.css 전체를 읽지 않는다).
 - 미리보기: `/kit/?deck=examples/science`. 새 덱을 다 만들면 `examples/`에 복사하고 도감을 다시 찍는다:
   `node scripts/kit-shot.mjs --deck examples/이름 --scale 0.25 --cols 6 --out /tmp/x --sheet kit/gallery/이름.png`
@@ -33,7 +35,7 @@
 |---|---|
 | `.k-h` | 항목 제목 (46, 세미볼드) |
 | `.k-p` | 본문 (38) |
-| `.k-foot` | 도식 아래 한 줄 요약 (38, 세미볼드, 가운데) |
+| `.k-foot` | (쓰지 않음 — 2026-10-15부터 결론은 카드 제목·부연설명에. 예전 덱에만 남아 있다) |
 | `.k-label` | ※ 참고사항 (32) |
 | `.k-big` | 핵심 숫자 (96, 메인 컬러) |
 | `.k-hero` | `.k-big` + `.k-p` 묶음 (도식 위) |
@@ -98,9 +100,11 @@
 | `.k-chat` > `.k-msg`(`.me`) > `.k-bubble` | 대화. 좌우 위치와 색으로 말한 사람을 구분하고, 아바타는 넣지 않는다 |
 | `.k-notes` > `p style="--r:기울기"` + `small` | 포스트잇 (과학 o) |
 | `.k-profile` + `<div data-photo="teacher">` | 강사 소개 (과학 g). 상반신은 카드 바로 아래 자식으로 둔다 |
-| `<div data-photo="book\|photo\|cover\|teacher" data-slot data-caption>` | 사진·교재 자리. 클릭하면 사진을 넣는다 |
-| `<div class="k-photoset" data-set data-count="3" data-captions="a,b,c,d">` | 사진 묶음 1~4장 (과학 h). 미리보기에서 + 추가 / × 빼기, 장수에 따라 1장·나란히·왼쪽 큰 1+2·2×2 |
+| `<div data-photo="book\|photo\|cover\|teacher" data-slot data-caption [data-src]>` | 사진·교재 자리. 클릭하면 사진을 넣는다. photo·book은 `data-src`로 처음 사진을 줄 수 있다 |
+| `<div class="k-photoset" data-set data-count="3" data-captions="a,b,c,d" [data-srcs="주소1 주소2 …"]>` | 사진 묶음 1~4장 (과학 h). 묶음만 있는 카드는 높이 740, 아래 글이 있으면 600에서 줄어듦. **사진은 원본 비율 그대로, 잘리지 않는다**(사용자 확정, fit.js `fitPhotoSets`): 넣은 순서대로 줄을 나누는 경우를 다 따져 줄마다 높이를 맞추고(폭은 비율만큼) 영역 안에서 사진이 가장 크게 보이는 배치를 고른다. 사진 강조의 큰 사진만 잘리는 대신 끌어서 위치(`pos`)·툴바 '전체 보기'(`.fit-contain`). 미리보기에서 + 추가 / × 빼기, 장수에 따라 1장·나란히·왼쪽 큰 1+2·2×2 |
 | `.k-photos` / `.k-photos-side` | 사진 3장 고정 배치 (예전) |
+| `.k-photo-hero` > `div data-photo="photo" data-src="사진 주소"` + `.k-panel`(`.k-reasons`·`.k-quote` 등) | 사진 강조: 큰 사진(시험지·학생·학부모) 아래에 흰 도형이 겹친다. 글이 길면 사진이 줄어든다(최소 300) (시험분석 a·i) |
+| 카드에 `data-bgimg="사진 주소"` | **사진 스타일**(내 스타일 6번)에서만 보이는 배경 사진: 도식이 작은 카드에만 자동으로 켜지고(도식은 위로, 사진은 아래 50% 투명), 표지는 전체 + 어두운 막·흰 글자. 후보 카드엔 다 달아 두면 된다. `.k-photo-hero` 카드에는 넣지 않는다 |
 | `<i data-icon2d="이름">` | 2D 아이콘 14종 |
 | `<i data-ph="이름">` | Phosphor 아이콘 |
 | `.k-tag` | 회색 칩 (`.solid` = 직함 등 강조) |
@@ -184,7 +188,7 @@
 | `.k-week` > 머리 `span` + `b`×6, 줄마다 `b` + `em`(수업)/`i`(빈칸) | 주간 시간표 격자 (사회 h). 특강 칸 `em.hl`만 메인 |
 | `.k-cards` > `.k-cards-back`(`b.k-h`) + `.k-panel.k-cards-front`(`p.k-h` + `dl`) | 사물: 명함 두 장 (사회 i). 뒤 장만 메인 |
 
-※ 새 부품 클래스는 엔진 CSS와 부딪히지 않게 항상 `k-` 접두사를 붙인다(원래 개발 폴더에서 사회 c 범례가 엔진의 `.bar`와 부딪혔음).
+※ 새 부품 클래스는 엔진 CSS와 부딪히지 않게 항상 `k-` 접두사를 붙인다(예전 엔진에 남아 있던 템플릿용 `.bar`와 사회 c 범례가 부딪혔음).
 
 ## 수학 커리큘럼 덱 (시각 3 + 일반 6)
 
@@ -241,5 +245,36 @@
 | `.k-window` > `.k-window-body.k-parse` > `span`(`.hl`) > `b`단어 묶음 + `i`역할 칩 | 시각: 실제 문장 구조 표시, 동사 칩만 메인 (영어문법 b) |
 | `.k-panel.k-proof.k-proof-en` | 시각: 영어 서술형 첨삭 (영어문법 e, 첨삭지는 글쓰기 b) |
 | `.k-sched.k-sched-text` | 시간표 칸에 활동 + 설명 (영어문법 d) |
+| `.k-split.k-book-split` > `div data-photo="book"` + `.k-figs` | 교재 강조: 책 목업 + 구성 숫자 3줄 (영어문법 j). 미리보기에서 책에 × → 자리째 빠지고(.no-book) 숫자 3줄이 전체 폭 흰 도형 + 큰 숫자(68)로 |
+| `.k-body.k-profile`(`p.k-h` + `.k-tag.solid` + `.k-figs`) + 카드 바로 아래 `div data-photo="teacher"` | 강사 강조: 상반신 + 이름·직함·경력 숫자 (영어문법 k). 상반신에 × → .no-teacher, 이름·직함 + 숫자 흰 도형 3개가 세로 가운데로. 사진 강조(.k-photo-hero)도 × → 흰 도형만 |
 
 재사용: `.k-hero` + `.k-reasons`(a), `.k-curri`(c), `.k-days`(f), `.k-tiles-text`(g), `.k-exam`(h), `.k-steps3` + `.k-info`(i).
+
+## 시험분석 덱 — `examples/exam-analysis.html` (홈페이지 콘텐츠 스튜디오 '시험분석' 카드 글자를 우리 기준으로)
+
+**시험분석은 고정 구성(2026-10-15 사용자 확정)**: 새 시험분석 덱은 이 덱을 복사해 **글자·숫자·강조 위치·사진만** 바꾼다. 카드 순서와 부품은 그대로, 바꿀 수 있는 건 약간의 변형뿐 — 막대·항목 수(3 기본, 2~5), 강조할 칸(난이도 단계·막대·마지막 전략), 적중 카드는 문항 수 규칙(아래 g·g5·g10·g15), 내용이 없는 카드는 뺀다(예: 학부모 이야기가 없으면 i). **예상 등급컷 카드(`.k-cutline`)는 쓰지 않는다.**
+
+| 순서 | id | 카드 | 부품 |
+|---|---|---|---|
+| 1 | cover | 표지: 시험분석 · 학교 과목 시험 · 학년·학원 | 표지 (사진 스타일이면 교실·시험 사진) |
+| 2 | a | 출제 경향 한 줄 결론 | `.k-photo-hero` 시험지 사진 + `.k-reasons` 출제 특징 2줄 |
+| 3 | b | 난이도 | `.k-level5`(해당 단계 `.hl`) + `.k-pairs` 핵심·점수 차이 |
+| 4 | c | 가장 어려운 영역 | `.k-hero` 큰 숫자 + `.k-scores` 영역 막대(강조 1줄) |
+| 5 | d | 점수가 갈린 포인트 3 | `.k-days.k-days-num` 01~03 |
+| 6 | e | 다음 시험 전략 3 | `.k-essay` 큰 번호 3단, 마지막만 `.accent` |
+| 7 | g | 적중 문항 | 문항 수 규칙: 1~5 `.k-hits` · 6~10 `.k-hitgrid` · 11~ `.k-hitgrid.nums` |
+| 8 | h | 수준별 학습 전략 | `.k-areas` 상위권·중위권·모두 |
+| 9 | i | 학부모 이야기 | `.k-photo-hero` 사진 + `.k-quote` |
+| 10 | j | 총평 | `.k-checks` 3줄 |
+
+| 부품 | 쓰임 |
+|---|---|
+| `.k-panel.k-level5` > `p`×5(`.hl`) > `i` + `span` | 시각: 하~상 난이도 5단계, 해당 단계만 메인 (시험분석 b) |
+| `.k-panel.k-cutline` > `.k-cutline-axis` > `p style="--v"`(`.hl`) > `b`등급 + `em`점수 · `.k-cutline-scale` | 시각: 점수 눈금 위 등급컷(위아래 번갈아), 1등급만 메인. `--v` = (점수-50)×2 (시험분석 f) |
+| `.k-panel.k-hits` > `p.k-hits-head` + `p`(`b`번호 `span`개념 `em`(`.up`)난이도 `i data-ph="check-circle"`) | 문항 줄: 번호 · 개념 · 난이도 칩 · 적중 체크 (시험분석 g) |
+| ↳ 적중 문항 수에 따라 (홈페이지에서 원장님이 고른 개수대로 바뀜) | **1~5개**: `.k-hits` 표 줄(번호 메인 · 개념 · 난이도 칩, 체크 칸 없음 — 모든 줄이 적중) + 아래 `.k-foot`, 줄 간격 넉넉히 · **6~10개**: `.k-hitgrid` 번호 + 난이도 칩 타일(아래 줄) · **11개 이상**: `.k-hitgrid.nums` 번호만 있는 타일 + 상 난이도는 메인 테두리 + `.k-hitkey` 범례(5칸 × 4줄 = 20문항까지 넉넉) · 난이도가 비면 `<em></em>`(칩 숨김). `.dense`·`.more`는 쓰지 않는다(사용자: "다닥다닥"). 2026-10-15 3·5·10·15개 × 84조합 통과 |
+| `.k-hero`(`.k-big` N문항) + `.k-hitgrid` > `p`(`.up`) > `b`번호 + `em`난이도 | 적중 6~10문항: 번호 타일 5칸 격자(10개 = 2줄), 상 난이도 타일만 메인 톤, 개념은 `.k-foot`로 블로그 본문 안내 (시험분석 g10) |
+| `.k-hero` + `.k-hitgrid.nums` > `p`(`.up`) > `b`번호 + `p.k-hitkey` > `i` + `span` | 적중 11문항 이상: 번호만 있는 타일, 상 난이도는 흰 타일 + 메인 테두리, 범례 "상 난이도 문항" (시험분석 g15) |
+| `.k-scores .k-stat.hl` | 점수 막대 칸에서 강조 줄만 메인 (시험분석 c) |
+
+재사용: `.k-reasons`(a), `.k-pairs`(b), `.k-days`(d), `.k-essay`(e), `.k-areas`(h), `.k-quote`(i), `.k-checks`(j).

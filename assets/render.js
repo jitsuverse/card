@@ -104,16 +104,17 @@ const PHOTO_ICON = `<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="curr
 // 책 목업: 표지(높이 고정, 가로는 원본 비율) + 책등·종이 단면·뒤표지·위아래 면을 CSS 3D로 붙인다
 // 면 순서는 뒤 → 옆 → 표지: 3D 깊이 정렬을 하지 않는 내보내기 도구(html-to-image)에서도 표지가 맨 앞에 그려지게
 // 사진 배율(%)·위치(px, 카드 원본 기준) → CSS 변수. 사진 틀 안에서 확대·축소·이동된다 (배율 50~200%)
-const scaleStyle = (scale, x = 0, y = 0) => {
+const scaleStyle = (scale, x = 0, y = 0, pos = null) => {
   const v = Math.min(200, Math.max(50, Number(scale) || 100));
-  const vars = [v !== 100 && `--img-scale: ${v / 100}`, (x || y) && `--img-x: ${Math.round(x)}px; --img-y: ${Math.round(y)}px`].filter(Boolean);
+  const vars = [v !== 100 && `--img-scale: ${v / 100}`, (x || y) && `--img-x: ${Math.round(x)}px; --img-y: ${Math.round(y)}px`,
+    pos && `--img-pos: ${Math.round(pos[0])}% ${Math.round(pos[1])}%`].filter(Boolean); // pos: 잘린 사진에서 보이는 위치(끌어서 정함, %)
   return vars.length ? ` style="${vars.join('; ')}"` : '';
 };
 
 export function bookMockup(img = {}, slot = '') { // 부품 키트(kit/)도 같은 목업·사진 틀·강사 사진을 쓴다
   const { caption = '교재 표지', src = '', scale, x = 0, y = 0 } = img;
   const cover = src
-    ? `<img class="book-cover" src="${esc(src)}" alt="${esc(caption)}">`
+    ? `<img class="book-cover" src="${esc(src)}" alt="${esc(caption)}" onload="this.classList.toggle('wide', this.naturalWidth / this.naturalHeight > 0.85)">` // 가로 사진이면 책 비율로 자름
     : `<div class="book-cover book-cover-empty">${PHOTO_ICON}<span>${plain(caption)}</span></div>`;
   return `<div class="book-item${src ? ' has-img' : ''}" data-img="${slot}"${scaleStyle(scale, x, y)}>
     <div class="book-shadow"></div>
@@ -124,13 +125,14 @@ export function bookMockup(img = {}, slot = '') { // 부품 키트(kit/)도 같�
 // 사진 틀: 주소가 있으면 사진(cover로 채움), 없으면 자리표시(아이콘 + 캡션)
 // withCaption: 사진 위 왼쪽 아래에 캡션 칩 표시
 // slot: 사진 자리 이름 — 미리보기에서 사진 자리를 클릭해 이미지를 넣을 때 어느 줄인지 찾는 데 쓴다
+// img.pos: 보이는 위치 [x%, y%] (사진을 끌어서 정함) · img.fit === 'contain': 전체 보기(잘리지 않게 칸 안에 다 넣고 남는 곳은 흰 바탕)
 export function photoFrame(img = {}, cls = '', withCaption = false, slot = '') {
   const { caption = '사진', src = '' } = img;
   const inner = src
     ? `<img src="${esc(src)}" alt="${esc(caption)}">`
     : `<div class="photo-placeholder">${PHOTO_ICON}<span>${plain(caption)}</span></div>`;
   const chip = withCaption && caption && src ? `<span class="photo-caption">${plain(caption)}</span>` : '';
-  return `<figure class="shape photo ${cls}${src ? ' has-img' : ''}"${slot ? ` data-img="${slot}"` : ''}${scaleStyle(img.scale)}>${inner}${chip}</figure>`;
+  return `<figure class="shape photo ${cls}${src ? ' has-img' : ''}${src && img.fit === 'contain' ? ' fit-contain' : ''}"${slot ? ` data-img="${slot}"` : ''}${scaleStyle(img.scale, 0, 0, img.pos)}>${inner}${chip}</figure>`;
 }
 
 export function cardBackground(style, i) { // 부품 키트(kit/)도 같은 배경을 쓴다

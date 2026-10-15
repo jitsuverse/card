@@ -38,11 +38,14 @@ export async function launch() {
   return puppeteer.launch({ executablePath: chrome, headless: true, args: ['--disable-background-timer-throttling', '--disable-renderer-backgrounding', '--disable-backgrounding-occluded-windows'] });
 }
 
-// 왼쪽 옵션 패널을 실제로 눌러 바꾼다: { shape, shapeStyle, cardStyle, bookMockup, coverVisual, coverAlign, coverBg, font, dark }
+// 왼쪽 옵션 패널을 실제로 눌러 바꾼다: { shape, shapeStyle, cardStyle, bookMockup, coverVisual, coverAlign, coverBg, font, dark, photo }
 export async function setOptions(page, o) {
   await page.evaluate(async (o) => {
     const click = (id, v) => document.querySelector(`#${id} button[data-v="${v}"]`)?.click();
+    if (o.photo) window.kitState.photo = true; // 사진 스타일 (패널에선 내 스타일 6번) — 아래 클릭으로 다시 그려진다
     for (const k of ['shape', 'shapeStyle', 'cardStyle', 'bookMockup', 'coverVisual', 'coverAlign', 'coverBg']) if (o[k]) click(k, o[k]);
+    if (o.photo && !o.cardStyle) click('cardStyle', window.kitState.cardStyle); // 다시 그리기
+    if (o.drop) await window.kitDrop(String(o.drop).split(',')); // 사진 자리 빼기 (교재·강사·사진 강조)
     if (o.font) for (const id of ['fontTitle', 'fontBody']) { const s = document.getElementById(id); if ([...s.options].some((x) => x.value === o.font)) { s.value = o.font; s.dispatchEvent(new Event('change')); } }
     if (o.dark) for (const [k, v] of [['bg', '#111318'], ['title', '#ffffff'], ['body', '#a7a9b2']]) { const i = document.querySelector(`input[data-color=${k}]`); i.value = v; i.dispatchEvent(new Event('input')); }
     await new Promise((r) => setTimeout(r, 600)); await document.fonts.ready; await new Promise((r) => setTimeout(r, 200));

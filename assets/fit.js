@@ -67,3 +67,94 @@ export function fitSplitHead(root = document, P = CARD_PARTS) {
     head.style.paddingBottom = `${Math.round(cur + topGap - bottomGap)}px`;
   }
 }
+
+// ---------- 여백 활용 (2026-10-15 사용자 확정: 공간이 남으면 촘촘히 붙이지 않는다) ----------
+// 콘텐츠 영역(.k-body)에 자리가 남으면 카드에 --air(1~max)를 넣어 부품의 '세로 간격'만 넓힌다(kit.css '여백 활용').
+// 간격은 --air에 비례하므로 --air 1·2에서 도식 높이를 재서, 도식이 영역의 fill만큼 차는 값을 바로 구한다.
+// 촘촘한 모드(.tight·.dense)와 강사 카드(.k-profile)는 건너뛴다.
+export const AIR = { fill: 0.9, max: 1.6 };
+function contentHeight(body) {
+  const kids = [...body.children].filter((el) => el.offsetParent);
+  if (!kids.length) return 0;
+  const k = body.getBoundingClientRect().height / body.offsetHeight || 1; // 미리보기 축소 배율
+  return (kids.at(-1).getBoundingClientRect().bottom - kids[0].getBoundingClientRect().top) / k;
+}
+export function fitAir(root = document, P = CARD_PARTS) {
+  for (const card of root.querySelectorAll(P.card)) {
+    card.style.removeProperty('--air');
+    const body = card.querySelector(':scope > .k-body');
+    if (!body || (body.matches('.k-profile') && !card.matches('.no-teacher')) || card.matches('.with-photo') || body.querySelector('.tight, .dense')) continue; // 강사 사진을 뺀 카드는 일반 카드처럼
+    const h1 = contentHeight(body);
+    card.style.setProperty('--air', '2');
+    const per = contentHeight(body) - h1; // --air 1 늘 때 늘어나는 높이
+    const air = per > 0 ? Math.min(AIR.max, Math.max(1, 1 + (body.clientHeight * AIR.fill - h1) / per)) : 1;
+    if (air > 1) card.style.setProperty('--air', air.toFixed(3)); else card.style.removeProperty('--air');
+  }
+}
+
+// ---------- 사진 스타일: 도식이 작은 카드에만 배경 사진 (2026-10-15 사용자) ----------
+// 도식을 콘텐츠 영역 위쪽에 붙여 보고(.with-photo), 그 아래 남는 자리가 minRoom 이상일 때만 사진을 켠다(.on).
+// 사진은 도식 아래 끝에서 overlap만큼 위부터 깔린다 — 도식과 사진이 많이 겹치지 않게. 표지는 항상 전체 사진.
+export const PHOTO = { minRoom: 440, overlap: 90 };
+export function fitPhoto(root = document, P = CARD_PARTS) {
+  for (const card of root.querySelectorAll(P.card)) {
+    const ph = card.querySelector(':scope > .card-photo');
+    card.classList.remove('with-photo');
+    if (!ph) continue;
+    ph.classList.remove('on');
+    ph.style.removeProperty('top');
+    if (card.matches('.layout-cover')) { card.classList.add('with-photo'); ph.classList.add('on'); continue; }
+    const body = card.querySelector(':scope > .k-body');
+    const kids = body ? [...body.children].filter((el) => el.offsetParent) : [];
+    if (!kids.length || body.matches('.k-profile')) continue;
+    card.style.removeProperty('--air');
+    card.classList.add('with-photo');
+    const k = card.getBoundingClientRect().height / card.offsetHeight || 1;
+    const bottom = (kids.at(-1).getBoundingClientRect().bottom - card.getBoundingClientRect().top) / k;
+    if (card.offsetHeight - bottom < PHOTO.minRoom) { card.classList.remove('with-photo'); continue; }
+    ph.classList.add('on');
+    ph.style.top = `${Math.round(bottom - PHOTO.overlap)}px`;
+  }
+}
+
+// ---------- 사진 묶음 배치: 원본 비율 그대로 (2026-10-15 사용자 확정) ----------
+// 사진을 자르지 않는다. 넣은 순서대로 사진을 줄(행)로 나누는 모든 경우를 따져, 줄마다 높이를 같게(폭은 비율만큼) 맞추고
+// 묶음 영역(가로 전체 × 높이 740/600) 안에서 사진이 가장 크게 보이는 배치를 고른다. 넘치면 전체를 줄이고 가운데 정렬.
+// 사진을 아직 못 불러온 자리는 4:3으로 친다 — 사진이 들어오면 다시 부른다(main.js).
+const ratioOf = (fig) => { const i = fig.querySelector('img'); return i?.naturalWidth ? i.naturalWidth / i.naturalHeight : 4 / 3; };
+const GAP = 20;
+function bestRows(r, W, H) {
+  let best = null;
+  for (let mask = 0; mask < 1 << (r.length - 1); mask++) { // 사진 사이마다 '여기서 줄 바꿈' 여부
+    const rows = [[0]];
+    for (let i = 1; i < r.length; i++) (mask >> (i - 1)) & 1 ? rows.push([i]) : rows.at(-1).push(i);
+    const hs = rows.map((row) => (W - GAP * (row.length - 1)) / row.reduce((t, i) => t + r[i], 0));
+    const total = hs.reduce((a, b) => a + b, 0) + GAP * (rows.length - 1);
+    const k = Math.min(1, (H - GAP * (rows.length - 1)) / (total - GAP * (rows.length - 1)));
+    const area = rows.reduce((t, row, j) => t + row.reduce((u, i) => u + r[i] * (hs[j] * k) ** 2, 0), 0);
+    if (!best || area > best.area + 1) best = { rows, hs: hs.map((h) => h * k), k, area };
+  }
+  return best;
+}
+export function fitPhotoSets(root = document) {
+  for (const set of root.querySelectorAll('.k-photoset')) {
+    const figs = [...set.children];
+    set.removeAttribute('style'); set.removeAttribute('data-layout');
+    figs.forEach((f) => f.removeAttribute('style'));
+    const W = set.clientWidth, H = set.clientHeight, r = figs.map(ratioOf);
+    const { rows, hs } = bestRows(r, W, H);
+    let y = 0;
+    rows.forEach((row, j) => {
+      const rowW = row.reduce((t, i) => t + r[i] * hs[j], 0) + GAP * (row.length - 1);
+      let x = (W - rowW) / 2;
+      row.forEach((i) => {
+        const w = r[i] * hs[j];
+        Object.assign(figs[i].style, { left: `${Math.round(x)}px`, top: `${Math.round(y)}px`, width: `${Math.round(w)}px`, height: `${Math.round(hs[j])}px` });
+        x += w + GAP;
+      });
+      y += hs[j] + GAP;
+    });
+    set.dataset.layout = 'rows';
+    set.style.height = `${Math.round(y - GAP)}px`;
+  }
+}

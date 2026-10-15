@@ -1,6 +1,6 @@
 // 부품 키트 카드 사진 찍기 — 바뀐 카드만, 작게 찍어서 확인 토큰을 줄인다.
 // 사용법: node scripts/kit-shot.mjs [--ids a,f] [--deck cards] [--scale 0.5] [--out 폴더] [--sheet 시트.png] [--cols 5]
-//                                  [--dark] [--cardStyle panel] [--shape rounded] [--shapeStyle shadow] [--font 폰트id] [--coverAlign center] [--coverBg main]
+//                                  [--dark] [--photo] [--drop g-book,h-teacher] [--cardStyle panel] [--shape rounded] [--shapeStyle shadow] [--font 폰트id] [--coverAlign center] [--coverBg main]
 //   --ids    찍을 카드 id (빼면 전부)          --scale  1080×1440 기준 배율 (기본 0.5 → 540×720)
 //   --sheet  여러 장을 id 라벨과 함께 한 장으로 모은 시트 (이미지 확인은 시트 한 장만 보면 된다)
 //   찍으면서 넘침도 숫자로 알려 준다.

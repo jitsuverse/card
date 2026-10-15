@@ -6,17 +6,25 @@ import { themeVars, cardBackground, bookMockup, photoFrame, teacherFigure, contr
 import { renderIcon } from '../assets/icons.js';
 import { phIcon } from '../assets/phosphor.js';
 import { removeBackground } from '../assets/cutout.js';
-import { fitTextGaps, fitSplitHead } from '../assets/fit.js';
+import { fitTextGaps, fitSplitHead, fitAir, fitPhoto, fitPhotoSets } from '../assets/fit.js';
 import { setupPanel } from '../panel/panel.js';
 
 const $ = (s) => document.querySelector(s);
 const deck = $('#deck');
 const state = structuredClone(DEFAULT_OPTIONS);
+window.kitState = state; // 검사·사진 스크립트가 패널에 없는 옵션(photo)을 바꿀 때만 쓴다
+window.kitDrop = async (slots) => { // 사진 스크립트(kit-shot --drop g-book,h-teacher)용: 사진 자리 빼기
+  for (const s of slots) { const f = deck.querySelector(`[data-img="${s}"]`); if (f) dropped.set(s, { card: f.closest('.kcard').id, label: '사진' }); }
+  await render();
+};
 const photos = {}; // 사진 자리(data-slot) → { src, scale }  (이 화면에서만 유지)
 const setCounts = {}; // 사진 묶음(data-set) → 지금 장수 (1~4, 처음엔 data-count)
 const mockups = {};  // 책 자리(data-slot) → 교재 목업 각도 (미리보기에서 책에 마우스를 올려 고름)
 const setCaps = {};   // 사진 묶음 → 자리별 캡션 (사진을 빼면 사진과 함께 당겨진다)
 const SET_MAX = 4;
+// 뺀 사진 자리(교재·강사·사진 강조): 자리 이름 → { card, label } — 카드는 사진 없이 그려진다(.no-book / .no-teacher / .no-photo)
+const dropped = new Map();
+const DROP_LABEL = { book: '교재 사진', teacher: '강사 사진', photo: '사진' };
 let cardsHTML = null;
 
 // 배경 밝기가 0.5 미만이면 어두운 테마 (흰 도형 → 유리 도형)
@@ -33,14 +41,15 @@ const isDark = (hex) => {
 //   photo   : 사진 틀 (사진이 들어가면 위에 캡션)
 // <i data-icon2d="이름"> : 2D 아이콘
 const mockupOf = (slot) => mockups[slot] ?? state.bookMockup ?? 'front';
-const bookFigure = (slot, caption) => `<figure class="book-stage${photos[slot]?.src ? ' has-img' : ''}" data-mockup="${mockupOf(slot)}">
-  <div class="book-row book-row-1">${bookMockup({ caption, ...photos[slot] }, slot)}</div></figure>`;
+const bookFigure = (slot, caption, src) => { const img = { caption, ...(src && { src }), ...photos[slot] };
+  return `<figure class="book-stage${img.src ? ' has-img' : ''}" data-mockup="${mockupOf(slot)}">
+  <div class="book-row book-row-1">${bookMockup(img, slot)}</div></figure>`; };
 
 function photoHTML(el) {
   const { photo: kind, slot, caption } = el.dataset;
-  if (kind === 'book') return bookFigure(slot, caption ?? '교재 표지');
+  if (kind === 'book') return bookFigure(slot, caption ?? '교재 표지', el.dataset.src);
   if (kind === 'teacher') return teacherFigure({ caption: caption ?? '강사 사진', ...photos[slot] }, slot);
-  if (kind === 'photo') return photoFrame({ caption: caption ?? '사진', ...photos[slot] }, '', false, slot);
+  if (kind === 'photo') return photoFrame({ caption: caption ?? '사진', ...(el.dataset.src && { src: el.dataset.src }), ...photos[slot] }, '', false, slot); // data-src: 덱을 만들 때 찾은 무료 사진 주소
   if (kind === 'cover') {
     if (state.coverVisual === 'teacher') return teacherFigure({ caption: '강사 사진', ...photos['cover-teacher'] }, 'cover-teacher', 'cover-teacher');
     if (state.coverVisual === 'book') {
@@ -52,6 +61,16 @@ function photoHTML(el) {
   return '';
 }
 
+// 사진 스타일 배경: 카드의 data-bgimg(덱을 만들 때 찾은 무료 사진 주소) — 클릭해서 바꾼 사진(photos['bg-카드id'])이 먼저.
+// 사진을 못 불러오면(주소 바뀜·막힘) 사진만 빠지고 기본 배경으로 보인다.
+function bgPhoto(k) {
+  const slot = `bg-${k.id}`, p = photos[slot] ?? {}, src = p.src ?? k.dataset.bgimg;
+  if (!src) return '';
+  const vars = [p.scale && p.scale !== 100 && `--img-scale:${p.scale / 100}`, p.pos && `--img-pos:${p.pos[0]}% ${p.pos[1]}%`].filter(Boolean);
+  const scale = vars.length ? ` style="${vars.join(';')}"` : '';
+  return `<figure class="card-photo photo has-img" data-img="${slot}"${scale}><img src="${src}" alt="" onerror="this.closest('.kcard').classList.remove('with-photo');this.parentNode.remove()"></figure>`;
+}
+
 function fillSlots() {
   // 사진 묶음: <div class="k-photoset" data-set="h" data-count="3" data-captions="a,b,c,d"> → 장수만큼 사진 자리
   deck.querySelectorAll('.k-photoset').forEach((el) => {
@@ -59,9 +78,13 @@ function fillSlots() {
     const caps = (setCaps[set] ??= Array.from({ length: SET_MAX }, (_, k) => (el.dataset.captions ?? '').split(',')[k] || '사진'));
     const n = (setCounts[set] ??= Math.min(SET_MAX, Math.max(1, +el.dataset.count || 1)));
     el.classList.add(`n-${n}`);
-    el.innerHTML = Array.from({ length: n }, (_, k) => `<div data-photo="photo" data-slot="${set}-${k}" data-caption="${caps[k] || '사진'}"></div>`).join('');
+    const srcs = (el.dataset.srcs ?? '').split(/\s+/); // data-srcs="주소1 주소2 …": 덱을 만들 때 찾은 사진(자리 순서대로)
+    el.innerHTML = Array.from({ length: n }, (_, k) => `<div data-photo="photo" data-slot="${set}-${k}" data-caption="${caps[k] || '사진'}"${srcs[k] ? ` data-src="${srcs[k]}"` : ''}></div>`).join('');
   });
-  deck.querySelectorAll('[data-photo]').forEach((el) => { el.insertAdjacentHTML('beforebegin', photoHTML(el)); el.remove(); });
+  deck.querySelectorAll('[data-photo]').forEach((el) => {
+    if (dropped.has(el.dataset.slot)) { el.closest('.kcard')?.classList.add(`no-${el.dataset.photo}`); el.remove(); return; } // 뺀 자리
+    el.insertAdjacentHTML('beforebegin', photoHTML(el)); el.remove();
+  });
   deck.querySelectorAll('[data-icon2d]').forEach((el) => { el.outerHTML = `<span class="k-icon">${renderIcon(el.dataset.icon2d, state.colors.main)}</span>`; });
 }
 
@@ -173,19 +196,29 @@ async function render() {
   deck.querySelectorAll('.kcard').forEach((k, i) => {
     k.classList.toggle('dark', dark);
     Object.assign(k.dataset, { shape: state.shape, style: state.shapeStyle });
-    if (k.classList.contains('layout-cover')) { Object.assign(k.dataset, { align: state.coverAlign, bg: state.coverBg }); return; } // 표지는 항상 단색, 정렬 옵션
+    const photo = state.photo ? bgPhoto(k) : '';
+    if (k.classList.contains('layout-cover')) { // 표지는 단색(정렬 옵션) — 사진 스타일이면 전체 사진
+      Object.assign(k.dataset, { align: state.coverAlign, bg: state.coverBg });
+      delete k.dataset.card;
+      if (photo) k.insertAdjacentHTML('afterbegin', photo);
+      return;
+    }
     k.dataset.card = state.cardStyle;
-    k.insertAdjacentHTML('afterbegin', cardBackground(state.cardStyle, i)); // 흰 판·테두리 판
+    k.insertAdjacentHTML('afterbegin', cardBackground(state.cardStyle, i) + photo); // 흰 판·테두리 판 + 배경 사진(쓸지는 fitPhoto가 도식 크기로 정한다)
   });
   fit();
   document.fonts.ready.then(fit); // 웹폰트가 늦게 오면 다시 계산
+  deck.querySelectorAll('.k-photoset img').forEach((i) => { if (!i.complete) i.addEventListener('load', fit, { once: true }); }); // 사진 비율을 안 뒤 배치
   $('#count').textContent = `${deck.querySelectorAll('.kcard').length}장 · 부품 키트 · ${CANVAS.width}×${CANVAS.height}px`;
 }
 
 // 간격 보정: 제목↔부연설명(표지는 태그↔제목↔부제) 간격을 실제 글자 윤곽 기준으로, 위아래 나눔 머리 여백
 function fit() {
+  fitPhotoSets(deck); // 사진 묶음: 사진 비율에 맞는 배치 (사진을 불러온 뒤 다시)
   fitTextGaps(deck);
   fitSplitHead(deck);
+  fitPhoto(deck); // 사진 스타일: 도식이 작은 카드에만 사진, 도식은 위로
+  fitAir(deck); // 남는 자리만큼 세로 간격 넓히기 (사진 카드는 빼고)
 }
 
 // ---------- 사진 넣기 ----------
@@ -195,15 +228,40 @@ function initPhotos() {
   // 강사 사진 위치 옮기기: 사진이 들어간 강사 상반신을 끌면 사진만 움직인다 (photos[자리].x·y, 카드 원본 px)
   let drag = null, dragged = false;
   deck.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0) return;
+    const pan = e.target.closest('.photo.has-img:not(.fit-contain)'); // 잘린 사진(사진 강조·배경): 끌어서 보이는 위치 고르기 — 사진 묶음은 원본 비율이라 제외
+    if (pan?.closest('.k-photoset')) return;
+    if (pan) { startPan(e, pan); return; }
     const fig = e.target.closest(':is(.profile-figure, .book-item).has-img'); // 강사 사진·교재 사진
-    if (!fig || e.button !== 0) return;
+    if (!fig) return;
     const p = photos[fig.dataset.img] ?? {}, k = (c => c.getBoundingClientRect().height / c.offsetHeight)(fig.closest('.kcard')) || 1;
     drag = { fig, slot: fig.dataset.img, sx: e.clientX, sy: e.clientY, x0: p.x ?? 0, y0: p.y ?? 0, x: p.x ?? 0, y: p.y ?? 0, k };
     dragged = false;
     fig.setPointerCapture(e.pointerId);
     e.preventDefault();
   });
+  // 사진 끌기: 사진이 칸보다 넘치는 만큼만 움직인다 → object-position %(photos[자리].pos)
+  function startPan(e, fig) {
+    const img = fig.querySelector('img'), r = fig.getBoundingClientRect();
+    if (!img?.naturalWidth) return;
+    const s = Math.max(r.width / img.naturalWidth, r.height / img.naturalHeight) * (photos[fig.dataset.img]?.scale ?? 100) / 100;
+    const [px, py] = photos[fig.dataset.img]?.pos ?? (getComputedStyle(img).objectPosition.match(/[\d.]+(?=%)/g) ?? [50, 50]).map(Number);
+    drag = { pan: true, fig, img, slot: fig.dataset.img, sx: e.clientX, sy: e.clientY, px, py, x: px, y: py,
+      ox: img.naturalWidth * s - r.width, oy: img.naturalHeight * s - r.height }; // 넘치는 양(화면 px)
+    dragged = false;
+    fig.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  }
   deck.addEventListener('pointermove', (e) => {
+    if (drag?.pan) {
+      const dx = e.clientX - drag.sx, dy = e.clientY - drag.sy;
+      if (Math.abs(dx) + Math.abs(dy) > 3) dragged = true;
+      const clamp = (v) => Math.min(100, Math.max(0, v));
+      drag.x = drag.ox > 1 ? clamp(drag.px - (dx / drag.ox) * 100) : drag.px;
+      drag.y = drag.oy > 1 ? clamp(drag.py - (dy / drag.oy) * 100) : drag.py;
+      drag.fig.style.setProperty('--img-pos', `${drag.x}% ${drag.y}%`);
+      return;
+    }
     if (!drag) return;
     const dx = (e.clientX - drag.sx) / drag.k, dy = (e.clientY - drag.sy) / drag.k;
     if (Math.abs(dx) + Math.abs(dy) > 3 / drag.k) dragged = true;
@@ -215,6 +273,7 @@ function initPhotos() {
     if (!drag) return;
     const d = drag; drag = null;
     if (!dragged) return;
+    if (d.pan) { photos[d.slot] = { ...photos[d.slot], pos: [Math.round(d.x), Math.round(d.y)] }; render(); return; }
     photos[d.slot] = { ...photos[d.slot], x: Math.round(d.x), y: Math.round(d.y) };
     render();
   });
@@ -252,25 +311,69 @@ function initPhotos() {
   tools.className = 'img-tools';
   tools.hidden = true;
   tools.innerHTML = `<span class="zoom"><button data-d="-10" title="축소">−</button><span></span><button data-d="10" title="확대">+</button><button data-d="0" title="100%로">원래대로</button></span>
+    <button class="fit" data-act="fit" title="잘리지 않게 사진 전체를 칸 안에 (시험지·교재 사진)">전체 보기</button>
     <button class="remove" data-act="remove" title="이 사진 빼기">×</button>
     <span class="angles">${BOOK_MOCKUPS.map((m) => `<button data-mockup="${m.id}" title="교재 목업: ${m.label}">${m.label}</button>`).join('')}</span>`; // 책에 올리면 그 책의 목업 각도
   document.body.append(tools);
+  // 사진 자리에 마우스를 올리면 가운데(배경 사진은 아래쪽)에 '클릭해서 사진 변경/넣기' 안내 — 클릭은 그대로 사진 자리로 간다
+  const hint = document.createElement('div');
+  hint.className = 'img-hint';
+  hint.hidden = true;
+  document.body.append(hint);
+  const showHint = (frame) => {
+    const r = frame.getBoundingClientRect(), bg = frame.matches('.card-photo');
+    hint.textContent = !frame.matches('.has-img') ? '클릭해서 사진 넣기' : frame.matches('.photo:not(.fit-contain)') && !frame.closest('.k-photoset') ? '클릭해서 사진 변경 · 끌어서 위치 조정' : '클릭해서 사진 변경';
+    hint.style.left = `${r.left + r.width / 2}px`;
+    hint.style.top = `${bg ? r.bottom - 40 : r.top + r.height / 2}px`;
+    hint.classList.toggle('bottom', bg);
+    hint.hidden = false;
+  };
   let hover = null, hideTimer = null;
   const setOf = (slot) => { const m = /^(.+)-(\d+)$/.exec(slot ?? ''); return m && m[1] in setCounts ? [m[1], +m[2]] : null; };
   const place = () => {
     const frame = hover && deck.querySelector(`[data-img="${hover}"]`);
-    const inSet = setOf(hover), hasImg = !!photos[hover]?.src, isBook = !!frame?.matches('.book-item');
-    if (!frame || (!hasImg && !inSet && !isBook)) { tools.hidden = true; return; }
+    const inSet = setOf(hover), hasImg = !!photos[hover]?.src || frame?.matches('.has-img'), isBook = !!frame?.matches('.book-item'), canDrop = canDropOf(frame);
+    if (!frame || (!hasImg && !inSet && !isBook && !canDrop)) { tools.hidden = true; return; }
     tools.querySelector('.angles').hidden = !isBook;
     tools.querySelectorAll('.angles button').forEach((b) => b.classList.toggle('on', b.dataset.mockup === mockupOf(hover)));
     const r = frame.getBoundingClientRect();
     tools.style.left = `${r.right - 8}px`;
     tools.style.top = `${r.top + 8}px`;
     tools.querySelector('.zoom').hidden = !hasImg;
+    const fitBtn = tools.querySelector('.fit'), isPhoto = !!frame.matches('.photo.has-img') && !frame.matches('.card-photo') && !frame.closest('.k-photoset'); // 전체 보기는 잘리는 사진에만
+    fitBtn.hidden = !isPhoto;
+    fitBtn.textContent = frame.matches('.fit-contain') ? '채워 보기' : '전체 보기';
     tools.querySelector('.zoom span').textContent = `${photos[hover]?.scale ?? 100}%`;
-    tools.querySelector('.remove').hidden = inSet ? setCounts[inSet[0]] <= 1 : !hasImg; // 묶음은 한 장까지 남김
+    const rm = tools.querySelector('.remove');
+    rm.hidden = inSet ? setCounts[inSet[0]] <= 1 : !(hasImg || canDrop); // 묶음은 한 장까지 남김
+    rm.title = canDrop ? '이 사진 자리 빼기 — 카드가 사진 없이 바뀌어요' : '이 사진 빼기';
     tools.hidden = false;
   };
+  // 교재 목업·강사 상반신·사진 강조 사진은 자리째 뺄 수 있다(× → 카드가 사진 없는 모양으로)
+  function canDropOf(frame) { return !!frame && !setOf(frame.dataset.img) && (frame.matches('.book-item, .profile-figure') || !!frame.closest('.k-photo-hero')); }
+  // 뺀 자리가 있는 카드에 마우스를 올리면 오른쪽 아래 '+ ○○ 자리 다시 넣기'
+  const restoreBtn = document.createElement('button');
+  restoreBtn.className = 'gallery-add slot-restore';
+  restoreBtn.hidden = true;
+  document.body.append(restoreBtn);
+  let restoreSlot = null;
+  const placeRestore = (card) => {
+    restoreSlot = card && [...dropped].find(([, d]) => d.card === card.id)?.[0];
+    if (!restoreSlot) { restoreBtn.hidden = true; return; }
+    const r = card.getBoundingClientRect();
+    restoreBtn.style.left = `${r.right - 12}px`;
+    restoreBtn.style.top = `${r.bottom - 52}px`;
+    restoreBtn.textContent = `+ ${dropped.get(restoreSlot).label} 자리 다시 넣기`;
+    restoreBtn.hidden = false;
+  };
+  restoreBtn.addEventListener('mouseenter', () => clearTimeout(hideTimer));
+  restoreBtn.addEventListener('mouseleave', () => hideSoon());
+  restoreBtn.addEventListener('click', async () => {
+    if (!restoreSlot) return;
+    dropped.delete(restoreSlot);
+    restoreBtn.hidden = true;
+    await render();
+  });
   // 사진 묶음 아래 '+ 사진 추가 (n/4)'
   const addBtn = document.createElement('button');
   addBtn.className = 'gallery-add';
@@ -299,20 +402,31 @@ function initPhotos() {
     clearTimeout(hideTimer);
     addSet = e.target.closest('.kcard')?.querySelector('.k-photoset')?.dataset.set ?? null;
     placeAdd();
-    if (frame) { hover = frame.dataset.img; place(); }
+    placeRestore(e.target.closest('.kcard'));
+    if (frame) { hover = frame.dataset.img; place(); showHint(frame); } else hint.hidden = true;
   });
-  function hideSoon() { hideTimer = setTimeout(() => { tools.hidden = true; addBtn.hidden = true; }, 300); }
-  deck.addEventListener('mouseout', hideSoon);
+  function hideSoon() { hideTimer = setTimeout(() => { tools.hidden = true; addBtn.hidden = true; restoreBtn.hidden = true; }, 300); }
+  deck.addEventListener('mouseout', (e) => { if (!e.relatedTarget?.closest?.('[data-img]')) hint.hidden = true; hideSoon(); });
   tools.addEventListener('mouseenter', () => clearTimeout(hideTimer));
   tools.addEventListener('mouseleave', hideSoon);
-  $('.stage').addEventListener('scroll', () => { tools.hidden = true; addBtn.hidden = true; });
+  $('.stage').addEventListener('scroll', () => { tools.hidden = true; addBtn.hidden = true; hint.hidden = true; restoreBtn.hidden = true; });
   tools.addEventListener('click', async (e) => {
     const btn = e.target.closest('button');
     if (!btn || !hover) return;
     if (btn.dataset.mockup) { mockups[hover] = btn.dataset.mockup; await render(); place(); return; }
+    if (btn.dataset.act === 'fit') { // 전체 보기 ↔ 채워 보기
+      photos[hover] ??= {};
+      photos[hover].fit = photos[hover].fit === 'contain' ? undefined : 'contain';
+      await render(); place(); return;
+    }
     if (btn.dataset.act === 'remove') {
-      const inSet = setOf(hover);
-      if (inSet) { // 묶음에서 이 자리를 빼고 뒤 사진을 한 칸씩 당긴다
+      const inSet = setOf(hover), frame = deck.querySelector(`[data-img="${hover}"]`);
+      if (canDropOf(frame)) { // 교재·강사·사진 강조: 자리째 빼고 카드를 사진 없이
+        const kind = frame.matches('.book-item') ? 'book' : frame.matches('.profile-figure') ? 'teacher' : 'photo';
+        dropped.set(hover, { card: frame.closest('.kcard').id, label: DROP_LABEL[kind] });
+        delete photos[hover];
+        hint.hidden = true;
+      } else if (inSet) { // 묶음에서 이 자리를 빼고 뒤 사진을 한 칸씩 당긴다
         const [set, k] = inSet;
         for (let j = k; j < setCounts[set] - 1; j++) {
           if (photos[`${set}-${j + 1}`]) photos[`${set}-${j}`] = photos[`${set}-${j + 1}`]; else delete photos[`${set}-${j}`];
@@ -323,6 +437,7 @@ function initPhotos() {
       } else delete photos[hover];
       tools.hidden = true;
     } else {
+      photos[hover] ??= {}; // 덱에 주소로 들어간 사진(data-src·data-bgimg)도 확대·축소
       const d = Number(btn.dataset.d), cur = photos[hover].scale ?? 100;
       photos[hover].scale = d === 0 ? 100 : Math.min(200, Math.max(50, cur + d));
       if (d === 0) Object.assign(photos[hover], { x: 0, y: 0 }); // 원래대로 = 크기·위치 모두

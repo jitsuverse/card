@@ -123,6 +123,7 @@ export const COVER_VISUALS = [
 export const COVER_ALIGNS = [
   { id: 'left', label: '왼쪽' },
   { id: 'center', label: '가운데' },
+  { id: 'bottom', label: '아래' }, // 글자를 1:1 영역 아래쪽에 왼쪽 정렬, 이미지는 오른쪽 위
 ];
 
 // 표지 배경 — 배경 컬러(본문 카드와 같은 배경) / 메인 컬러(글자는 메인 위에서 잘 보이는 색으로 자동)
@@ -159,8 +160,9 @@ export const DEFAULT_OPTIONS = {
   cardStyle: 'solid',
   bookMockup: 'front', // 책 목업 각도
   coverVisual: 'icon', // 표지 오른쪽 아래 이미지: icon / teacher / book
-  coverAlign: 'left', // 표지 정렬: left / center
+  coverAlign: 'left', // 표지 정렬: left / center / bottom
   coverBg: 'bg', // 표지 배경: bg(배경 컬러) / main(메인 컬러)
+  photo: false, // 사진 스타일: 카드의 data-bgimg 사진을 도식이 작은 카드에만 깐다(표지는 전체 사진) — 내 스타일 6번 '사진'으로 켠다
   shapeShadow: { opacity: 6 }, // 도형 스타일 '그림자'의 투명도(%) — 방향은 아래 고정
   shapeLine: { width: 3, color: '#D9D9DE' }, // 도형 스타일 '선'의 굵기(px)·색
   panelLine: { width: 3, color: '#D9D9DE' }, // 테두리 판의 선 굵기(px)·색

@@ -130,15 +130,17 @@ export function setupPanel(state, render) {
   lineControls($('#panelLine'), 'panelLine');
 
   // ---------- 내 스타일: 현재 스타일 옵션을 5칸에 저장·불러오기 (브라우저 localStorage) ----------
-  const STYLE_KEYS = ['fontTitle', 'fontBody', 'colors', 'shape', 'shapeStyle', 'shapeShadow', 'shapeLine', 'cardStyle', 'panelLine', 'coverVisual', 'coverAlign', 'coverBg'];
-  const STYLE_SLOTS = 5;
+  const STYLE_KEYS = ['fontTitle', 'fontBody', 'colors', 'shape', 'shapeStyle', 'shapeShadow', 'shapeLine', 'cardStyle', 'panelLine', 'coverVisual', 'coverAlign', 'coverBg', 'photo'];
+  const STYLE_SLOTS = 6;
+  // 6번 칸은 기본으로 '사진' 스타일(기본 옵션 + 사진 켜기) — 저장하면 덮어쓰고, 비우면 다시 '사진'으로 돌아온다
+  const BUILTIN = { 5: { name: '사진', builtin: true, opts: { photo: true } } };
   const STORE_KEY = 'cardnews.myStyles.v1';
   function readStyles() {
-    try { const v = JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); return Array.from({ length: STYLE_SLOTS }, (_, i) => v[i] ?? null); }
-    catch { return Array(STYLE_SLOTS).fill(null); }
+    try { const v = JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); return Array.from({ length: STYLE_SLOTS }, (_, i) => v[i] ?? BUILTIN[i] ?? null); }
+    catch { return Array.from({ length: STYLE_SLOTS }, (_, i) => BUILTIN[i] ?? null); }
   }
   function writeStyles(list) {
-    try { localStorage.setItem(STORE_KEY, JSON.stringify(list)); return true; }
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(list.map((st) => (st?.builtin ? null : st)))); return true; }
     catch { alert('이 브라우저에서는 스타일을 저장할 수 없어요 (저장소 사용 불가).'); return false; }
   }
   function initMyStyles() {
@@ -147,13 +149,13 @@ export function setupPanel(state, render) {
     const draw = () => {
       const list = readStyles();
       box.innerHTML = list.map((st, i) => {
-        const o = st?.opts;
+        const o = st && { ...DEFAULT_OPTIONS, ...st.opts };
         const sw = o ? `<i class="sw" style="background:${o.colors.bg};border-color:${o.colors.main}"><b style="background:${o.colors.main}"></b></i>` : '<i class="sw empty"></i>';
         const font = o ? FONTS.find((f) => f.id === o.fontTitle)?.label ?? '' : '';
         return `<div class="slot${i === current ? ' on' : ''}">
           <button class="slot-load" data-i="${i}" ${st ? '' : 'disabled'}>${sw}<span>${st ? st.name : `${i + 1}. 빈 칸`}</span>${o ? `<small>${font}</small>` : ''}</button>
           <button class="slot-save" data-i="${i}" title="지금 스타일을 이 칸에 저장">저장</button>
-          ${st ? `<button class="slot-del" data-i="${i}" title="이 칸 비우기">×</button>` : ''}
+          ${st && !st.builtin ? `<button class="slot-del" data-i="${i}" title="이 칸 비우기">×</button>` : ''}
         </div>`;
       }).join('');
     };

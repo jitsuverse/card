@@ -1442,3 +1442,208 @@
 .k-sched-text .k-slot .k-panel { padding: 0 32px; gap: 16px; }
 .k-sched-text .k-p { text-align: right; }
 .k-proof-en p { padding-top: 56px; }
+
+/* ===== 교재 강조 카드: 책 목업(왼쪽) + 구성 숫자(오른쪽) ===== */
+.k-book-split { grid-template-columns: 1.1fr 1fr; }
+.k-book-split .k-figs { margin-top: 0; }
+
+/* ===== 시험분석 덱: 난이도 5단계 · 등급컷 눈금 · 문항 줄 ===== */
+.kcard[data-shape=square] :is(.k-level5 i, .k-hits em) { border-radius: 0; }
+/* 점수 막대 칸에서 강조 줄만 메인 */
+.k-scores .k-stat.hl .k-track i { background: var(--main); }
+
+/* 난이도 5단계: 왼쪽부터 점점 높아지는 칸, 해당 단계만 메인 */
+.k-level5 { display: grid; grid-template-columns: repeat(5, 1fr); align-items: end; gap: 14px; padding: 48px 40px 40px; }
+.k-level5 p { display: flex; flex-direction: column; align-items: stretch; gap: 16px; text-align: center; }
+.k-level5 i { display: block; border-radius: calc(var(--r-lg) * 0.4); background: var(--toy); }
+.k-level5 p:nth-child(1) i { height: 70px; } .k-level5 p:nth-child(2) i { height: 120px; } .k-level5 p:nth-child(3) i { height: 170px; }
+.k-level5 p:nth-child(4) i { height: 220px; } .k-level5 p:nth-child(5) i { height: 270px; }
+.k-level5 span { color: var(--body); line-height: var(--lh-title); }
+.k-level5 .hl i { background: var(--main); }
+.k-level5 .hl span { color: var(--main); font-weight: var(--title-weight); }
+.kcard:is([data-card=panel], [data-card=outline]) .k-level5 p:not(.hl) i { background: var(--panel-fill); }
+
+/* 등급컷 눈금: 50~100점 가로 선 위에 등급 표시(위아래 번갈아), 1등급만 메인 */
+.k-cutline { padding: 56px 48px 40px; }
+.k-cutline-axis { position: relative; height: 360px; }
+.k-cutline-axis::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 8px; margin-top: -4px; border-radius: 4px; background: var(--toy); }
+.k-cutline-axis p { position: absolute; left: calc(var(--v) * 1%); display: flex; flex-direction: column; align-items: center; gap: 6px; translate: -50% 0; white-space: nowrap; }
+.k-cutline-axis p:nth-child(odd) { bottom: calc(50% + 34px); }
+.k-cutline-axis p:nth-child(even) { top: calc(50% + 34px); flex-direction: column-reverse; }
+.k-cutline-axis p::after { content: ''; position: absolute; left: 50%; width: 22px; height: 22px; margin-left: -11px; border-radius: 50%; background: var(--surface); box-shadow: inset 0 0 0 6px var(--toy-dark); }
+.k-cutline-axis p:nth-child(odd)::after { bottom: -45px; }
+.k-cutline-axis p:nth-child(even)::after { top: -45px; }
+.k-cutline-axis b { font-weight: var(--title-weight); line-height: var(--lh-title); }
+.k-cutline-axis em { font-style: normal; color: var(--body); line-height: var(--lh-title); }
+.k-cutline-axis .hl em { color: var(--main); font-weight: var(--title-weight); }
+.k-cutline-axis .hl::after { box-shadow: inset 0 0 0 11px var(--main); }
+.k-cutline-scale { display: flex; justify-content: space-between; color: var(--body); line-height: var(--lh-title); }
+
+/* 문항 줄: 머리 + 번호 · 개념 · 난이도 칩 · 적중 체크 */
+.k-hits { padding: 16px 40px; }
+.k-hits > p { display: grid; grid-template-columns: 90px 1fr 90px 60px; align-items: center; gap: 16px; padding: 26px 0; }
+.k-hits > p + p { border-top: 2px solid var(--line); }
+.k-hits-head span { color: var(--body); line-height: var(--lh-title); }
+.k-hits-head span:nth-child(n+3) { text-align: center; }
+.k-hits b { font-weight: var(--title-weight); }
+.k-hits > p:not(.k-hits-head) span { color: var(--body); line-height: var(--lh-title); }
+.k-hits em { font-style: normal; justify-self: center; padding: 6px 18px; border-radius: min(var(--r-sm), 12px); background: var(--toy); color: var(--body); line-height: var(--lh-title); }
+.k-hits em.up { background: var(--surface-2); color: var(--main); font-weight: var(--title-weight); }
+.kcard.dark .k-hits em.up { background: color-mix(in srgb, var(--main) 22%, transparent); }
+.k-hits .k-ph { justify-self: center; width: 52px; height: 52px; color: var(--main); }
+.k-cutline-axis .hl b { color: var(--title); }
+.k-level5 { padding: 40px 40px 32px; }
+.k-level5 p:nth-child(1) i { height: 50px; } .k-level5 p:nth-child(2) i { height: 90px; } .k-level5 p:nth-child(3) i { height: 130px; }
+.k-level5 p:nth-child(4) i { height: 170px; } .k-level5 p:nth-child(5) i { height: 210px; }
+/* 문항 줄: 난이도가 비면 칩을 숨기고, 문항이 많으면(.dense, 5~8줄) 촘촘하게 — 9줄 이상은 8줄 + '외 N문항' 줄(.more) */
+.k-hits em:empty { visibility: hidden; }
+.k-hits.dense { padding: 8px 40px; }
+.k-hits.dense > p { padding: 13px 0; }
+.k-hits.dense em { padding: 2px 16px; }
+.k-hits.dense .k-ph { width: 46px; height: 46px; }
+.k-hits > p.more { display: block; text-align: center; color: var(--body); }
+.k-hits.dense > p:not(.k-hits-head, .more) span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } /* 촘촘한 모드: 개념은 한 줄(넘치면 …) — 줄 높이가 일정해야 8줄이 들어간다 */
+.k-hits.dense > p { min-width: 0; }
+.k-hits.dense > p > * { white-space: nowrap; }
+.k-hits.dense > p { padding: 10px 0; }
+.k-hits.dense > .k-hits-head { padding-bottom: 6px; }
+/* 문항 줄 5개: 줄 간격은 넉넉히 두되(3문항과 같은 느낌), 머리·판 여백을 조금 줄여 긴 개념이 두 줄로 꺾여도 들어가게 */
+.k-hits:has(> p:nth-of-type(6)):not(.dense) > p { padding: 20px 0; }
+.k-hits:has(> p:nth-of-type(6)):not(.dense) > .k-hits-head { padding: 8px 0 14px; }
+.k-hits > p { grid-template-columns: 76px 1fr 72px 48px; gap: 12px; }
+.k-hits .k-ph { width: 46px; height: 46px; }
+.k-hits:has(> p:nth-of-type(6)):not(.dense) > p { padding: 18px 0; }
+/* 문항 줄: 모든 줄이 적중이라 체크 칸을 빼고 번호를 메인으로 — 칸은 번호 · 개념 · 난이도 3개 */
+.k-hits > p { grid-template-columns: 76px 1fr 112px; gap: 12px; }
+.k-hits > p:not(.k-hits-head, .more) > b { color: var(--main); }
+
+/* 적중 6문항 이상: 문항 번호 타일 격자(5칸) — 번호(46, 메인) + 난이도 칩, 상 난이도 타일만 메인 톤 */
+.kcard :is(.k-hitgrid b) { font-size: var(--fs-heading); line-height: var(--lh-title); font-family: var(--font-title); font-weight: var(--headline-weight); }
+.kcard[data-shape=square] :is(.k-hitgrid > p, .k-hitgrid em) { border-radius: 0; }
+.k-hitgrid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+.k-hitgrid > p { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 30px 6px 26px; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow); }
+.kcard[data-style=line] .k-hitgrid > p { border: var(--line-width) solid var(--line-color); }
+.k-hitgrid b { color: var(--title); white-space: nowrap; }
+.k-hitgrid em { font-style: normal; padding: 4px 18px; border-radius: min(var(--r-sm), 12px); background: var(--toy); color: var(--body); line-height: var(--lh-title); }
+.k-hitgrid .up b { color: var(--main); }
+.k-hitgrid .up em { background: var(--surface-2); color: var(--main); font-weight: var(--title-weight); }
+.kcard.dark .k-hitgrid .up em { background: color-mix(in srgb, var(--main) 22%, transparent); }
+.kcard:is([data-card=panel], [data-card=outline]) .k-hitgrid em { background: var(--panel-fill); }
+.k-hitgrid { gap: 20px; }
+.k-hitgrid > p { padding: 40px 6px 36px; gap: 18px; }
+
+/* 적중 11문항 이상: 번호만 있는 작은 타일(.nums) — 상 난이도는 타일 색으로, 아래 범례(.k-hitkey) */
+.k-hitgrid.nums > p { padding: 28px 6px; }
+.k-hitgrid.nums > .up { background: var(--surface-2); box-shadow: none; }
+.kcard.dark .k-hitgrid.nums > .up { background: color-mix(in srgb, var(--main) 22%, transparent); }
+.kcard[data-style=line] .k-hitgrid.nums > .up { border-color: var(--main); }
+.k-hitkey { display: flex; align-items: center; justify-content: flex-end; gap: 14px; color: var(--body); line-height: var(--lh-title); }
+.k-hitkey i { width: 28px; height: 28px; border-radius: min(var(--r-sm), 8px); background: var(--surface-2); box-shadow: inset 0 0 0 3px var(--main); }
+.kcard.dark .k-hitkey i { background: color-mix(in srgb, var(--main) 22%, transparent); }
+/* 상 난이도 타일: 흰 타일 + 메인 테두리(바탕색이 카드 배경과 겹쳐 빠져 보이지 않게), 범례도 같은 모양 */
+.k-hitgrid.nums > .up { background: var(--surface); box-shadow: var(--shadow), inset 0 0 0 4px var(--main); }
+.kcard.dark .k-hitgrid.nums > .up { background: var(--surface); }
+.k-hitkey i { width: 34px; height: 34px; background: var(--surface); box-shadow: inset 0 0 0 4px var(--main); }
+.kcard.dark .k-hitkey i { background: var(--surface); }
+
+/* ===== 콘텐츠 영역 세로 가운데 (2026-10-15 사용자 확정) =====
+   콘텐츠 영역 = 부연설명 바로 아래 ~ 카드 맨 아래 끝. 도식은 그 영역의 정확한 세로 가운데에 온다.
+   본문 위 간격(--head-gap 88)과 카드 아래 여백(180)이 달라 그냥 두면 46px 위로 뜬다 →
+   .k-body 를 카드 아래 여백 안으로 늘려 위아래 간격을 같게(88) 만들고 justify-content:center 로 가운데.
+   상단 강조(split)는 위아래 간격이 이미 같아 보정만, 강사 카드(.k-profile)는 위에 붙는 구조라 제외.
+   그다음 시각적 보정 --optical-lift 만큼 위로 옮긴다(translate — 영역 크기는 그대로라 넘침 기준이 바뀌지 않는다). */
+.kcard { --optical-lift: 24px; } /* 시각적 보정: 수학적 가운데보다 이만큼 위 (사용자 확정 — 숫자만 바꿔 조절) */
+.kcard:not([data-card=split]) > .k-body:not(.k-profile) { margin-bottom: calc(var(--head-gap) - 180px); }
+.kcard > .k-body:not(.k-profile) { translate: 0 calc(-1 * var(--optical-lift)); } /* 공간은 깎지 않고 보이는 위치만 위로 — 들어가는 양은 그대로 */
+
+/* ===== 여백 활용 --air (2026-10-15 사용자 확정: 공간이 남으면 촘촘히 붙이지 않는다) =====
+   fit.js fitAir 가 콘텐츠 영역에 남는 자리를 재서 카드에 --air(1~1.6)를 넣는다. 부품의 '세로 간격'만 이 배율로 넓힌다 —
+   글자·도형 너비·가로 여백은 그대로, 도형을 키우지 않고 줄·항목 사이를 띄운다. .tight·.dense는 더 구체적인 규칙이라 그대로 이긴다.
+   새 부품도 세로 간격을 calc(값 * var(--air, 1))로 쓰면 따라온다. */
+.k-body { gap: calc(28px * var(--air, 1)); }
+.k-reasons { padding-top: calc(40px * var(--air, 1)); padding-bottom: calc(24px * var(--air, 1)); }
+.k-reasons > .k-h { padding-bottom: calc(16px * var(--air, 1)); }
+.k-reasons > p:not(.k-h) { padding-block: calc(20px * var(--air, 1)); }
+.k-rows > * { padding-block: calc(22px * var(--air, 1)); }
+.k-pairs { margin-top: calc(36px * var(--air, 1)); }
+.k-scores { gap: calc(34px * var(--air, 1)); padding-block: calc(48px * var(--air, 1)); }
+.k-days, .k-essay { gap: calc(20px * var(--air, 1)); }
+.k-hits > p { padding-block: calc(26px * var(--air, 1)); }
+.k-hitgrid { row-gap: calc(20px * var(--air, 1)); }
+.k-quote blockquote { margin-top: calc(40px * var(--air, 1)); }
+.k-quote figcaption { margin-top: calc(48px * var(--air, 1)); }
+.k-checks { padding-block: calc(16px * var(--air, 1)); }
+.k-checks p { padding-block: calc(30px * var(--air, 1)); }
+.k-areas { padding-block: calc(20px * var(--air, 1)); }
+.k-areas > div { padding-block: calc(22px * var(--air, 1)); }
+.k-areas p { margin-bottom: calc(6px * var(--air, 1)); }
+.k-hits:has(> p:nth-of-type(6)):not(.dense) > p { padding-block: calc(18px * var(--air, 1)); }
+
+/* ===== 표 머리·항목 이름 = 제목 역할 (2026-10-15 사용자 확정) =====
+   '문항 · 개념 · 난이도' 같은 표 머리, '핵심 · 점수 차이' 같은 줄 이름은 제목이라 세미볼드 + 제목 컬러(값은 보통 + 본문 컬러). */
+.kcard :is(.k-hits-head span, .k-pairs p > span) { font-weight: var(--title-weight); color: var(--title); }
+
+/* ===== 사진 스타일 (내 스타일 '사진', 2026-10-15) =====
+   카드에 data-bgimg="사진 주소"(덱을 만들 때 Unsplash 등에서 찾은 무료 사진)를 적으면 main.js가 .card-photo로 깐다.
+   사진 스타일(옵션 photo — 내 스타일 6번 '사진')일 때만. 본문 카드는 fit.js fitPhoto가 도식이 작은 카드(아래 남는 자리 ≥ PHOTO.minRoom)에만 사진을 켜고(.on),
+   도식을 위로 붙인 뒤 도식 아래 끝 근처부터 사진을 깐다. 사진은 50% 투명도로 은은하게, 위로 갈수록 배경색에 녹아든다.
+   표지: 전체 사진 + 어두운 막, 글자는 흰색(사진 위 글자 예외). 사진이 없거나 못 불러오면 기본 배경과 같다. */
+.kcard > .card-photo:not(.on) { display: none; } /* fitPhoto가 도식이 작은 카드에만 켠다(.on) */
+.kcard.with-photo > .k-body { justify-content: flex-start; } /* 사진 카드는 도식을 콘텐츠 영역 위쪽에 — 사진과 덜 겹치게 */
+.kcard > .card-photo { position: absolute; left: 0; right: 0; bottom: 0; top: 600px; margin: 0; z-index: 0; overflow: hidden; border-radius: 0; box-shadow: none; }
+.kcard > .card-photo img { object-position: var(--img-pos, center 35%); opacity: .5; } /* 은은하게: 사진 50% (사용자 2026-10-15) */
+.layout-cover > .card-photo img { opacity: 1; }
+.kcard > .card-photo::after { content: ''; position: absolute; inset: -1px 0 0; /* 위 끝 1px 이음매 방지 */
+  background: linear-gradient(to bottom, var(--bg) 0%, color-mix(in srgb, var(--bg) 97%, transparent) 8%, color-mix(in srgb, var(--bg) 90%, transparent) 18%,
+    color-mix(in srgb, var(--bg) 76%, transparent) 30%, color-mix(in srgb, var(--bg) 56%, transparent) 45%, color-mix(in srgb, var(--bg) 36%, transparent) 62%,
+    color-mix(in srgb, var(--bg) 20%, transparent) 80%, color-mix(in srgb, var(--bg) 12%, transparent) 100%); } /* 위 끝에서 경계선이 보이지 않게 천천히 녹인다 */
+.kcard.dark > .card-photo img { filter: saturate(.7) brightness(.45); }
+.kcard.dark.with-photo .k-body :is(.k-panel, .k-pill) { backdrop-filter: blur(16px); } /* 유리 도형 뒤 사진을 흐려 글자가 읽히게 */
+/* 사진 위에 바로 놓이는 선·글자(도형 밖 줄 목록)는 읽히도록 배경색 막을 조금 더 */
+.kcard.with-photo .k-body :is(.k-hitkey, .k-legend) { align-self: flex-end; width: fit-content; margin-left: auto; padding: 6px 20px; border-radius: var(--r-sm); background: color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: blur(6px); }
+.kcard.with-photo .k-body > .k-rows:not(.k-panel) { background: color-mix(in srgb, var(--bg) 82%, transparent); border-radius: var(--r-sm); padding-inline: 32px; backdrop-filter: blur(6px); }
+/* 표지 */
+.layout-cover > .card-photo { top: 0; }
+.layout-cover > .card-photo::after { background: linear-gradient(to bottom, rgb(0 0 0 / .35) 0%, rgb(0 0 0 / .45) 50%, rgb(0 0 0 / .7) 100%); }
+.layout-cover.with-photo .title { color: #FFFFFF; }
+.layout-cover.with-photo .cover-tag { color: var(--main); } /* 키워드 태그는 사진 위에서도 메인 컬러 (사용자 2026-10-15) */
+.layout-cover.with-photo :is(.sub, .note) { color: rgb(255 255 255 / .85); opacity: 1; }
+.layout-cover.with-photo > .cover-icon { display: none; } /* 사진이 표지 그림 역할 — 아이콘은 뺀다 */
+
+/* 사진 강조 .k-photo-hero: 큰 사진(data-photo="photo" data-src="사진 주소") + 아래에 겹친 흰 도형(출제 특징·인용 등).
+   시험지·학생·학부모 사진을 크게 보여 주는 시각 카드용. 이 카드에는 사진 스타일 배경(data-bgimg)을 넣지 않는다(사진 두 장 ✗). */
+.k-photo-hero { display: flex; flex-direction: column; }
+.k-body > .k-photo-hero { flex-shrink: 1; min-height: 0; } /* 글이 길거나 폰트가 크면 사진 높이가 줄어 넘치지 않는다(최소 300) */
+.kcard .k-photo-hero > figure.photo { height: 410px; flex-shrink: 1; min-height: 300px; border-radius: var(--r-lg); box-shadow: var(--shadow); }
+.k-photo-hero > .k-quote { padding-block: 56px 48px; } /* 사진과 같이 쓰면 인용 칸 위아래 여백만 조금 줄인다 */
+.k-photo-hero > .k-panel { position: relative; flex-shrink: 0; margin: -110px 40px 0; }
+
+/* 표지 정렬: 아래 (data-align=bottom) — 글자는 1:1 영역 아래쪽 왼쪽, 아이콘·교재 사진은 오른쪽 위 */
+.layout-cover[data-align=bottom] { justify-content: flex-end; }
+.layout-cover[data-align=bottom] > .cover-icon { bottom: auto; top: calc(var(--cover-safe-top) + var(--cover-inset)); }
+.layout-cover[data-align=bottom] > .cover-book { bottom: auto; top: calc(var(--cover-safe-top) + var(--cover-inset)); }
+
+/* 사진 묶음 아래에 글(줄 목록 등)이 붙으면 사진 높이가 줄어 넘치지 않는다(최소 360) — 사진 점검 덱 d */
+.k-body > .k-photoset { flex-shrink: 1; min-height: 360px; }
+.k-photo-hero > .photo:not(.has-img) .photo-placeholder { padding-bottom: 110px; } /* 빈 자리 안내는 겹친 도형에 가리지 않는 위쪽에 */
+/* 사진 묶음만 있는 카드: 위아래 여백이 남으므로 사진을 더 크게(600 → 740, 사용자 2026-10-15) */
+.k-body > .k-photoset:only-child { height: 740px; }
+
+/* ===== 사진 자리를 뺀 카드 (미리보기에서 × → main.js가 .no-book / .no-teacher / .no-photo, 2026-10-15) =====
+   교재·강사 카드는 숫자 3줄(.k-figs)이 카드 전체 폭의 흰 도형 3개로 바뀌고 숫자를 크게(68) — 여백을 정보로 채운다.
+   강사 카드는 위에 붙는 구조(.k-profile)를 풀고 다른 카드처럼 콘텐츠 영역 세로 가운데로. 사진 강조는 흰 도형만 남는다. */
+.kcard.no-book .k-book-split { grid-template-columns: 1fr; }
+.kcard:is(.no-book, .no-teacher) .k-figs { display: flex; flex-direction: column; gap: calc(24px * var(--air, 1)); margin-top: 0; }
+.kcard:is(.no-book, .no-teacher) .k-figs p { flex-direction: row; align-items: center; justify-content: space-between; gap: 24px;
+  padding: calc(40px * var(--air, 1)) 48px; border: 0; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow); } /* 남는 자리만큼(--air) 칸을 넉넉히 */
+.kcard:is(.no-book, .no-teacher) .k-figs p:last-child { border-bottom: 0; }
+.kcard:is(.no-book, .no-teacher) .k-figs b { font-size: var(--fs-title); line-height: 1.1; }
+.kcard.no-teacher > .k-body.k-profile { max-width: none; justify-content: center; margin-bottom: calc(var(--head-gap) - 180px); translate: 0 calc(-1 * var(--optical-lift)); }
+.kcard.no-teacher > .k-body.k-profile > .k-figs { align-self: stretch; margin-top: 48px; }
+.kcard.no-photo .k-photo-hero > .k-panel { margin: 0; }
+
+/* ===== 사진 묶음: 원본 비율 그대로 (2026-10-15 사용자 확정) — fit.js fitPhotoSets가 줄 나눔·크기·위치를 정한다(잘림 없음) =====
+   사진 강조(.k-photo-hero)의 큰 사진·배경 사진은 칸에 맞춰 채우고, 미리보기에서 끌어 보이는 위치(--img-pos)를 고르거나 '전체 보기'(.fit-contain). */
+.k-photoset[data-layout=rows] { display: block; position: relative; }
+.k-photoset[data-layout=rows] > .photo { position: absolute; }
+.kcard .shape.photo.has-img.fit-contain { background: var(--surface); box-shadow: var(--shadow); }
