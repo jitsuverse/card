@@ -3,3 +3,4 @@ node_modules/
 .claude/
 *.png
 !kit/gallery/*.png
+!docs/menu/*.png
