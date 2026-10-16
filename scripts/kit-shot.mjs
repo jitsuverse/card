@@ -26,7 +26,7 @@ await setOptions(page, a);
 await page.addStyleTag({ content: '.frame>.kcard{transform:none!important}.frame{width:auto!important;height:auto!important}' });
 await new Promise((r) => setTimeout(r, 300));
 
-const ids = (await page.evaluate(() => [...document.querySelectorAll('.kcard')].map((c) => c.id))).filter((id) => !want || want.includes(id));
+const ids = (await page.evaluate(() => [...document.querySelectorAll('#deck .kcard')].map((c) => c.id))).filter((id) => !want || want.includes(id));
 const over = await page.evaluate((ids) => ids.map((id) => { const b = document.getElementById(id).querySelector('.k-body'); const d = b ? b.scrollHeight - b.clientHeight : 0; return d > 1 ? `${id} ${d}px` : ''; }).filter(Boolean), ids);
 const shots = [];
 for (const id of ids) {
@@ -46,6 +46,6 @@ if (a.sheet) { // 시트: id 라벨을 붙여 격자로 모은 한 장
 }
 
 await browser.close();
-server.close();
+server.closeAllConnections(); server.close(); // 열린 연결(keep-alive)을 끊어야 바로 끝난다 — 안 끊으면 끝난 뒤 25초 넘게 기다림
 console.log(`${shots.length}장 → ${a.sheet ? resolve(a.sheet) : out}`);
 console.log(`넘침: ${over.length ? over.join(', ') : '없음'}${errs.length ? `\n페이지 오류: ${errs.join(' | ')}` : ''}`);

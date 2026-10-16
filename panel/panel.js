@@ -1,11 +1,12 @@
 // 왼쪽 옵션 패널(내 스타일·폰트·컬러·도형 모양·도형 스타일·본문 카드 배경·교재 목업·표지 이미지)
 // 부품 키트(kit/)의 왼쪽 옵션 패널. 옵션을 바꾸면 kit/kit.css의 "왼쪽 옵션 연결"도 맞춘다.
-import { FONTS, TITLE_FONTS, BODY_FONTS, SHAPES, SHAPE_STYLES, CARD_STYLES, COVER_VISUALS, COVER_ALIGNS, COVER_BGS, DEFAULT_OPTIONS } from '../assets/config.js';
+import { withBrandColor } from '../assets/render.js';
+import { FONTS, TITLE_FONTS, BODY_FONTS, SHAPES, SHAPE_STYLES, CARD_STYLES, COVER_VISUALS, COVER_ALIGNS, COVER_BGS, DEFAULT_OPTIONS, PRESET_STYLES } from '../assets/config.js';
 
 const $ = (s) => document.querySelector(s);
 
 // state: 옵션 객체(바뀌면 그 자리에서 고침), render: 옵션이 바뀔 때마다 부르는 그리기 함수
-export function setupPanel(state, render) {
+export function setupPanel(state, render, { brand = () => null } = {}) { // brand: 학원 메인 컬러(없으면 null) — 스타일을 골라도 메인은 이 색
   const syncers = []; // 옵션 화면 동기화 함수들 — 저장한 스타일을 불러올 때 한 번에 갱신
 
   // ---------- HEX 입력칸 ----------
@@ -36,9 +37,11 @@ export function setupPanel(state, render) {
       else l.remove();
     });
     for (const id of wanted) {
+      const font = FONTS.find((f) => f.id === id);
+      if (!font) continue; // 목록에 없는 폰트(저장된 옛 스타일 등)는 건너뛴다
       const link = document.createElement('link');
       link.rel = 'stylesheet';
-      link.href = FONTS.find((f) => f.id === id).css;
+      link.href = font.css;
       link.crossOrigin = 'anonymous'; // PNG 내보내기 시 폰트 임베드에 필요
       link.dataset.font = id;
       document.head.appendChild(link);
@@ -132,8 +135,8 @@ export function setupPanel(state, render) {
   // ---------- 내 스타일: 현재 스타일 옵션을 5칸에 저장·불러오기 (브라우저 localStorage) ----------
   const STYLE_KEYS = ['fontTitle', 'fontBody', 'colors', 'shape', 'shapeStyle', 'shapeShadow', 'shapeLine', 'cardStyle', 'panelLine', 'coverVisual', 'coverAlign', 'coverBg', 'photo'];
   const STYLE_SLOTS = 6;
-  // 6번 칸은 기본으로 '사진' 스타일(기본 옵션 + 사진 켜기) — 저장하면 덮어쓰고, 비우면 다시 '사진'으로 돌아온다
-  const BUILTIN = { 5: { name: '사진', builtin: true, opts: { photo: true } } };
+  // 비어 있는 칸은 관리자 추천 스타일(config PRESET_STYLES) — 저장하면 덮어쓰고, 비우면 다시 추천 스타일로 돌아온다
+  const BUILTIN = Object.fromEntries(PRESET_STYLES.map((p, i) => [i, { ...p, builtin: true }]));
   const STORE_KEY = 'cardnews.myStyles.v1';
   function readStyles() {
     try { const v = JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); return Array.from({ length: STYLE_SLOTS }, (_, i) => v[i] ?? BUILTIN[i] ?? null); }
@@ -149,7 +152,7 @@ export function setupPanel(state, render) {
     const draw = () => {
       const list = readStyles();
       box.innerHTML = list.map((st, i) => {
-        const o = st && { ...DEFAULT_OPTIONS, ...st.opts };
+        const o = st && { ...DEFAULT_OPTIONS, ...st.opts, colors: { ...DEFAULT_OPTIONS.colors, ...st.opts?.colors } };
         const sw = o ? `<i class="sw" style="background:${o.colors.bg};border-color:${o.colors.main}"><b style="background:${o.colors.main}"></b></i>` : '<i class="sw empty"></i>';
         const font = o ? FONTS.find((f) => f.id === o.fontTitle)?.label ?? '' : '';
         return `<div class="slot${i === current ? ' on' : ''}">
@@ -159,6 +162,62 @@ export function setupPanel(state, render) {
         </div>`;
       }).join('');
     };
+    // '추천 스타일' 고르기(.preset-picker — 글 설정·카드뉴스 디자인 맨 위): 6칸을 카드 썸네일로, 누르면 그 스타일로.
+    // 썸네일 그림은 main.js가 그린다(.style-thumb 자리에 지금 덱의 카드를 그 스타일로 복제) — 그리라고 'stylesdrawn' 이벤트를 보낸다.
+    const pickers = [...document.querySelectorAll('.preset-picker')];
+    const drawPicker = () => {
+      const list = readStyles();
+      pickers.forEach((pk) => {
+        pk.innerHTML = list.map((st, i) => (st ? `<button type="button" class="style-tile${i === current ? ' on' : ''}" data-i="${i}" title="${st.name} 스타일로">
+          <span class="style-thumb" data-i="${i}"></span><span class="style-name">${st.name}</span></button>` : '')).join('');
+      });
+      document.dispatchEvent(new CustomEvent('stylesdrawn'));
+    };
+    const load = (i, list) => {
+      Object.assign(state, structuredClone(withBrandColor({ ...Object.fromEntries(STYLE_KEYS.map((k) => [k, DEFAULT_OPTIONS[k]])), ...list[i].opts,
+        colors: { ...DEFAULT_OPTIONS.colors, ...list[i].opts.colors } }, brand())));
+      syncers.forEach((f) => f());
+      current = i;
+      draw(); drawPicker();
+      render();
+    };
+    pickers.forEach((pk) => pk.addEventListener('click', (e) => {
+      const btn = e.target.closest('.style-tile');
+      const list = readStyles();
+      if (btn && list[btn.dataset.i]) load(Number(btn.dataset.i), list);
+    }));
+    api.styles = readStyles;
+    // 덱이 기본 스타일을 정해 둔 경우(예: 이미지 덱은 사진 스타일): 그 이름의 추천 스타일을 고른다. 다시 그리지는 않는다(부르는 쪽이 그림)
+    api.chooseByName = (name) => {
+      const list = readStyles(), i = list.findIndex((st) => st?.name === name || (name === '사진' && st?.opts?.photo));
+      if (i < 0) return false;
+      Object.assign(state, structuredClone(withBrandColor({ ...Object.fromEntries(STYLE_KEYS.map((k) => [k, DEFAULT_OPTIONS[k]])), ...list[i].opts,
+        colors: { ...DEFAULT_OPTIONS.colors, ...list[i].opts.colors } }, brand())));
+      syncers.forEach((f) => f());
+      current = i; draw(); drawPicker();
+      return true;
+    };
+    // 학원 메인 컬러가 바뀌면(데모 설정) 지금 카드 메인도 그 색으로
+    api.applyBrand = () => { Object.assign(state, withBrandColor(state, brand())); syncers.forEach((f) => f()); drawPicker(); render(); };
+    // 되돌리기: '생성하기' 때의 옵션을 기억해 두고(snapshot), '처음 스타일로 되돌리기'에서 그대로 돌려놓는다(restore)
+    let base = null, baseIndex = -1;
+    api.hasSnapshot = () => !!base;
+    api.snapshot = () => { base = structuredClone(Object.fromEntries(STYLE_KEYS.map((k) => [k, state[k]]))); baseIndex = current; };
+    api.restore = () => {
+      if (!base) return;
+      Object.assign(state, structuredClone(base));
+      syncers.forEach((f) => f());
+      current = baseIndex;
+      draw(); drawPicker();
+      render();
+    };
+    // 관리자: 지금 6칸을 config.js PRESET_STYLES 코드로 복사 (기본값과 다른 옵션만)
+    $('#copyPresets')?.addEventListener('click', async () => {
+      const diff = (o) => Object.fromEntries(Object.entries(o).filter(([k, v]) => JSON.stringify(v) !== JSON.stringify(DEFAULT_OPTIONS[k])));
+      const code = `export const PRESET_STYLES = [\n${readStyles().map((st) => st ? `  { name: ${JSON.stringify(st.name)}, opts: ${JSON.stringify(diff(st.opts))} },` : '  null,').join('\n')}\n];`;
+      try { await navigator.clipboard.writeText(code); alert('스타일 코드를 복사했어요. assets/config.js의 PRESET_STYLES에 붙여 넣으면 돼요.'); }
+      catch { prompt('아래 코드를 복사하세요', code); }
+    });
     box.addEventListener('click', (e) => {
       const btn = e.target.closest('button');
       if (!btn) return;
@@ -167,25 +226,22 @@ export function setupPanel(state, render) {
         const name = prompt('이 스타일의 이름', list[i]?.name ?? `스타일 ${i + 1}`);
         if (name == null) return;
         list[i] = { name: name.trim() || `스타일 ${i + 1}`, savedAt: Date.now(), opts: structuredClone(Object.fromEntries(STYLE_KEYS.map((k) => [k, state[k]]))) };
-        if (writeStyles(list)) { current = i; draw(); }
+        if (writeStyles(list)) { current = i; draw(); drawPicker(); }
       } else if (btn.classList.contains('slot-del')) {
         if (!confirm(`'${list[i]?.name}' 스타일을 지울까요?`)) return;
         list[i] = null;
-        if (writeStyles(list)) { if (current === i) current = -1; draw(); }
+        if (writeStyles(list)) { if (current === i) current = -1; draw(); drawPicker(); }
       } else if (btn.classList.contains('slot-load') && list[i]) {
-        Object.assign(state, structuredClone({ ...Object.fromEntries(STYLE_KEYS.map((k) => [k, DEFAULT_OPTIONS[k]])), ...list[i].opts }));
-        syncers.forEach((f) => f());
-        current = i;
-        draw();
-        render();
+        load(i, list);
       }
     });
-    draw();
+    draw(); drawPicker();
   }
 
+  const api = {};
   initMyStyles();
 
-  return {
+  return Object.assign(api, {
     // 그리기 직전에 부른다: 선택한 폰트 불러오기 + 지금 옵션에 맞게 세부 조절 보이기/숨기기
     update() {
       loadFonts([state.fontTitle, state.fontBody]);
@@ -193,6 +249,14 @@ export function setupPanel(state, render) {
       // 선 굵기·선 색은 '선' 스타일일 때만 (그림자·기본에서는 숨김 — 구분선·연결선은 지금 값 그대로 쓴다)
       $('#shapeLine').hidden = state.shapeStyle !== 'line';
       $('#panelLine').hidden = state.cardStyle !== 'outline';
+      // 사진 스타일: 표지는 배경 컬러 · 아래 정렬 · 아이콘으로 고정(사진이 표지 그림이라) — 버튼은 잠그고 안내 (2026-10-16 사용자 확정)
+      const lock = !!state.photo;
+      if (lock) {
+        const fixed = { coverBg: 'bg', coverAlign: 'bottom', coverVisual: 'icon' };
+        if (Object.entries(fixed).some(([k, v]) => state[k] !== v)) { Object.assign(state, fixed); syncers.forEach((f) => f()); }
+      }
+      ['#coverBg', '#coverAlign', '#coverVisual'].forEach((s) => $(s)?.classList.toggle('locked', lock));
+      if ($('#coverLockNote')) $('#coverLockNote').hidden = !lock;
     },
-  };
+  });
 }

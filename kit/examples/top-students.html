@@ -1,0 +1,132 @@
+<!-- 성적 우수자/상승자 명단 10장(2026-10-16) — 홍보형. 중등부 1학기 중간고사 결과: 전체 성과 · 학교별 · 만점자 · 상승 시상대 · 전후 점수 · 학생 한마디 · 비결 · 학년별 · 상담 안내.
+     이름은 모두 가린 예시(김○○). 기준 공식: 제목 2줄 = 결론, 부연설명 1줄 = 근거. 시각 3장(시상대 · 전후 점 막대 · 학교별 순위 막대) + 정보 6장.
+     사진 스타일용 사진(사진 모음 pool:주제 — 덱마다 다른 사진, assets/config.js PHOTO_POOL): 표지 교실, 학생 한마디 카드 사진 강조(필기하는 손), 도식이 작은 카드에 배경 후보. -->
+
+<!-- 1. 표지 -->
+<div class="kcard layout-cover" id="cover" data-bgimg="pool:classroom">
+  <p class="cover-tag">성적 우수자</p>
+  <h1 class="title">이번 중간고사,<br>함께 웃은 이름들</h1>
+  <p class="sub">2026 1학기 중간고사 · 에듀리치브레인 중등부</p>
+  <div data-photo="cover" data-icon="star"></div>
+</div>
+
+<!-- 2. 정보 → 숫자 타일 2×2(설명 2줄), 1등급 칸만 메인 -->
+<div class="kcard" id="a">
+  <div class="k-head"><h2 class="k-title">수강생 넷 중 하나가<br>1등급을 받았어요</h2><p class="k-sub">중등부 수강생 120명 기준</p></div>
+  <div class="k-body">
+    <div class="k-tiles k-tiles-text">
+      <div class="hl"><b>28명</b><span>과목 1등급<br>(전체의 23%)</span></div>
+      <div><b>15명</b><span>한 과목 이상<br>100점 만점</span></div>
+      <div><b>+12점</b><span>학기 초보다<br>평균 점수 상승</span></div>
+      <div><b>94%</b><span>학기 목표 점수<br>달성 비율</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. 시각 → 학교별 1등급 수 순위 막대, 1위만 메인 -->
+<div class="kcard" id="b" data-bgimg="pool:school">
+  <div class="k-head"><h2 class="k-title">다섯 학교에서<br>고르게 1등급이 나왔어요</h2><p class="k-sub">학교별 1등급 학생 수</p></div>
+  <div class="k-body">
+    <div class="k-rank">
+      <p class="hl" style="--v:100"><b>1</b><span>대치중</span><i></i><em>8명</em></p>
+      <p style="--v:88"><b>2</b><span>숙명여중</span><i></i><em>7명</em></p>
+      <p style="--v:75"><b>3</b><span>단대부중</span><i></i><em>6명</em></p>
+      <p style="--v:50"><b>4</b><span>휘문중</span><i></i><em>4명</em></p>
+      <p style="--v:38"><b>5</b><span>역삼중</span><i></i><em>3명</em></p>
+    </div>
+  </div>
+</div>
+
+<!-- 4. 정보 → 만점자 명단표(.k-roster): 메인 머리 띠 + 이름 · 학교 학년 · 과목 칩 · 점수 5줄 + ※ 외 인원 -->
+<div class="kcard" id="c">
+  <div class="k-head"><h2 class="k-title">15명이 한 과목 이상<br>100점을 받았어요</h2><p class="k-sub">과목별 만점 학생 (일부)</p></div>
+  <div class="k-body">
+    <div class="k-panel k-roster">
+      <p class="k-roster-head"><b>만점자 명단</b><span>2026 1학기 중간고사</span></p>
+      <p><b>김○○</b><span>대치중 2학년</span><em>수학</em><strong>100</strong></p>
+      <p><b>이○○</b><span>숙명여중 3학년</span><em>영어</em><strong>100</strong></p>
+      <p><b>박○○</b><span>단대부중 1학년</span><em>국어</em><strong>100</strong></p>
+      <p><b>최○○</b><span>휘문중 2학년</span><em>과학</em><strong>100</strong></p>
+      <p><b>정○○</b><span>대치중 3학년</span><em>수학</em><strong>100</strong></p>
+    </div>
+    <p class="k-label">※ 외 10명 · 학생과 학부모님 동의를 받아 이름 일부를 가렸어요</p>
+  </div>
+</div>
+
+<!-- 5. 시각 → 시상대(상승 폭 1~3위), 1위만 메인 -->
+<div class="kcard" id="d">
+  <div class="k-head"><h2 class="k-title">가장 많이 오른 학생은<br>38점이 올랐어요</h2><p class="k-sub">학기 초 진단 대비 상승 폭 1~3위</p></div>
+  <div class="k-body">
+    <div class="k-podium">
+      <div class="r2"><b>+31점</b><div><span>2</span><em>이○○</em></div></div>
+      <div class="r1 hl"><b>+38점</b><div><span>1</span><em>김○○</em></div></div>
+      <div class="r3"><b>+27점</b><div><span>3</span><em>정○○</em></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 6. 시각 → 큰 숫자 + 전후 점 막대 4줄(학기 초 → 중간고사) -->
+<div class="kcard" id="e">
+  <div class="k-head"><h2 class="k-title">상승 학생 넷은<br>평균 26점 올랐어요</h2><p class="k-sub">학기 초 진단 → 중간고사</p></div>
+  <div class="k-body">
+    <div class="k-hero"><span class="k-big">+26점</span><p class="k-p">네 학생 모두<br>20점 넘게 올랐어요</p></div>
+    <div class="k-panel k-db-short">
+      <div class="k-db" style="--a:30;--b:87"><span>김○○</span><div class="k-db-track"><i></i></div><b>58 → 92</b></div>
+      <div class="k-db" style="--a:37;--b:83"><span>이○○</span><div class="k-db-track"><i></i></div><b>62 → 90</b></div>
+      <div class="k-db" style="--a:42;--b:80"><span>정○○</span><div class="k-db-track"><i></i></div><b>65 → 88</b></div>
+      <div class="k-db" style="--a:50;--b:85"><span>한○○</span><div class="k-db-track"><i></i></div><b>70 → 91</b></div>
+    </div>
+  </div>
+</div>
+
+<!-- 7. 정보 → 사진 강조(필기하는 손, 사진 스타일에서만) + 학생 한마디 -->
+<div class="kcard" id="f">
+  <div class="k-head"><h2 class="k-title">틀린 문제를 다시 푼 게<br>제일 도움이 됐어요</h2><p class="k-sub">38점 오른 학생의 한마디</p></div>
+  <div class="k-body">
+    <div class="k-photo-hero">
+      <div data-photo="photo" data-slot="f-photo" data-caption="공부하는 사진" data-src="pool:writing"></div>
+      <figure class="k-panel k-quote">
+        <i class="k-quote-mark"></i>
+        <blockquote>오답 노트를 주말마다<br>다시 풀었더니, 시험에서<br>같은 실수를 안 했어요.</blockquote>
+        <figcaption>김○○ · 대치중 2학년</figcaption>
+      </figure>
+    </div>
+  </div>
+</div>
+
+<!-- 8. 정보 → 큰 번호 3단(비결), 마지막만 메인 -->
+<div class="kcard" id="g">
+  <div class="k-head"><h2 class="k-title">세 가지 습관이<br>점수를 바꿨어요</h2><p class="k-sub">우수 학생들의 공통점</p></div>
+  <div class="k-body">
+    <div class="k-essay">
+      <div class="k-panel"><em>1</em><p><b class="k-h">오답 노트</b><span>틀린 이유까지 한 줄로 기록</span></p></div>
+      <div class="k-panel"><em>2</em><p><b class="k-h">주말 클리닉</b><span>한 주 질문을 1:1로 해결</span></p></div>
+      <div class="k-panel accent"><em>3</em><p><b class="k-h">학교별 기출</b><span>시험 4주 전부터 실전 연습</span></p></div>
+    </div>
+  </div>
+</div>
+
+<!-- 9. 정보 → 학년 배지 줄 3개(1등급 수 · 대표 과목), 중2만 메인 -->
+<div class="kcard" id="h" data-bgimg="pool:desk">
+  <div class="k-head"><h2 class="k-title">세 학년 모두<br>1등급이 나왔어요</h2><p class="k-sub">학년별 1등급 학생 수</p></div>
+  <div class="k-body">
+    <div class="k-days">
+      <div class="k-panel"><em>중1</em><p><b class="k-h">1등급 7명</b><span>국어·수학에서 가장 많이</span></p></div>
+      <div class="k-panel accent"><em>중2</em><p><b class="k-h">1등급 12명</b><span>수학 만점 3명 포함</span></p></div>
+      <div class="k-panel"><em>중3</em><p><b class="k-h">1등급 9명</b><span>영어·과학에서 가장 많이</span></p></div>
+    </div>
+  </div>
+</div>
+
+<!-- 10. 상담 안내 → 큰 숫자 + 라벨 · 값 안내 -->
+<div class="kcard" id="i" data-bgimg="pool:books">
+  <div class="k-head"><h2 class="k-title">다음 이름은<br>우리 아이 차례예요</h2><p class="k-sub">2학기 반 편성 상담 안내</p></div>
+  <div class="k-body">
+    <div class="k-hero"><span class="k-big">20명</span><p class="k-p">2학기 새 반<br>선착순 모집</p></div>
+    <dl class="k-panel k-info">
+      <div><dt>상담</dt><dd>학습 진단과 반 안내 20분</dd></div>
+      <div><dt>기간</dt><dd>8월 한 달 동안</dd></div>
+      <div><dt>신청</dt><dd>전화 또는 문자 예약</dd></div>
+    </dl>
+  </div>
+</div>

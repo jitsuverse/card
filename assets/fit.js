@@ -95,7 +95,7 @@ export function fitAir(root = document, P = CARD_PARTS) {
 // ---------- 사진 스타일: 도식이 작은 카드에만 배경 사진 (2026-10-15 사용자) ----------
 // 도식을 콘텐츠 영역 위쪽에 붙여 보고(.with-photo), 그 아래 남는 자리가 minRoom 이상일 때만 사진을 켠다(.on).
 // 사진은 도식 아래 끝에서 overlap만큼 위부터 깔린다 — 도식과 사진이 많이 겹치지 않게. 표지는 항상 전체 사진.
-export const PHOTO = { minRoom: 440, overlap: 90 };
+export const PHOTO = { minRoom: 440, overlap: 90, rise: 0.25 }; // rise: 사진 카드에서 도식 위 여백 = 남는 자리 × 0.25
 export function fitPhoto(root = document, P = CARD_PARTS) {
   for (const card of root.querySelectorAll(P.card)) {
     const ph = card.querySelector(':scope > .card-photo');
@@ -108,16 +108,20 @@ export function fitPhoto(root = document, P = CARD_PARTS) {
     const kids = body ? [...body.children].filter((el) => el.offsetParent) : [];
     if (!kids.length || body.matches('.k-profile')) continue;
     card.style.removeProperty('--air');
+    body.style.removeProperty('padding-top');
+    const free = body.clientHeight - contentHeight(body); // 가운데일 때 남는 자리
     card.classList.add('with-photo');
+    // 도식은 위로 '적당히만' — 남는 자리의 PHOTO.rise 비율만큼 위 여백을 남긴다(맨 위에 붙이면 부연설명과 너무 가깝다, 사용자 2026-10-16)
+    body.style.paddingTop = `${Math.round(Math.max(0, free) * PHOTO.rise)}px`;
     const k = card.getBoundingClientRect().height / card.offsetHeight || 1;
     const bottom = (kids.at(-1).getBoundingClientRect().bottom - card.getBoundingClientRect().top) / k;
-    if (card.offsetHeight - bottom < PHOTO.minRoom) { card.classList.remove('with-photo'); continue; }
+    if (card.offsetHeight - bottom < PHOTO.minRoom) { card.classList.remove('with-photo'); body.style.removeProperty('padding-top'); continue; }
     ph.classList.add('on');
     ph.style.top = `${Math.round(bottom - PHOTO.overlap)}px`;
   }
 }
 
-// ---------- 사진 묶음 배치: 원본 비율 그대로 (2026-10-15 사용자 확정) ----------
+// ---------- 사진 묶음 배치: 학습자료가 있으면 원본 비율 그대로 (2026-10-15 · 10-16 사용자 확정) ----------
 // 사진을 자르지 않는다. 넣은 순서대로 사진을 줄(행)로 나누는 모든 경우를 따져, 줄마다 높이를 같게(폭은 비율만큼) 맞추고
 // 묶음 영역(가로 전체 × 높이 740/600) 안에서 사진이 가장 크게 보이는 배치를 고른다. 넘치면 전체를 줄이고 가운데 정렬.
 // 사진을 아직 못 불러온 자리는 4:3으로 친다 — 사진이 들어오면 다시 부른다(main.js).
@@ -139,8 +143,10 @@ function bestRows(r, W, H) {
 export function fitPhotoSets(root = document) {
   for (const set of root.querySelectorAll('.k-photoset')) {
     const figs = [...set.children];
-    set.removeAttribute('style'); set.removeAttribute('data-layout');
-    figs.forEach((f) => f.removeAttribute('style'));
+    set.style.removeProperty('height'); set.removeAttribute('data-layout');
+    figs.forEach((f) => ['left', 'top', 'width', 'height'].forEach((p) => f.style.removeProperty(p))); // 크기·보이는 위치(--img-*)는 남긴다
+    // 학습자료(.fit-contain — 교재·시험지)가 하나라도 있으면 원본 비율 그대로 줄 배치, 일반 사진만이면 칸을 고르게 나눈 격자에 채운다(kit.css n-1~n-4)
+    if (!figs.some((f) => f.matches('.fit-contain'))) continue;
     const W = set.clientWidth, H = set.clientHeight, r = figs.map(ratioOf);
     const { rows, hs } = bestRows(r, W, H);
     let y = 0;
@@ -156,5 +162,42 @@ export function fitPhotoSets(root = document) {
     });
     set.dataset.layout = 'rows';
     set.style.height = `${Math.round(y - GAP)}px`;
+  }
+}
+
+// ---------- 사진 강조(.k-photo-hero)의 '원본 비율' 사진: 틀 = 사진 (2026-10-16 사용자) ----------
+// 원본 비율(.fit-contain)이면 흰 틀 안에 사진을 맞춰 넣지 않고, 틀 자체를 사진 비율로 영역(가로 전체 × 410) 안에서 가장 크게 잡는다.
+// 줄이기(--img-scale < 1)는 틀째 — 채우기·원본 비율 모두 사진이 틀과 함께 작아진다(빈 틀이 남지 않게). 채우기에서 키우기는 칸 안 확대. 사진을 불러온 뒤 다시 부른다(main.js).
+export const HERO_MAX_H = 560; // 원본 비율 사진 강조를 키울 때 세로 한도(카드 넘침 방지)
+export function fitContainPhotos(root = document) {
+  for (const f of root.querySelectorAll('.k-photo-hero > .photo')) {
+    ['width', 'height', 'min-height', 'align-self'].forEach((p) => f.style.removeProperty(p));
+    f.classList.remove('shrunk');
+    const img = f.querySelector('img');
+    if (!img?.naturalWidth) continue;
+    const W = f.clientWidth, H = f.clientHeight, r = img.naturalWidth / img.naturalHeight;
+    const scale = parseFloat(getComputedStyle(f).getPropertyValue('--img-scale')) || 1;
+    const contain = f.matches('.fit-contain');
+    if (!contain && scale >= 1) continue; // 채우기 + 100% 이상: 틀은 그대로, 칸 안에서 사진만 확대(card.css)
+    let w = W, h = contain ? W / r : H; // 채우기는 틀 비율 그대로, 원본 비율은 사진 비율
+    if (contain && h > H) { h = H; w = H * r; }
+    // 줄이면 틀째 작아진다. 원본 비율은 키우기도 틀째 — 가로는 영역 폭, 세로는 HERO_MAX_H까지
+    const s = contain ? Math.min(scale, W / w, HERO_MAX_H / h) : Math.min(1, scale);
+    if (!contain) f.classList.add('shrunk');
+    Object.assign(f.style, { width: `${Math.round(w * s)}px`, height: `${Math.round(h * s)}px`, minHeight: '0', alignSelf: 'center' });
+  }
+}
+
+// ---------- 시각 보정은 남는 자리만큼만 (2026-10-16) ----------
+// 도식을 --optical-lift(24px)만큼 위로 올리는데, 콘텐츠가 영역을 꽉 채운 카드에서 그대로 올리면 부연설명과 도식 사이가 최소 여백(88px)보다 좁아진다.
+// 위아래 남는 자리(free/2)보다 많이 올리지 않는다.
+export const LIFT = 24;
+export function fitLift(root = document, P = CARD_PARTS) {
+  for (const card of root.querySelectorAll(P.card)) {
+    card.style.removeProperty('--optical-lift');
+    const body = card.querySelector(':scope > .k-body');
+    if (!body || body.matches('.k-profile')) continue;
+    const free = body.clientHeight - contentHeight(body);
+    if (free / 2 < LIFT) card.style.setProperty('--optical-lift', `${Math.max(0, Math.floor(free / 2))}px`);
   }
 }

@@ -66,3 +66,34 @@ export async function makeDeck(request) {
 - 첫 요청: `cache_creation_input_tokens`가 크고 `cache_read_input_tokens`는 0.
 - 두 번째 요청부터: `cache_read_input_tokens`가 크고 `input_tokens`는 이번 요청 내용만큼 작다.
 - 두 번째에도 read가 0이면, 1~3 사이에 매번 바뀌는 내용이 끼어 있지 않은지 본다.
+
+## 콘텐츠 타입별 예시 덱 (2026-10-16 — 예시 덱이 늘어도 비용이 그대로이게)
+
+예시 덱을 **전부** 프롬프트에 넣으면 덱이 늘 때마다 모든 생성 비용이 같이 오른다(예시 21벌 ≈ 6만~7만 토큰). 대신 `kit/examples/deck-types.json`의 표대로 **기준 덱 + 그 콘텐츠 타입 덱 1~2벌만** 넣는다(타입마다 예시 약 1만 2천 토큰 이하).
+
+- 키: 홈페이지 DB `content_type` 코드(`exam_analysis` · `seminar_promo` 등). 표에 없는 타입은 `fallback`.
+- `notForPrompt`: 비교용·점검용 덱 — 프롬프트에 넣지 않는다(깃허브 사본에서도 뺀다).
+- 새 덱을 만들면 이 표에 한 줄 더한다. 부품 목록(PARTS.md)은 지금처럼 전부 넣는다 — 다른 덱의 부품도 설명을 보고 쓸 수 있다.
+
+**캐시 순서** — 모든 타입이 같은 앞부분을 같이 쓰게, 캐시 표시를 두 곳에:
+
+| 순서 | 내용 | 캐시 |
+|---|---|---|
+| 1 | 디자인 규칙 · 앱 규칙 · 부품 목록 (모든 타입 같음) | ✅ 표시 1 — 모든 학원·타입이 같이 씀 |
+| 2 | 예시 덱: always + 그 타입 덱 (타입마다 다름) | ✅ 표시 2 — 같은 타입끼리 같이 씀 |
+| 3 | 이번 카드 요청(학원 이름·섹션 내용) | ✗ |
+
+```js
+import TYPES from '…/examples/deck-types.json';
+const pick = (type) => [...new Set([...TYPES.always, ...(TYPES.types[type] ?? TYPES.fallback)])];
+// system = [규칙, 앱 규칙, { 부품 목록, cache_control: 1h }, { pick(type) 예시 덱들, cache_control: 1h }]
+```
+
+**어림 비용** (Sonnet 5.5, 덱 10장 = 10번 호출, 1달러 1,400원 — 실제 값은 홈페이지 `logAiUsage` 기록으로 확인):
+
+| | 예시 전부 (지금 키트 21벌) | 타입별 (이 표) |
+|---|---|---|
+| 매번 보내는 앞부분 | 약 9만~10만 토큰 | 약 3만 토큰 |
+| 덱 하나 | 약 $0.95 (1,300원) | 약 $0.55 (770원) |
+
+캐시 읽기·저장 단가는 위 '비용 감각'. 카드 내용 입력·출력(약 $0.36)은 어느 쪽이든 같다.

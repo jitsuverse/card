@@ -1,0 +1,130 @@
+<!-- 성적 우수자 후기 10장(2026-10-16) — 홍보형. 중2 수학 52점 → 94점 학생 이야기 + 학생·학부모 후기 + 과정 · 비결 · 상담 안내.
+     이름은 모두 가린 예시(김○○). 기준 공식: 제목 2줄 = 결론, 부연설명 1줄 = 근거. 시각 3장(전후 막대 · 포스트잇 한마디 · 전후 점 막대) + 정보 6장.
+     사진 스타일용 사진(사진 모음 pool:주제 — 덱마다 다른 사진, assets/config.js PHOTO_POOL): 표지 공부 책상, 학생 한마디 카드 사진 강조(필기하는 손), 도식이 작은 카드에 배경 후보. -->
+
+<!-- 1. 표지 -->
+<div class="kcard layout-cover" id="cover" data-bgimg="pool:desk">
+  <p class="cover-tag">성적 우수자 후기</p>
+  <h1 class="title">수학 52점에서<br>94점이 되기까지</h1>
+  <p class="sub">중2 학생·학부모 후기 · 에듀리치브레인</p>
+  <div data-photo="cover" data-icon="chat"></div>
+</div>
+
+<!-- 2. 시각 → 전후 막대 두 개 + 상승 칩, 지금 막대만 메인 -->
+<div class="kcard" id="a">
+  <div class="k-head"><h2 class="k-title">한 학기 만에<br>42점이 올랐어요</h2><p class="k-sub">1학기 진단 평가와 2학기 중간고사 비교</p></div>
+  <div class="k-body">
+    <div class="k-panel k-rise">
+      <div style="--v:52"><strong>52점</strong><i></i><span>1학기 진단</span></div>
+      <p class="k-rise-chip">+42점</p>
+      <div class="hl" style="--v:94"><strong>94점</strong><i></i><span>2학기 중간</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. 정보 → 사진 강조(필기하는 손, 사진 스타일에서만) + 학생 한마디 -->
+<div class="kcard" id="b">
+  <div class="k-head"><h2 class="k-title">틀린 이유를 적으니<br>같은 실수가 줄었어요</h2><p class="k-sub">42점 오른 김○○ 학생의 후기</p></div>
+  <div class="k-body">
+    <div class="k-photo-hero">
+      <div data-photo="photo" data-slot="b-photo" data-caption="공부하는 사진" data-src="pool:writing"></div>
+      <figure class="k-panel k-quote">
+        <i class="k-quote-mark"></i>
+        <blockquote>답만 고치지 않고<br>왜 틀렸는지 한 줄씩 쓰니까<br>시험에서 덜 흔들렸어요.</blockquote>
+        <figcaption>김○○ · 중2</figcaption>
+      </figure>
+    </div>
+  </div>
+</div>
+
+<!-- 4. 정보 → 시기 배지 줄 3개(월 + 한 일 + 설명), 마지막만 메인 -->
+<div class="kcard" id="c" data-bgimg="pool:exam">
+  <div class="k-head"><h2 class="k-title">세 단계로<br>차근차근 올라왔어요</h2><p class="k-sub">김○○ 학생의 한 학기</p></div>
+  <div class="k-body">
+    <div class="k-days">
+      <div class="k-panel"><em>3월</em><p><b class="k-h">진단 평가</b><span>빈 단원 찾고 개념 다시 정리</span></p></div>
+      <div class="k-panel"><em>6월</em><p><b class="k-h">오답 반복</b><span>오답 노트 주 2회 다시 풀기</span></p></div>
+      <div class="k-panel accent"><em>10월</em><p><b class="k-h">94점 달성</b><span>2학기 중간고사 최고 점수</span></p></div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. 시각 → 포스트잇 한마디 4장(학생 후기), 한 장만 메인 -->
+<div class="kcard" id="d">
+  <div class="k-head"><h2 class="k-title">학생들은<br>자신감이 생겼대요</h2><p class="k-sub">성적이 오른 학생들의 한마디</p></div>
+  <div class="k-body">
+    <div class="k-notes">
+      <p style="--r:-2deg">모르는 걸<br>바로 물어봐요<small>중1 학생</small></p>
+      <p class="hl" style="--r:1.5deg">수학이 처음으로<br>재미있어졌어요<small>중2 학생</small></p>
+      <p style="--r:1deg">서술형도 이제<br>끝까지 써요<small>중2 학생</small></p>
+      <p style="--r:-1.5deg">시험 전날에도<br>떨리지 않았어요<small>중3 학생</small></p>
+    </div>
+  </div>
+</div>
+
+<!-- 6. 정보 → 좌우로 번갈아 놓인 말풍선 4개(학부모 후기), 마지막 하나만 메인 -->
+<div class="kcard" id="e" data-bgimg="pool:help">
+  <div class="k-head"><h2 class="k-title">학부모님이 먼저<br>달라진 걸 느꼈어요</h2><p class="k-sub">학부모님 후기</p></div>
+  <div class="k-body">
+    <div class="k-says">
+      <p class="k-panel"><b>중2 어머니</b><span>숙제를 스스로 해요</span></p>
+      <p class="k-panel"><b>중1 아버지</b><span>질문이 많아졌어요</span></p>
+      <p class="k-panel"><b>중3 어머니</b><span>상담이 꼼꼼해요</span></p>
+      <p class="k-panel accent"><b>중2 아버지</b><span>성적표가 기다려져요</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- 7. 시각 → 큰 숫자 + 전후 점 막대 4줄(후기를 남긴 다른 학생) -->
+<div class="kcard" id="f">
+  <div class="k-head"><h2 class="k-title">다른 학생들도<br>20점 넘게 올랐어요</h2><p class="k-sub">후기를 남긴 학생 네 명의 점수</p></div>
+  <div class="k-body">
+    <div class="k-hero"><span class="k-big">+27점</span><p class="k-p">네 학생의<br>평균 상승 폭</p></div>
+    <div class="k-panel k-db-short">
+      <div class="k-db" style="--a:38;--b:83"><span>이○○</span><div class="k-db-track"><i></i></div><b>61 → 89</b></div>
+      <div class="k-db" style="--a:30;--b:80"><span>박○○</span><div class="k-db-track"><i></i></div><b>57 → 86</b></div>
+      <div class="k-db" style="--a:45;--b:87"><span>최○○</span><div class="k-db-track"><i></i></div><b>66 → 91</b></div>
+      <div class="k-db" style="--a:50;--b:88"><span>정○○</span><div class="k-db-track"><i></i></div><b>70 → 95</b></div>
+    </div>
+  </div>
+</div>
+
+<!-- 8. 정보 → 큰 숫자 + 머리 + 번호 이유 목록(후기에 많이 나온 비결) -->
+<div class="kcard" id="g" data-bgimg="pool:books">
+  <div class="k-head"><h2 class="k-title">후기마다 같은<br>세 가지가 나왔어요</h2><p class="k-sub">학생·학부모 후기에 가장 많이 나온 말</p></div>
+  <div class="k-body">
+    <div class="k-hero"><span class="k-big">31명</span><p class="k-p">후기 48명 중<br>오답 노트를 첫째로 꼽았어요</p></div>
+    <div class="k-panel k-reasons">
+      <p class="k-h">성적이 오른 비결</p>
+      <p><b>1</b><span>오답 노트에 틀린 이유까지</span></p>
+      <p><b>2</b><span>모르는 건 그 주 1:1 질문</span></p>
+      <p><b>3</b><span>매주 확인 테스트로 다시</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- 9. 정보 → 숫자 타일 2×2(설명 2줄), 평균 상승만 메인 -->
+<div class="kcard" id="h">
+  <div class="k-head"><h2 class="k-title">후기를 남긴 48명,<br>평균 18점 올랐어요</h2><p class="k-sub">2026 1학기 후기 설문 기준</p></div>
+  <div class="k-body">
+    <div class="k-tiles k-tiles-text">
+      <div class="hl"><b>+18점</b><span>후기 학생<br>평균 상승</span></div>
+      <div><b>48명</b><span>후기를<br>남긴 학생</span></div>
+      <div><b>96%</b><span>다른 학부모께<br>추천하고 싶다</span></div>
+      <div><b>92%</b><span>다음 학기도<br>계속 다닌다</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 10. 상담 안내 → 큰 숫자 + 라벨 · 값 안내 -->
+<div class="kcard" id="i" data-bgimg="pool:classroom">
+  <div class="k-head"><h2 class="k-title">다음 후기의 주인공,<br>상담부터 시작해요</h2><p class="k-sub">2학기 학습 상담 안내</p></div>
+  <div class="k-body">
+    <div class="k-hero"><span class="k-big">20분</span><p class="k-p">진단 결과로<br>빈 단원부터 짚어요</p></div>
+    <dl class="k-panel k-info">
+      <div><dt>대상</dt><dd>중학교 1~3학년</dd></div>
+      <div><dt>내용</dt><dd>진단 평가와 학습 계획</dd></div>
+      <div><dt>신청</dt><dd>전화 또는 문자 예약</dd></div>
+    </dl>
+  </div>
+</div>

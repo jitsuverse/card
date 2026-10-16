@@ -11,6 +11,14 @@ const luminance = (hex) => {
 };
 export const contrastText = (hex) => (luminance(hex) > 0.6 ? '#111111' : '#FFFFFF');
 
+// 학원 메인 컬러 적용 (2026-10-16 사용자 확정): 원장님이 학원 설정에 정해 둔 메인 컬러를 카드 메인 컬러로 쓴다.
+// 어떤 스타일을 골라도 메인만 학원 색으로 바뀐다. 너무 밝은 색(흰 도형 위에서 안 보임)이거나 형식이 틀리면 스타일의 메인을 그대로 둔다.
+// 홈페이지 lib/cardkit/options.js initialKitOptions(brandColor)와 같은 규칙.
+export function withBrandColor(opts, brand) {
+  if (!/^#[0-9a-f]{6}$/i.test(String(brand)) || luminance(brand) > 0.8) return opts;
+  return { ...opts, colors: { ...opts.colors, main: brand } };
+}
+
 // 두 색을 t 비율로 섞는다 (t=0 → a, t=1 → b)
 function mix(a, b, t) {
   const pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16);
@@ -57,6 +65,7 @@ export function themeVars(opts) {
     '--font-body': findFont(opts.fontBody).family,
     '--title-weight': strongWeightFor(findFont(opts.fontBody)), // 항목 제목·라벨 세미볼드 — 이 글자들은 본문 폰트로 쓰므로 본문 폰트 기준
     '--headline-weight': titleFont.headline ?? nearestWeight(titleFont, TYPOGRAPHY.headlineWeight), // 표지·본문 카드 제목 (Bold가 얇은 폰트는 font.headline)
+    '--figure-weight': strongWeightFor(titleFont), // 도식 영역의 큰 숫자·이름 등 제목 폰트 글자: 세미볼드(600, 없으면 700) — 카드 제목만 볼드
     '--body-head-weight': strongWeightFor(findFont(opts.fontBody)), // 본문 크기 소제목(## ) 굵기
     '--body-weight': TYPOGRAPHY.bodyWeight,
     '--main': c.main,
@@ -64,7 +73,7 @@ export function themeVars(opts) {
     '--bg': c.bg,
     // 어두운 배경: 메인 컬러를 오른쪽 위에서 은은하게 번지게 한 조명 하나. 밝은 배경은 없음
     '--bg-glow': isDark(c)
-      ? 'radial-gradient(80% 55% at 100% 0%, color-mix(in srgb, var(--main) 24%, transparent), transparent 100%)'
+      ? 'radial-gradient(95% 65% at 100% 0%, color-mix(in srgb, var(--main) 40%, transparent), transparent 100%)' // 2026-10-16 사용자: 더 잘 보이게 (24% → 40%, 범위 조금 넓게)
       : 'none',
     '--title': c.title,
     '--body': c.body,
@@ -125,14 +134,15 @@ export function bookMockup(img = {}, slot = '') { // 부품 키트(kit/)도 같�
 // 사진 틀: 주소가 있으면 사진(cover로 채움), 없으면 자리표시(아이콘 + 캡션)
 // withCaption: 사진 위 왼쪽 아래에 캡션 칩 표시
 // slot: 사진 자리 이름 — 미리보기에서 사진 자리를 클릭해 이미지를 넣을 때 어느 줄인지 찾는 데 쓴다
-// img.pos: 보이는 위치 [x%, y%] (사진을 끌어서 정함) · img.fit === 'contain': 전체 보기(잘리지 않게 칸 안에 다 넣고 남는 곳은 흰 바탕)
+// img.pos: 보이는 위치 [x%, y%] (사진을 끌어서 정함) · img.fit === 'contain': 원본 비율(잘리지 않게), 없거나 'cover': 칸에 맞춰 채움(기본)
+// img.fixed: fit을 정했으면 data-fit으로 남긴다
 export function photoFrame(img = {}, cls = '', withCaption = false, slot = '') {
   const { caption = '사진', src = '' } = img;
   const inner = src
-    ? `<img src="${esc(src)}" alt="${esc(caption)}">`
+    ? `<img src="${esc(src)}" alt="${esc(caption)}"${/^https:\/\/images\.unsplash\.com\//.test(src) ? ' crossorigin="anonymous"' : ''}>` // Unsplash는 CORS 허용 — PNG 내보내기 때 캔버스에 그려도 막히지 않게
     : `<div class="photo-placeholder">${PHOTO_ICON}<span>${plain(caption)}</span></div>`;
   const chip = withCaption && caption && src ? `<span class="photo-caption">${plain(caption)}</span>` : '';
-  return `<figure class="shape photo ${cls}${src ? ' has-img' : ''}${src && img.fit === 'contain' ? ' fit-contain' : ''}"${slot ? ` data-img="${slot}"` : ''}${scaleStyle(img.scale, 0, 0, img.pos)}>${inner}${chip}</figure>`;
+  return `<figure class="shape photo ${cls}${src ? ' has-img' : ''}${src && img.fit === 'contain' ? ' fit-contain' : ''}"${slot ? ` data-img="${slot}"` : ''}${img.fixed && img.fit ? ` data-fit="${img.fit}"` : ''}${scaleStyle(img.scale, 0, 0, img.pos)}>${inner}${chip}</figure>`;
 }
 
 export function cardBackground(style, i) { // 부품 키트(kit/)도 같은 배경을 쓴다

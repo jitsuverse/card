@@ -1,0 +1,136 @@
+<!-- 관리 프로그램 10장(2026-10-16) — 홍보형. 수업 밖 관리(출결 알림 · 숙제 · 오답 · 주간 리포트 · 상담 · 담임)를 학부모에게 소개.
+     기준 공식: 제목 2줄 = 결론, 부연설명 1줄 = 근거. 시각 3장(등하원 문자 · 오답 카드 · 주간 리포트) + 정보 6장. 이름은 가린 예시(김○○).
+     사진 스타일용 사진(사진 모음 pool:주제 — 덱마다 다른 사진, assets/config.js PHOTO_POOL): 표지 교실, 담임 카드 사진 강조(공부 돕기), 도식이 작은 카드에 배경 후보. -->
+
+<!-- 1. 표지 -->
+<div class="kcard layout-cover" id="cover" data-bgimg="pool:classroom">
+  <p class="cover-tag">관리 프로그램</p>
+  <h1 class="title">수업이 끝나도<br>관리는 이어져요</h1>
+  <p class="sub">출결부터 리포트까지 · 에듀리치브레인</p>
+  <div data-photo="cover" data-icon="check"></div>
+</div>
+
+<!-- 2. 정보 → 숫자 타일 2×2(설명 2줄), 오답 칸만 메인 -->
+<div class="kcard" id="a">
+  <div class="k-head"><h2 class="k-title">수업 밖 시간까지<br>네 가지로 챙겨요</h2><p class="k-sub">한 학생을 등원부터 주말까지 관리해요</p></div>
+  <div class="k-body">
+    <div class="k-tiles k-tiles-text">
+      <div><b>2번</b><span>하루 등원·하원<br>문자 알림</span></div>
+      <div><b>100%</b><span>수업 전<br>숙제 검사</span></div>
+      <div class="hl"><b>3번</b><span>틀린 문제<br>다시 풀기</span></div>
+      <div><b>1장</b><span>매주 보내는<br>학습 리포트</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. 시각 → 실제 등하원 문자(학원 ↔ 학부모) -->
+<div class="kcard" id="b">
+  <div class="k-head"><h2 class="k-title">등원과 하원은<br>바로 문자로 알려요</h2><p class="k-sub">학원에 잘 왔는지 기다리지 않아도 돼요</p></div>
+  <div class="k-body">
+    <div class="k-chat">
+      <div class="k-msg"><div><b class="k-who">학원</b><p class="k-bubble">김○○ 학생, 6시 2분에<br>등원했어요</p></div></div>
+      <div class="k-msg me"><div><b class="k-who">학부모</b><p class="k-bubble">네, 감사합니다</p></div></div>
+      <div class="k-msg"><div><b class="k-who">학원</b><p class="k-bubble">9시 30분 하원했어요.<br>오늘 숙제는 2쪽이에요</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. 정보 → 시기 배지 줄 3개, 마지막만 메인 -->
+<div class="kcard" id="c" data-bgimg="pool:books">
+  <div class="k-head"><h2 class="k-title">숙제는 그 주 안에<br>꼭 끝내고 넘어가요</h2><p class="k-sub">밀린 숙제가 쌓이지 않게 세 번 확인해요</p></div>
+  <div class="k-body">
+    <div class="k-days">
+      <div class="k-panel"><em>등원</em><p><b class="k-h">숙제 검사</b><span>수업 전 풀이까지 확인</span></p></div>
+      <div class="k-panel"><em>당일</em><p><b class="k-h">남아서 마무리</b><span>못 한 부분은 학원에서</span></p></div>
+      <div class="k-panel accent"><em>주말</em><p><b class="k-h">보충 확인</b><span>그 주 숙제 빠짐없이</span></p></div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. 시각 → 고리에 꿴 실제 오답 카드, 마지막 회차만 남음 -->
+<div class="kcard" id="d" data-bgimg="pool:writing">
+  <div class="k-head"><h2 class="k-title">틀린 문제는<br>세 번 다시 풀어요</h2><p class="k-sub">세 번 다 맞히면 오답 카드를 졸업해요</p></div>
+  <div class="k-body">
+    <div class="k-flash"><div class="k-flash-card">
+      <p class="k-h">오답 카드</p>
+      <p class="k-p">근의 공식 부호 실수</p>
+      <div class="k-flash-checks">
+        <div class="k-checkrow"><span class="k-check"></span>1일 뒤 다시 풀기</div>
+        <div class="k-checkrow"><span class="k-check"></span>1주 뒤 다시 풀기</div>
+        <div class="k-checkrow todo"><span class="k-check"></span>1달 뒤 다시 풀기</div>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- 6. 시각 → 실제 주간 리포트(머리 띠 메인), 오답 줄 강조 -->
+<div class="kcard" id="e">
+  <div class="k-head"><h2 class="k-title">매주 금요일,<br>리포트를 보내드려요</h2><p class="k-sub">출석 · 숙제 · 테스트 · 오답을 한 장에</p></div>
+  <div class="k-body">
+    <div class="k-panel k-report">
+      <p class="k-h">이번 주 학습 리포트</p>
+      <p><b>출석</b><i></i><em>3/3회</em></p>
+      <p><b>숙제 완료</b><i></i><em>100%</em></p>
+      <p><b>단원 테스트</b><i></i><em>88점</em></p>
+      <p class="hl"><b>남은 오답</b><i></i><em>3개</em></p>
+    </div>
+    <p class="k-label">※ 리포트에는 담임 선생님 코멘트가 함께 가요</p>
+  </div>
+</div>
+
+<!-- 7. 정보 → 한 칸 안 주기별 체크 목록 -->
+<div class="kcard" id="f">
+  <div class="k-head"><h2 class="k-title">상담은 기다리지 않고<br>먼저 연락드려요</h2><p class="k-sub">정해진 때마다 담임 선생님이 연락해요</p></div>
+  <div class="k-body">
+    <div class="k-panel k-cycle">
+      <div><b>매주</b><p><i data-ph="check-circle"></i>리포트와 한 줄 코멘트</p><p><i data-ph="check-circle"></i>숙제·출결 특이 사항</p></div>
+      <div><b>매달</b><p><i data-ph="check-circle"></i>10분 전화 상담</p><p><i data-ph="check-circle"></i>다음 달 학습 계획 조정</p></div>
+      <div><b>시험 후</b><p><i data-ph="check-circle"></i>성적 분석 상담</p><p><i data-ph="check-circle"></i>다음 시험 대비 계획</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- 8. 정보 → 숫자 세 칸 → 결론 칸(메인) -->
+<div class="kcard" id="g">
+  <div class="k-head"><h2 class="k-title">관리를 꾸준히 하니<br>점수가 따라왔어요</h2><p class="k-sub">지난 학기 중등부 120명 기준</p></div>
+  <div class="k-body">
+    <div class="k-panel k-stats3">
+      <p><strong>98%</strong><span>출석률</span></p>
+      <p><strong>96%</strong><span>숙제 완료율</span></p>
+      <p><strong>3회</strong><span>오답 다시 풀기</span></p>
+    </div>
+    <span class="k-down" data-ph="caret-down"></span>
+    <div class="k-panel accent k-verdict"><span class="k-big">+14점</span><p class="k-p">한 학기 뒤<br>평균 점수 상승</p></div>
+    <p class="k-label">※ 2026년 1학기 학교 시험 전후 비교</p>
+  </div>
+</div>
+
+<!-- 9. 정보 → 사진 강조(공부 돕기, 사진 스타일에서만) + 담임이 하는 일 / 사진이 빠지면 큰 숫자 -->
+<div class="kcard" id="h">
+  <div class="k-head"><h2 class="k-title">한 학생에게<br>담임 한 분이 붙어요</h2><p class="k-sub">과목 수업과 따로, 관리만 맡아요</p></div>
+  <div class="k-body">
+    <div class="k-hero k-nophoto-only"><span class="k-big">1명</span><p class="k-p">담임 한 분이<br>처음부터 끝까지</p></div>
+    <div class="k-photo-hero">
+      <div data-photo="photo" data-slot="h-photo" data-caption="공부를 돕는 사진" data-src="pool:help"></div>
+      <div class="k-panel k-reasons">
+        <p class="k-h">담임 선생님이 하는 일</p>
+        <p><b>1</b><span>숙제와 오답을 직접 확인</span></p>
+        <p><b>2</b><span>주간 리포트 코멘트 작성</span></p>
+        <p><b>3</b><span>매달 학부모 전화 상담</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 10. 상담 → 큰 숫자 + 안내 -->
+<div class="kcard" id="i" data-bgimg="pool:desk">
+  <div class="k-head"><h2 class="k-title">2주 동안 무료로<br>관리를 받아 보세요</h2><p class="k-sub">관리 프로그램 체험 신청 안내</p></div>
+  <div class="k-body">
+    <div class="k-hero"><span class="k-big">2주</span><p class="k-p">출결부터 리포트까지<br>모두 체험해요</p></div>
+    <dl class="k-panel k-info">
+      <div><dt>대상</dt><dd>중학교 1~3학년</dd></div>
+      <div><dt>내용</dt><dd>알림 · 숙제 · 오답 · 리포트</dd></div>
+      <div><dt>신청</dt><dd>전화 또는 문자 예약</dd></div>
+    </dl>
+  </div>
+</div>

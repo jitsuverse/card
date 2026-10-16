@@ -20,7 +20,7 @@ export const ICONS = {
 };
 
 // 2D 플랫: [톤, 패스, 옵션] — 면 위주, 선 없음, 모서리는 모두 둥글게
-// 톤: gray(옅은 회색 몸체) · grayDark(회색 그늘) · main(메인 컬러) · deep(진한 메인) · white
+// 톤: gray(옅은 회색 몸체) · grayDark(회색 그늘) · main(메인 컬러) · deep(진한 메인) · white · ink(메인 조각 위의 흰 조각)
 // 옵션: { t: transform, round: 다각형 모서리를 둥글게 만드는 같은 색 테두리 두께 }
 export const ICONS_2D = {
   bulb: [
@@ -48,7 +48,7 @@ export const ICONS_2D = {
   heart: [
     ['gray', rrect(12, 12, 76, 76, 20)],
     ['main', ICONS.heart, { t: 'translate(19 21) scale(0.62)', round: 8 }],
-    ['white', circle(36, 38, 4.5)],
+    ['ink', circle(36, 38, 4.5)],
   ],
   star: [ // 리본 배지
     ['gray', 'M37 58L28 90l10-6 6 10 7-34Z', { round: 6 }],
@@ -60,11 +60,11 @@ export const ICONS_2D = {
   chat: [
     ['gray', 'M10 16h54v36H34L22 63V52H10Z', { round: 12 }],
     ['main', 'M38 42h52v34H80v11L67 76H38Z', { round: 12 }],
-    ['white', `${rrect(47, 52, 34, 5, 2.5)} ${rrect(47, 63, 22, 5, 2.5)}`],
+    ['ink', `${rrect(47, 52, 34, 5, 2.5)} ${rrect(47, 63, 22, 5, 2.5)}`],
   ],
   target: [
     ['gray', circle(50, 50, 42)],
-    ['white', circle(50, 50, 30)],
+    ['ink', circle(50, 50, 30)],
     ['main', circle(50, 50, 20)],
     ['deep', circle(50, 50, 9)],
   ],
@@ -82,7 +82,7 @@ export const ICONS_2D = {
   ],
   clock: [
     ['gray', circle(50, 50, 42)],
-    ['white', circle(50, 50, 31)],
+    ['ink', circle(50, 50, 31)],
     ['grayDark', `${rrect(48, 22, 4, 7, 2)} ${rrect(48, 71, 4, 7, 2)} ${rrect(22, 48, 7, 4, 2)} ${rrect(71, 48, 7, 4, 2)}`],
     ['deep', rrect(47, 29, 6, 24, 3)],
     ['main', rrect(47, 47, 22, 6, 3)],
@@ -101,7 +101,7 @@ export const ICONS_2D = {
   rocket: [
     ['main', 'M32 52L18 72h16Z M68 52l14 20H66Z', { round: 6 }],
     ['gray', 'M50 8q20 18 18 54H32Q30 26 50 8Z', { round: 6 }],
-    ['white', circle(50, 36, 9)],
+    ['ink', circle(50, 36, 9)],
     ['main', circle(50, 36, 5)],
     ['deep', rrect(40, 62, 20, 8, 4)],
     ['main', 'M43 74h14l-7 16Z', { round: 6 }],
@@ -123,8 +123,20 @@ function shade(hex, amt) {
 }
 
 // 아이콘은 2D 플랫 한 가지만 쓴다
-export function renderIcon(name, color) {
-  const tones = { gray: '#E8EAED', grayDark: '#D3D6DB', main: color, deep: shade(color, -0.4), white: '#FFFFFF' };
+// 아이콘 회색 몸체는 놓이는 바탕에 따라 고른다(2026-10-16 사용자): 밝은 바탕(흰색·옅은 회색·파스텔)에서는 옅은 회색이 묻혀서 한 단계 짙은 회색,
+// 어둡거나 색이 진한 바탕(다크·메인 컬러 표지)에서는 흰색 몸체. bg를 안 주면 예전 색.
+const lum = (hex) => { const n = parseInt(String(hex).replace('#', '').slice(0, 6), 16); return Number.isFinite(n) ? (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255 : 1; };
+function grayTones(bg, onMain) {
+  // 메인 컬러 표지(bg = 메인 컬러): 몸체는 메인에 흰색을 섞은 불투명 색 — 반투명이면 겹친 조각이 비쳐서(2026-10-17 사용자)
+  if (onMain) return { gray: shade(bg, 0.32), grayDark: shade(bg, 0.18) };
+  if (!bg) return { gray: '#E8EAED', grayDark: '#D3D6DB' };
+  const l = lum(bg);
+  if (l > 0.82) return { gray: '#D6DAE0', grayDark: '#BCC2CB' }; // 밝은 바탕: 짙은 회색
+  return { gray: '#FFFFFF', grayDark: '#E3E6EB' }; // 어둡거나 진한 바탕: 흰색
+}
+// onMain이면 bg에 메인 컬러(아이콘이 놓인 바탕)를 넘긴다.
+export function renderIcon(name, color, bg, onMain = false) {
+  const tones = { ...grayTones(bg, onMain), main: color, deep: onMain ? shade(bg, -0.3) : shade(color, -0.4), white: '#FFFFFF', ink: onMain ? bg : '#FFFFFF' }; // ink = 메인 조각 위에 놓인 흰 조각 — 메인 표지는 메인 조각이 흰색이라 메인 컬러로(2026-10-17) // 메인 표지의 진한 조각 = 메인을 어둡게(흰 강조색을 어둡게 하면 엉뚱한 회색)
   const parts = (ICONS_2D[name] ?? ICONS_2D.star).map(([tone, pd, o = {}]) => {
     const c = tones[tone];
     const round = o.round ? ` stroke="${c}" stroke-width="${o.round}" stroke-linejoin="round"` : '';

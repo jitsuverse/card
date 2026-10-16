@@ -11,7 +11,7 @@
   width: 1080px; height: 1440px; box-sizing: border-box; position: relative; overflow: hidden;
   padding: var(--content-padding); display: flex; flex-direction: column;
   background: var(--bg-glow, none), var(--bg); font-family: var(--font-body); /* 어두운 배경 = 메인 컬러 조명 */ color: var(--body);
-  word-break: keep-all;
+  word-break: keep-all; text-wrap: pretty; /* 줄바꿈: 낱말 단위 + 마지막 줄이 한두 낱말만 남지 않게(2026-10-16 사용자) */
 }
 .kcard * { box-sizing: border-box; margin: 0; }
 .kcard, .kcard * { letter-spacing: var(--ls); } /* 자간 -3%: 요소마다 자기 글자 크기 기준으로 */
@@ -21,6 +21,7 @@
 .kcard { font-size: var(--fs-body); }
 .kcard :where(b, strong, dt, th) { color: var(--title); }
 .kcard :where(dt, th) { font-weight: var(--title-weight); } /* 라벨 칸은 세미볼드 */
+.kcard :where(b, strong) { font-weight: var(--title-weight); } /* 굵은 태그 기본 = 세미볼드(브라우저 기본 볼드 ✗, 2026-10-16 사용자: 도식은 세미볼드) — 부품 규칙이 있으면 그쪽이 이긴다 */
 .kcard :where(small, sub, sup) { font-size: inherit; } /* 브라우저 기본 축소(5단계 밖) 막기 */
 .kcard :where(.hl, .accent, .me, .k-hl, .k-mark) :where(b, strong, dt, th) { color: inherit; } /* 강조 줄·메인 바탕 안에서는 부모 색(메인·on-main)을 따른다 */
 .kcard :where(.k-db > b, .k-key b, .k-window-bar b) { color: inherit; } /* 보통 굵기로 쓰는 값(b) — 굵기와 색 짝 규칙대로 본문 컬러. 새 부품에서 b를 보통 굵기로 쓰면 여기에 넣는다 */
@@ -47,7 +48,7 @@
 .accent .k-h, .accent .k-p { color: var(--on-main); }
 .k-hl { color: var(--main); font-weight: 700; }                                                          /* 문장 속 강조 단어 */
 .k-strike { text-decoration: line-through; text-decoration-color: var(--main); text-decoration-thickness: 4px; opacity: .55; }
-.k-mark { background: linear-gradient(transparent 58%, color-mix(in srgb, var(--main) 28%, transparent) 58%); color: var(--title); font-weight: 700; }
+.k-mark { background: linear-gradient(transparent 58%, color-mix(in srgb, var(--main) 28%, transparent) 58%); color: var(--title); font-weight: var(--title-weight); }
 
 .k-big { font-weight: 800; color: var(--main); } /* 핵심 숫자 */
 
@@ -452,8 +453,10 @@
 .kcard :is(.k-time, .k-cal span, .k-cal b, .k-legend, .k-db, .k-key p, .k-figs span, .k-faq p, .k-ticket-body dt, .k-ticket-body dd) { font-size: var(--fs-body); }
 .kcard :is(.k-time, .k-cal span, .k-cal b, .k-legend, .k-db, .k-key p, .k-figs span, .k-faq > div > p:first-child, .k-ticket-body dt, .k-ticket-body dd) { line-height: var(--lh-title); }
 /* 핵심 숫자 + 설명 한 줄 묶음 (도식 위) */
-.k-hero { display: flex; align-items: flex-end; gap: 32px; margin-bottom: 12px; }
-.k-hero .k-p { padding-bottom: 10px; color: var(--title); }
+.k-hero { display: flex; align-items: center; gap: 32px; margin-bottom: 12px; }
+.k-hero .k-p { color: var(--title); }
+/* 큰 숫자를 옆 두 줄 글의 세로 가운데에(사용자 2026-10-16): 줄 높이의 위아래 빈 곳을 잘라 눈에 보이는 글자끼리 가운데 맞춤 */
+.k-hero > :is(.k-big, .k-p) { text-box: trim-both cap alphabetic; }
 
 /* ===== 부품 추가 (4차: 숫자 타일·순위 막대·반원 게이지·시상대·포스트잇·비교표·월간 달력) ===== */
 /* 숫자 타일 2×2: 강조 숫자 + 설명 (하나만 메인 컬러) */
@@ -709,9 +712,19 @@
 .k-seal { position: absolute; right: 64px; bottom: 44px; width: 120px; height: 120px; display: grid; place-items: center; border-radius: 50%; border: 5px solid var(--main); color: var(--main); font-weight: var(--title-weight); transform: rotate(-10deg); }
 
 /* 쿠폰: 점선 테두리 · 왼쪽(이름 + 큰 값) | 점선 | 오른쪽 안내 줄 */
-.k-coupon { display: grid; grid-template-columns: 1fr 1.3fr; border: 4px dashed var(--arrow); border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow); }
-.k-coupon > div { padding: 56px 40px; }
-.k-coupon > div + div { border-left: 4px dashed var(--arrow); }
+/* 쿠폰(2026-10-16 사용자 — 더 쿠폰처럼): 왼쪽 떼는 쪽 = 메인 면(강조 한 곳), 가운데 점선 절취선 + 위아래 반원 홈,
+   양 끝 물결 테두리(바탕색 반원). 홈·물결은 바탕색(--hole)으로 칠해 뚫린 것처럼 — 판 배경에서는 판 색 */
+.k-coupon { --hole: var(--bg); --notch: 30px; --cr: min(var(--r-lg), 20px); position: relative; display: grid; grid-template-columns: 42% 58%; border-radius: var(--cr); background: var(--surface); box-shadow: var(--shadow); }
+.k-coupon::before, .k-coupon::after { content: ''; position: absolute; left: 42%; width: calc(var(--notch) * 2); height: calc(var(--notch) * 2); margin-left: calc(var(--notch) * -1); border-radius: 50%; background: var(--hole); z-index: 2; }
+.k-coupon::before { top: calc(var(--notch) * -1); } .k-coupon::after { bottom: calc(var(--notch) * -1); }
+.k-coupon > div { position: relative; padding: 64px 44px; }
+.k-coupon > div:first-child { padding-inline: 30px; }
+.k-coupon > div:first-child { background: var(--main); border-radius: var(--cr) 0 0 var(--cr); display: flex; flex-direction: column; justify-content: center; text-align: center; }
+.k-coupon > div:first-child :is(b.k-name, .k-big, span) { color: var(--on-main); }
+.k-coupon > div + div { border-left: var(--line-width) dashed color-mix(in srgb, var(--body) 35%, transparent); border-radius: 0 var(--cr) var(--cr) 0; }
+.k-coupon > div::before { content: ''; position: absolute; top: 28px; bottom: 28px; width: 14px; background: radial-gradient(circle at var(--sx) 50%, var(--hole) 0 13px, transparent 14px) 0 0 / 14px 40px space; } /* 물결 테두리 */
+.k-coupon > div:first-child::before { left: 0; --sx: 0; } .k-coupon > div + div::before { right: 0; --sx: 100%; }
+.kcard:is([data-card=panel], [data-card=outline]) .k-coupon { --hole: var(--panel-fill); background: var(--bg); }
 .k-coupon b.k-name { display: block; font-weight: var(--title-weight); color: var(--title); }
 .k-coupon .k-big { display: block; margin: 12px 0 4px; }
 .k-coupon span:not(.k-big) { color: var(--body); }
@@ -746,7 +759,6 @@
 .k-dial::before { content: ''; position: absolute; left: 50%; top: -26px; width: 84px; height: 40px; translate: -50% 0; border-radius: 12px 12px 0 0; background: var(--surface); z-index: -1; } /* 손잡이 */
 .k-dial > div { width: 100%; height: 100%; border-radius: 50%; display: grid; place-items: center; position: relative; }
 .k-dial > div::before { content: ''; position: absolute; inset: 64px; border-radius: 50%; background: var(--surface); }
-.dark .k-dial > div::before { background: color-mix(in srgb, #FFFFFF 10%, var(--bg)); }
 .k-dial strong { position: relative; color: var(--title); }
 .k-timer-key { flex: 1; }
 .k-timer-key p { display: flex; align-items: center; gap: 16px; padding: 22px 0; border-top: 2px solid var(--line); }
@@ -770,17 +782,23 @@
 .k-graph-x span { position: absolute; translate: -50% 0; white-space: nowrap; }
 
 /* 오답 카드 링: 뒤에 두 장이 비스듬히 겹친 카드 + 왼쪽 위 구멍과 고리 / 다 푼 날은 체크, 남은 날은 빈 원 */
-.k-flash { position: relative; align-self: center; width: 640px; margin-top: 24px; }
+.k-flash { position: relative; align-self: center; width: min(800px, calc(100% - 48px)); margin-top: 24px; } /* 2026-10-16 사용자: 640은 작음 → 영역 폭 가까이 */
 .k-flash::before, .k-flash::after { content: ''; position: absolute; inset: 0; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow); }
-.k-flash::before { rotate: 4deg; translate: 14px 6px; }
-.k-flash::after { rotate: -3deg; translate: -10px 10px; }
+.k-flash::before { rotate: 4deg; translate: 18px 8px; }
+.k-flash::after { rotate: -3deg; translate: -14px 14px; }
 .dark .k-flash::before, .dark .k-flash::after { background: color-mix(in srgb, #FFFFFF 6%, var(--bg)); }
-.k-flash-card { position: relative; z-index: 1; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow); padding: 52px 56px 52px 128px; }
+.k-flash-card { position: relative; z-index: 1; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow); padding: 80px 64px 84px 136px; --hole: var(--bg); }
 .dark .k-flash-card { background: color-mix(in srgb, #FFFFFF 10%, var(--bg)); }
-.k-flash-card::before { content: ''; position: absolute; left: 48px; top: 52px; width: 36px; height: 36px; border-radius: 50%; background: var(--bg); box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.12); } /* 구멍 */
-.k-flash-card::after { content: ''; position: absolute; left: 34px; top: -22px; width: 64px; height: 98px; border-radius: 32px; border: 8px solid var(--arrow); border-bottom-color: transparent; rotate: -8deg; } /* 고리 */
-.k-flash-card .k-p { margin-top: 8px; }
-.k-flash-checks { display: flex; flex-direction: column; gap: 22px; margin-top: 36px; padding-top: 32px; border-top: 2px solid var(--line); }
+.k-flash-card::before { content: ''; position: absolute; left: 48px; top: 64px; bottom: 64px; width: 40px; /* 왼쪽 펀치 구멍 줄(2026-10-16 사용자: 클립 빼고 구멍 여러 개) — 높이에 맞춰 고르게(space) */
+  background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--title) 6%, var(--hole)) 0 19.5px, transparent 20.5px) 0 0 / 40px 96px space; }
+.k-flash-card .k-p { margin-top: 14px; }
+/* 카드를 800으로 키운 만큼 안도 키운다(2026-10-16 사용자): 오답 내용 = 항목 제목 46, 머리 '오답 카드' = 본문 38 메인 라벨, 체크 52 */
+.kcard .k-flash-card > .k-h { font-size: var(--fs-body); }
+.kcard .k-flash-card > .k-p { font-size: var(--fs-heading); font-weight: var(--title-weight); color: var(--title); line-height: var(--lh-title); }
+.k-flash-checks .k-checkrow { gap: 22px; }
+.k-flash-checks .k-check { width: 52px; height: 52px; }
+.k-flash-checks .k-checkrow.todo .k-check { border-width: var(--line-width); }
+.k-flash-checks { display: flex; flex-direction: column; gap: 28px; margin-top: 48px; padding-top: 48px; border-top: var(--line-width) solid var(--line); }
 .k-checkrow.todo .k-check { background: none; border: 3px solid color-mix(in srgb, var(--body) 30%, transparent); }
 .k-checkrow.todo .k-check::after { content: none; }
 
@@ -800,7 +818,7 @@
 /* 판 배경(카드형·테두리형): 판 위 사물은 배경색으로 (흰 판 위에 흰 사물이 묻히지 않게) */
 .kcard:is([data-card=panel], [data-card=outline]) :is(.k-dial, .k-flash-card, .k-flash::before, .k-flash::after, .k-daypad, .k-dial::before) { background: var(--bg); }
 .kcard:is([data-card=panel], [data-card=outline]) .k-dial > div::before { background: var(--panel-fill); }
-.kcard:is([data-card=panel], [data-card=outline]) .k-flash-card::before { background: var(--panel-fill); }
+.kcard:is([data-card=panel], [data-card=outline]) .k-flash-card { --hole: var(--panel-fill); }
 .kcard:is([data-card=panel], [data-card=outline]) .k-daypad { box-shadow: 0 12px 0 -6px color-mix(in srgb, var(--body) 10%, var(--bg)), 0 24px 0 -12px color-mix(in srgb, var(--body) 18%, var(--bg)); }
 .kcard:is([data-card=panel], [data-card=outline]) .k-daypad::before { background: radial-gradient(circle at 30% 50%, var(--panel-fill) 9px, transparent 10px), radial-gradient(circle at 70% 50%, var(--panel-fill) 9px, transparent 10px), color-mix(in srgb, var(--body) 40%, var(--bg)); }
 
@@ -1189,9 +1207,9 @@
 .k-essay .accent span { color: var(--on-main); }
 
 /* 전후 막대: 두 막대 + 가운데 상승 칩, 뒤 막대만 메인 */
-.k-rise { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; height: 600px; padding: 56px 60px 40px; }
+.k-rise { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; min-height: 600px; padding: 56px 60px 40px; } /* 높이 고정 ✗ — 막대가 100에 가까우면 아래 라벨이 도형 밖으로 나갔다(2026-10-16) */
 .k-rise > div { display: flex; flex-direction: column; align-items: center; gap: 18px; }
-.k-rise i { width: 170px; height: calc(var(--v) * 4px); border-radius: var(--r-lg) var(--r-lg) 0 0; background: var(--toy); }
+.k-rise i { width: 170px; height: calc(var(--v) * 3.6px); border-radius: var(--r-lg) var(--r-lg) 0 0; background: var(--toy); }
 .k-rise .hl i { background: var(--main); }
 .k-rise .hl strong { color: var(--main); }
 .k-rise span { color: var(--body); padding-top: 14px; align-self: stretch; text-align: center; border-top: 2px solid var(--line); }
@@ -1574,6 +1592,9 @@
 .k-quote figcaption { margin-top: calc(48px * var(--air, 1)); }
 .k-checks { padding-block: calc(16px * var(--air, 1)); }
 .k-checks p { padding-block: calc(30px * var(--air, 1)); }
+.k-flash-checks { gap: calc(28px * var(--air, 1)); }
+.k-proof p { padding-top: calc(26px * var(--air, 1)); padding-bottom: calc(18px * var(--air, 1)); }
+.k-proof p:has(.k-ins) { padding-top: 60px; } /* 끼워 넣기 글자 자리는 그 줄에만, 글자 높이만큼 고정 — --air를 곱하면 도형 위가 휑해짐 (2026-10-16 사용자) */
 .k-areas { padding-block: calc(20px * var(--air, 1)); }
 .k-areas > div { padding-block: calc(22px * var(--air, 1)); }
 .k-areas p { margin-bottom: calc(6px * var(--air, 1)); }
@@ -1604,7 +1625,7 @@
 .kcard.with-photo .k-body > .k-rows:not(.k-panel) { background: color-mix(in srgb, var(--bg) 82%, transparent); border-radius: var(--r-sm); padding-inline: 32px; backdrop-filter: blur(6px); }
 /* 표지 */
 .layout-cover > .card-photo { top: 0; }
-.layout-cover > .card-photo::after { background: linear-gradient(to bottom, rgb(0 0 0 / .35) 0%, rgb(0 0 0 / .45) 50%, rgb(0 0 0 / .7) 100%); }
+.layout-cover > .card-photo::after { background: linear-gradient(to top, rgb(0 0 0 / .9) 0%, rgb(0 0 0 / .82) 35%, rgb(0 0 0 / .7) 58%, rgb(0 0 0 / .42) 76%, rgb(0 0 0 / .14) 90%, rgb(0 0 0 / 0) 100%); } /* 아래에서 위로 옅어지는 검은 그라데이션 — 제목이 있는 아래쪽만, 위쪽 사진은 그대로 (사용자 2026-10-16) */
 .layout-cover.with-photo .title { color: #FFFFFF; }
 .layout-cover.with-photo .cover-tag { color: var(--main); } /* 키워드 태그는 사진 위에서도 메인 컬러 (사용자 2026-10-15) */
 .layout-cover.with-photo :is(.sub, .note) { color: rgb(255 255 255 / .85); opacity: 1; }
@@ -1625,6 +1646,7 @@
 
 /* 사진 묶음 아래에 글(줄 목록 등)이 붙으면 사진 높이가 줄어 넘치지 않는다(최소 360) — 사진 점검 덱 d */
 .k-body > .k-photoset { flex-shrink: 1; min-height: 360px; }
+.k-body > .k-photoset:not(:only-child) { height: 480px; } /* 아래 글이 붙으면 600 → 480: 부연설명과의 여백이 다른 카드만큼(약 105px) 남게 */
 .k-photo-hero > .photo:not(.has-img) .photo-placeholder { padding-bottom: 110px; } /* 빈 자리 안내는 겹친 도형에 가리지 않는 위쪽에 */
 /* 사진 묶음만 있는 카드: 위아래 여백이 남으므로 사진을 더 크게(600 → 740, 사용자 2026-10-15) */
 .k-body > .k-photoset:only-child { height: 740px; }
@@ -1647,3 +1669,133 @@
 .k-photoset[data-layout=rows] { display: block; position: relative; }
 .k-photoset[data-layout=rows] > .photo { position: absolute; }
 .kcard .shape.photo.has-img.fit-contain { background: var(--surface); box-shadow: var(--shadow); }
+
+/* 사진 묶음 안의 학습자료 사진: 칸이 원본 비율이라 여백 없이 그대로 (전체 보기 흰 여백은 사진 강조용) */
+.k-photoset .photo.fit-contain img { object-fit: cover; padding: 0; }
+.kcard .k-photoset .shape.photo.has-img.fit-contain { background: none; box-shadow: none; }
+/* 배경 사진(사진 스타일)을 '원본 비율로' 하면 여백 없이 사진 전체 */
+.kcard > .card-photo.fit-contain img { padding: 0; }
+/* 사진 강조의 원본 비율 사진: 흰 틀 없이 사진만(틀 크기는 fit.js fitContainPhotos), 확대·축소는 틀째라 사진 자체는 그대로 */
+.kcard .k-photo-hero > figure.photo.has-img.fit-contain { background: none; box-shadow: var(--shadow); }
+.k-photo-hero > .photo.fit-contain img { object-fit: cover; padding: 0; transform: none; }
+.k-photo-hero:has(> .photo.fit-contain) > .k-panel { margin-top: -60px; } /* 사진이 작아질 수 있어 겹침을 줄인다 */
+.k-photo-hero > .photo.shrunk img { transform: none; } /* 채우기 사진을 줄이면 틀째 줄어들어(fitContainPhotos) 사진 자체는 그대로 */
+.k-photo-hero:has(> .photo.shrunk) > .k-panel { margin-top: -60px; } /* 줄인 사진은 겹침을 줄여 덜 가린다 */
+
+/* 두 힘 나란히 .k-duo (시험분석 총평): 칸마다 이름(46) + 설명 2줄, 결정적인 쪽만 메인(.accent) — 2026-10-16 */
+.k-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.k-duo > .k-panel { display: flex; flex-direction: column; gap: calc(20px * var(--air, 1)); padding: calc(56px * var(--air, 1)) 48px; }
+.k-duo > .k-panel > span { color: var(--body); line-height: var(--lh-body); }
+.k-duo > .k-panel.accent > :is(b, span) { color: var(--on-main); }
+.k-duo + .k-pairs { margin-top: calc(24px * var(--air, 1)); }
+
+/* 대화 말한 사람 표시(.k-who): 말풍선 위 — 본문 크기 · 세미볼드 · 제목 컬러 (학부모 가이드) */
+.k-msg > div { display: flex; flex-direction: column; gap: 10px; }
+.k-msg.me > div { align-items: flex-end; }
+.kcard .k-who { font-weight: var(--title-weight); color: var(--title); padding-inline: 8px; }
+
+/* 흰 도형 안 줄 목록: 줄 사이만 넉넉하게(--air), 도형 위아래 안쪽 여백은 좌우와 같게 고정 — 위아래가 늘어나 어색하지 않게 (사용자 2026-10-16) */
+.k-areas, .k-checks { padding-block: 44px; }
+.k-areas > div:first-child, .k-checks > p:first-child { padding-top: 0; }
+.k-areas > div:last-child, .k-checks > p:last-child { padding-bottom: 0; }
+.k-checks > p:first-child { border-top: 0; }
+
+/* 표지 정렬 '아래' — 이미지는 1:1 영역 위쪽, 글자(아래)와 겹치지 않게 (사용자 2026-10-16) */
+.layout-cover[data-align=bottom] > .cover-icon { width: 300px; height: 300px; rotate: 8deg; } /* 아이콘: 조금 작게 + 오른쪽으로 살짝 기울임 */
+.layout-cover[data-align=bottom] > .cover-book .book { height: 360px; } /* 교재: 그림자·기울기까지 1:1 영역 안 */
+.layout-cover[data-align=bottom] > .cover-book { top: calc(var(--cover-safe-top) + var(--cover-inset) + 8px); }
+/* 강사: 1:1 영역 위쪽에 서고, 아래는 투명하게 사라진다(중간에 뚝 끊기지 않게) */
+.layout-cover[data-align=bottom] .cover-teacher { top: calc(var(--cover-safe-top) + var(--cover-inset)); bottom: auto; height: 560px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%); mask-image: linear-gradient(to bottom, #000 62%, transparent 100%); }
+.layout-cover[data-align=bottom] .cover-teacher-backdrop { top: calc(var(--cover-safe-top) + var(--cover-inset) - 40px); bottom: auto; right: 10px; width: 600px; height: 600px; }
+
+/* 등급 막대 비교 .k-gradebar (입시칼럼 a): 줄마다 이름 + 1등급 비율, 막대 칸 폭 = 등급 비율(style flex). 1등급 칸만 진하게, 강조 줄(.hl)의 1등급만 메인 — 2026-10-16 */
+.k-gradebar { display: flex; flex-direction: column; gap: calc(48px * var(--air, 1)); padding: 56px 48px; }
+.k-gradebar p { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
+.k-gradebar em { font-style: normal; color: var(--body); }
+.k-gradebar .hl em { color: var(--main); font-weight: var(--title-weight); }
+.k-gb { display: flex; gap: 6px; height: 72px; }
+.k-gb i { min-width: 0; border-radius: min(var(--r-sm), 12px); background: var(--track); }
+.k-gb i:first-child { background: color-mix(in srgb, var(--body) 45%, var(--surface)); }
+.hl .k-gb i:first-child { background: var(--main); }
+.k-gradebar + * { margin-top: 0; }
+/* 동그라미(메인 테두리)에 붙은 팁은 메인 컬러로 — 표시와 설명이 한 짝으로 보이게 (사용자 2026-10-16) */
+.k-circle > .k-tip { background: var(--main); color: var(--on-main); }
+.k-circle > .k-tip::after { border-top-color: var(--main); }
+/* 영역 설명 칸의 오른쪽 값(em): 색은 본문 컬러 그대로, 굵기만 세미볼드 (사용자 2026-10-16 — 글자 색·굵기 짝 규칙의 예외) */
+.k-areas > div:not(.hl) em { font-weight: var(--title-weight); }
+/* Q&A 칸 사이도 남는 자리만큼 넉넉하게(--air) — 칸 안 여백은 고정 (사용자 2026-10-16: 자리가 남는데 다닥다닥 ✗) */
+.k-faq:not(.tight) { gap: calc(20px * var(--air, 1)); }
+/* 결과지·성적표 머리 띠는 메인 컬러 — 메인 컬러가 적은 카드의 강조 한 곳 (사용자 2026-10-16). 빨간 펜 동그라미는 테두리라 겹치지 않음 */
+.k-report > .k-h { background: var(--main); color: var(--on-main); }
+/* 사진을 뺀 사진 강조 카드(다른 스타일)에서만 보이는 보충 큰 숫자 — 자리가 비지 않게 */
+.kcard:not(.no-photo) .k-nophoto-only { display: none; }
+/* 결과지 맨 아래 줄은 아래 패딩 없이 — 도형 아래 여백 = 좌우 여백 (사용자 2026-10-16) */
+.k-report > p:last-child { padding-bottom: 0; }
+.k-report { padding-bottom: 40px; }
+/* 이유·번호 목록 칸(.k-reasons)도 같은 원칙: 위아래 안쪽 여백 고정(44), 남는 자리는 줄 사이에만 (사용자 2026-10-16) */
+.k-reasons { padding-block: 44px; }
+.k-reasons > p:last-child { padding-bottom: 0; }
+/* 이름 타일 .k-names: 숫자가 아니라 이름이라 제목 폰트 대신 본문 폰트 · 46 (성적 우수자 c) */
+.kcard .k-tiles.k-names b { font-family: var(--font-body); font-size: var(--fs-heading); font-weight: var(--title-weight); }
+
+/* 명단표 .k-roster (성적 우수자 c, 2026-10-16): 메인 머리 띠(제목 + 시험 이름) + 줄마다 이름 · 학교 학년 · 과목 칩 · 점수. 상장·게시판 명단처럼 */
+.k-roster { padding: 0 48px 32px; overflow: hidden; }
+.k-roster-head { display: flex; align-items: baseline; justify-content: space-between; margin: 0 -48px 8px; padding: 22px 48px; background: var(--main); }
+.kcard .k-roster-head b { color: var(--on-main); font-weight: var(--title-weight); font-size: var(--fs-heading); line-height: var(--lh-title); }
+.kcard .k-roster-head span { color: var(--on-main); }
+.k-roster > p:not(.k-roster-head) { display: grid; grid-template-columns: 150px 1fr auto 110px; align-items: center; gap: 20px; padding: calc(16px * var(--air, 1)) 0; }
+.k-roster > p:not(.k-roster-head) + p { border-top: 2px solid var(--line); }
+.kcard .k-roster > p:not(.k-roster-head) b { font-weight: var(--title-weight); color: var(--title); line-height: var(--lh-title); }
+.kcard .k-roster > p:not(.k-roster-head) > span { color: var(--body); line-height: var(--lh-title); }
+.k-roster em { font-style: normal; padding: 4px 18px; border-radius: min(var(--r-sm), 12px); background: var(--toy); color: var(--body); line-height: var(--lh-title); }
+.kcard .k-roster strong { justify-self: end; font-family: var(--font-title); font-size: var(--fs-heading); font-weight: var(--headline-weight); color: var(--title); line-height: var(--lh-title); }
+
+/* 비율 블록 + 아래 보조 줄 목록(학교분석 e, 2026-10-16): 블록 높이를 줄여 보조 목록 자리를 낸다 */
+.k-blocks.k-blocks-short { height: 420px; }
+
+/* 말풍선 강조 한 개(2026-10-16 사용자 — 메인 컬러가 하나도 없는 카드 ✗): <p class="k-panel accent"> = 메인 바탕 + --on-main 글자 */
+.kcard .k-says > .accent :is(b, span) { color: var(--on-main); }
+.k-says > .accent b { border-right-color: color-mix(in srgb, var(--on-main) 35%, transparent); }
+
+/* ===== 메인 컬러 한 곳 이상 (2026-10-16 사용자 — 메인 컬러가 하나도 없는 카드 ✗, kit-check가 잡는다) =====
+   메인이 옅은 색(color-mix)으로만 들어가던 부품에 강조 한 곳을 진한 메인으로. 목록 부품은 강조 줄에 .hl */
+.kcard :is(.k-rows > p.hl, .k-pairs > p.hl b, .k-figs > p.hl b) { color: var(--main); }
+.kcard .k-rows > p.hl { font-weight: var(--title-weight); }
+.kcard .k-notes > p.hl, .kcard:is([data-card]) .k-notes > p.hl { background: var(--main); color: var(--on-main); } /* 포스트잇 강조 장 = 메인 면(사용자 2026-10-16), 판 배경에서도 */
+.kcard .k-notes > p.hl small { color: var(--on-main); }
+.kcard .k-vocab-word b { color: var(--main); }                     /* 어휘 카드: 단어 */
+.kcard .k-flash-card > .k-h { color: var(--main); }                /* 오답 카드: 머리 */
+.kcard .k-curri > .k-panel.accent { color: var(--on-main); }       /* 학년 × 학기 표: 강조 칸 */
+.kcard .k-wb-key .t span { color: var(--main); }                  /* 펼친 문제집: 칸은 옅은 메인 그대로(칸이 많아 진하면 메인 면이 여럿), 범례 이름만 메인 */
+
+/* 인용문 = 공책 줄 (2026-10-16 사용자 — 여백이 많은 인용 카드): 줄마다 밑에 가는 선, 아래에 빈 줄 하나 더.
+   선 간격 = 글자 줄 높이(1lh)라 폰트·크기가 바뀌어도 글자 밑에 맞는다. 인용문을 쓰는 모든 덱에 적용 */
+.kcard .k-quote blockquote { line-height: 1.9; } /* 줄 사이에 선이 들어가 150%는 답답 → 공책 줄 인용문만 190%(사용자 2026-10-16) */
+.k-quote blockquote { --rule: color-mix(in srgb, var(--body) 26%, transparent); padding-bottom: 1lh; background: repeating-linear-gradient(to bottom, transparent 0 calc(1lh - 3px), var(--rule) calc(1lh - 3px) 1lh); } /* 한 장으로 반복(조각 반복은 첫 줄 위에 옅은 선이 생김) */
+.k-photo-hero .k-quote blockquote { padding-bottom: 0; } /* 사진과 같이 쓰면 자리가 모자라 아래 빈 줄은 뺀다 */
+
+/* 도식 영역은 세미볼드(2026-10-16 사용자): 볼드는 카드 제목·표지 제목에만. k-body 안에서는 --headline-weight를 세미볼드로 바꿔
+   큰 숫자(.k-big)·숫자 타일·시상대·점수 등 볼드로 쓰던 부품이 모두 세미볼드가 된다(제목 폰트에 600이 없으면 700). */
+.kcard .k-body { --headline-weight: var(--figure-weight, 600); }
+
+/* ===== 화이트보드 '오늘의 수업' (수업 소개 b, 2026-10-16) =====
+   실제 수업 순서를 칠판에 적은 모습: 회색 틀 + 흰 판 + 시간·할 일 줄 + 아래 숙제 줄, 판 아래 마커 받침(마커 하나만 메인).
+   강조 줄(.hl)은 할 일에 메인 마커 동그라미. 판 배경(카드형·테두리형)에서는 판 = 배경색 규칙을 따른다. */
+.k-wb { align-self: center; width: min(820px, 100%); --wb-frame: color-mix(in srgb, var(--title) 24%, var(--surface)); }
+.k-wb-board { position: relative; background: var(--surface); border: 16px solid var(--wb-frame); border-radius: var(--r-lg); box-shadow: var(--shadow); padding: 44px 56px 48px; }
+.dark .k-wb { --wb-frame: color-mix(in srgb, #FFFFFF 18%, var(--bg)); }
+.kcard:is([data-card=panel], [data-card=outline]) .k-wb-board { background: var(--bg); }
+.k-wb-list { display: flex; flex-direction: column; gap: calc(22px * var(--air, 1)); margin-top: calc(32px * var(--air, 1)); }
+.k-wb-list > p { display: grid; grid-template-columns: 128px 1fr; align-items: center; justify-items: start; }
+.k-wb-list .hl span { color: var(--main); border: 5px solid var(--main); border-radius: 50%; padding: 2px 20px; margin-left: -25px; rotate: -2deg; }
+.k-wb-note { margin-top: calc(34px * var(--air, 1)); padding-top: calc(30px * var(--air, 1)); border-top: var(--line-width) dashed var(--line); display: flex; gap: 20px; }
+.k-wb-tray { position: relative; height: 22px; margin: 0 48px; background: var(--wb-frame); border-radius: 0 0 14px 14px; }
+.k-wb-tray i { position: absolute; top: -16px; width: 96px; height: 22px; border-radius: 11px; background: var(--arrow); }
+.k-wb-tray i:nth-child(1) { left: 48px; } .k-wb-tray i:nth-child(2) { left: 164px; background: var(--main); } .k-wb-tray i:nth-child(3) { left: 280px; }
+.kcard .k-wb-list .hl b { color: var(--title); }                  /* 강조 줄도 시간은 제목 컬러 — 메인은 할 일 동그라미만 */
+
+
+/* 수학 풀이 첨삭(학원 철학 b, 2026-10-16 사용자 — 수식이 작음): 수식 줄·끼워 넣은 식은 발췌문처럼 46, 메모는 그대로 38 */
+.kcard .k-proof.k-proof-math > p, .kcard .k-proof.k-proof-math .k-ins b { font-size: var(--fs-heading); line-height: var(--lh-title); }
+.kcard .k-proof.k-proof-math > p:has(.k-ins) { padding-top: 70px; }

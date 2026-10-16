@@ -8,10 +8,12 @@
 //   3. 둥근 사각형(기본 도형 모양)에서 칠한 도형이 각진 채로 남지 않았는지
 //   4. 글자 색이 굵기와 짝인지 — 세미볼드 이상 = 제목 컬러, 보통 = 본문 컬러 (메인 컬러·메인 위 흰 글자는 제외)
 //   5. 제목 폰트는 카드 제목과 큰 숫자(항목 제목 크기 이상 숫자)에만 쓰였는지
-// 사용법: node scripts/kit-check.mjs [--quick] [--deck examples/science] [--all]
+// 사용법: node scripts/kit-check.mjs [--quick | --rep] [--deck examples/science | --uses k-flash,k-report | --all]
 //   --jobs N 동시에 여는 브라우저 탭 수 (기본 8 — 전체 검사 약 15초)
 //   --quick  Pretendard 한 가지 폰트만 (약 5초 — 만드는 중에는 이것만, 전체 검사는 마지막에 한 번)
+//   --rep    대표 폰트 8종만 (넘침이 잘 나는 넓은·줄 높은 폰트 + 세미볼드 없는 폰트) — 부품·카드를 고칠 때
 //   --deck   검사할 카드 묶음 (기본 cards = kit/cards.html)     --all  cards + kit/examples/*.html 전부
+//   --uses   그 클래스를 쓰는 덱만 (cards + examples 중) — 공통 부품을 고쳤을 때. 쉼표로 여러 개
 //   실패하면 카드별로 묶어서 '어떻게 고치면 되는지'를 같이 알려 준다.
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
@@ -22,7 +24,11 @@ const opt = args();
 const quick = !!opt.quick;
 const problems = [];
 
-const DECKS = opt.all ? ['cards', ...readdirSync(join(ROOT, 'kit/examples')).filter((f) => f.endsWith('.html')).map((f) => `examples/${f.slice(0, -5)}`)] : [opt.deck ?? 'cards'];
+const ALL_DECKS = ['cards', ...readdirSync(join(ROOT, 'kit/examples')).filter((f) => f.endsWith('.html')).map((f) => `examples/${f.slice(0, -5)}`)];
+// --uses k-flash,k-report: class 속성에 그 클래스가 있는 덱만 (전체 검사 6분+ 대신 고친 부품이 들어간 덱만)
+const usesRe = opt.uses && new RegExp(`class="[^"]*\\b(${String(opt.uses).split(',').map((c) => c.trim().replace(/^\./, '').replace(/[-]/g, '\\-')).join('|')})\\b`);
+const DECKS = opt.all ? ALL_DECKS : usesRe ? ALL_DECKS.filter((d) => usesRe.test(readFileSync(join(ROOT, `kit/${d}.html`), 'utf8'))) : [opt.deck ?? 'cards'];
+if (!DECKS.length) { console.log(`--uses ${opt.uses}: 이 클래스를 쓰는 덱이 없습니다`); process.exit(0); }
 // 1. 카드에 글자 크기 직접 쓰기 금지 — 부품 역할(kit.css 맨 아래 '글자 크기' 목록)로만 정한다
 for (const deck of DECKS) for (const m of readFileSync(join(ROOT, `kit/${deck}.html`), 'utf8').matchAll(/font-size\s*:[^;"]*/g)) problems.push(`[${deck}] ${deck}.html에 글자 크기 직접 지정: ${m[0]}`);
 
@@ -40,7 +46,9 @@ async function newPage() {
 const SIZES = Object.values(TYPOGRAPHY.size).map((v) => `${v}px`);
 const LS = parseFloat(TYPOGRAPHY.letterSpacing); // em 단위 (-0.03)
 const LHS = [TYPOGRAPHY.lineHeightTitle, TYPOGRAPHY.lineHeightBody, 1.1].map((v) => v.toFixed(2));
-const fonts = quick ? FONTS.slice(0, 1) : FONTS;
+// 대표 폰트(2026-10-16 측정 — 38px 같은 문장 폭·줄 높이): 기본 Pretendard · 가장 넓은 오르빗·마루부리·잘난고딕·고딕 A1 · 줄이 가장 높은 티머니·IBM Plex · 세미볼드 없는 나눔고딕
+const REP = ['pretendard', 'orbit', 'maru-buri', 'jalnan-gothic', 'gothic-a1', 'tmoney-round', 'ibm-plex', 'nanum-gothic'];
+const fonts = quick ? FONTS.slice(0, 1) : opt.rep ? FONTS.filter((f) => REP.includes(f.id)) : FONTS;
 let count = 0;
 async function checkDeck(page, deck, fonts, deckWide) {
   await page.goto(url(deck), { waitUntil: 'networkidle0' });
@@ -53,7 +61,7 @@ async function checkDeck(page, deck, fonts, deckWide) {
         document.querySelector(`#cardStyle button[data-v="${card === 'photo' ? 'solid' : card}"]`).click();
         await new Promise((r) => setTimeout(r, 600)); await document.fonts.ready; await new Promise((r) => setTimeout(r, 200));
         const out = [];
-        for (const c of document.querySelectorAll('.kcard')) {
+        for (const c of document.querySelectorAll('#deck .kcard')) {
           const body = c.querySelector('.k-body');
           const over = body ? body.scrollHeight - body.clientHeight : 0;
           if (over > 1) out.push(`${c.id} 카드 ${over}px 넘침`);
@@ -65,7 +73,14 @@ async function checkDeck(page, deck, fonts, deckWide) {
             const ls = cs.letterSpacing === 'normal' ? 0 : parseFloat(cs.letterSpacing) / px;
             if (Math.abs(ls - LS) > 0.002) out.push(`${name} 자간 ${(ls * 100).toFixed(1)}% (기준 ${(LS * 100).toFixed(0)}%)`);
             const lh = cs.lineHeight === 'normal' ? 'normal' : (parseFloat(cs.lineHeight) / px).toFixed(2);
-            if (!LHS.includes(lh)) out.push(`${name} 줄간격 ${lh} (130%·150%, 큰 숫자 110%만)`);
+            if (!LHS.includes(lh) && !(e.matches('.k-quote blockquote') && lh === '1.90')) out.push // 공책 줄 인용문만 190%(줄 사이 선, 사용자 2026-10-16)
+(`${name} 줄간격 ${lh} (130%·150%, 큰 숫자 110%만)`);
+            const pan = e.closest('.k-panel'); // 흰 도형 안 글자가 도형 밖으로 삐져나옴 (카드 넘침 검사로는 안 잡힘)
+            if (pan && !e.closest('.k-tip, .card-photo') && getComputedStyle(pan).overflow !== 'hidden') {
+              const r = e.getBoundingClientRect(), pr = pan.getBoundingClientRect(), k = pr.height / pan.offsetHeight || 1;
+              const d = Math.round(Math.max(r.bottom - pr.bottom, r.right - pr.right, pr.top - r.top, pr.left - r.left) / k);
+              if (d > 2) out.push(`${c.id} 카드 ${d}px 넘침`);
+            }
           }
         }
         return out;
@@ -86,22 +101,48 @@ async function checkDeck(page, deck, fonts, deckWide) {
   const square = await page.evaluate(() => {
     const out = new Set();
     const clipped = (e) => { for (let a = e.parentElement; a && !a.matches('.kcard'); a = a.parentElement) { const cs = getComputedStyle(a); if (cs.overflow === 'hidden' && parseFloat(cs.borderTopLeftRadius) > 0) return true; } return false; };
-    document.querySelectorAll('.kcard *').forEach((e) => {
+    document.querySelectorAll('#deck .kcard *').forEach((e) => {
       const cs = getComputedStyle(e), r = e.getBoundingClientRect();
       if (cs.backgroundColor === 'rgba(0, 0, 0, 0)' && cs.boxShadow === 'none') return;
-      if (r.width < 20 || r.height < 20 || e.closest('.card-paper, .book-item, svg, .k-matrix') || clipped(e)) return;
+      const c = e.closest('.kcard'), k = c.getBoundingClientRect().height / c.offsetHeight || 1; // 미리보기 배율과 상관없이 카드 원래 크기(px)로
+      if (r.width / k < 67 || r.height / k < 67 || e.closest('.card-paper, .book-item, svg, .k-matrix') || clipped(e)) return;
       if (parseFloat(cs.borderTopLeftRadius) === 0 && parseFloat(cs.borderBottomRightRadius) === 0) out.add(`${e.closest('.kcard').id} 카드 .${[...e.classList].join('.') || e.tagName.toLowerCase()} 모서리가 각짐 (둥근 사각형 옵션)`);
     });
     return [...out];
   });
   square.forEach((f) => problems.push(`[${deck}] ${f}`));
+  // 4. 메인 컬러가 한 군데도 없는 카드 ✗ (2026-10-16 사용자): 글자·바탕·테두리·SVG 칠 중 하나라도 메인 컬러여야 한다
+  const noMain = await page.evaluate(() => {
+    const d = document.createElement('i'); d.style.color = 'var(--main)'; document.querySelector('#deck .kcard').append(d);
+    const M = getComputedStyle(d).color; d.remove();
+    const out = [];
+    document.querySelectorAll('#deck .kcard').forEach((c) => {
+      const hit = (cs) => [cs.color, cs.backgroundColor, cs.borderTopColor, cs.borderLeftColor, cs.borderBottomColor, cs.fill, cs.stroke].includes(M) || cs.backgroundImage.includes(M);
+      const has = [c, ...c.querySelectorAll('*')].some((e) => hit(getComputedStyle(e)) || ['::before', '::after'].some((pe) => { const cs = getComputedStyle(e, pe); return cs.content !== 'none' && hit(cs); })) // 장식 요소(원고지 커서 등)도
+        || [...c.querySelectorAll('svg [fill], svg [stroke]')].some((e) => [e.getAttribute('fill'), e.getAttribute('stroke')].some((v) => v && (v.includes('--main') || getComputedStyle(e).fill === M || getComputedStyle(e).stroke === M)));
+      if (!has && c.querySelector('.k-body') && [...c.querySelector('.k-body').children].every((e) => e.matches('.k-photoset, .k-label'))) return; // 사진 묶음만 있는 카드(사진 스타일 전용 시각 보충)는 사진이 시각
+      if (!has) out.push(`${c.id} 카드 메인 컬러가 한 군데도 없음`);
+    });
+    return out;
+  });
+  noMain.forEach((f) => problems.push(`[${deck}] ${f}`));
+  // 5. 도식 영역은 세미볼드(2026-10-16 사용자): 기본 폰트(Pretendard, 600 있음)에서 .k-body 안 글자가 700 이상이면 ✗ — 볼드는 카드 제목·표지 제목에만
+  const heavy = await page.evaluate(() => {
+    const out = new Set();
+    document.querySelectorAll('#deck .kcard .k-body *').forEach((e) => {
+      if (![...e.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim()) || e.closest('.book-item, .cover-icon, .k-title')) return;
+      if (+getComputedStyle(e).fontWeight >= 700) out.add(`${e.closest('.kcard').id} 카드 "${e.textContent.trim().slice(0, 10)}" 볼드 (도식 영역은 세미볼드)`);
+    });
+    return [...out];
+  });
+  heavy.forEach((f) => problems.push(`[${deck}] ${f}`));
   const colorBad = await page.evaluate(() => {
-    const probe = (v) => { const d = document.createElement('i'); d.style.color = `var(${v})`; document.querySelector('.kcard').append(d); const c = getComputedStyle(d).color; d.remove(); return c; };
+    const probe = (v) => { const d = document.createElement('i'); d.style.color = `var(${v})`; document.querySelector('#deck .kcard').append(d); const c = getComputedStyle(d).color; d.remove(); return c; };
     const T = probe('--title'), B = probe('--body'), M = probe('--main'), W = probe('--on-main');
     const out = new Set();
-    document.querySelectorAll('.kcard *').forEach((e) => {
+    document.querySelectorAll('#deck .kcard *').forEach((e) => {
       if (![...e.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) return;
-      if (e.closest('.cover-icon, .k-tip, .book-item, .photo, .profile-figure, .ov, .layout-cover.with-photo')) return; // 아이콘·팁·사진 자리 안내·사진 위 글자(사진 표지 포함) 제외
+      if (e.closest('.cover-icon, .k-tip, .book-item, .photo, .profile-figure, .ov, .layout-cover.with-photo') || e.matches('.k-areas em')) return; // .k-areas em: 본문 컬러 + 세미볼드(사용자 예외) // 아이콘·팁·사진 자리 안내·사진 위 글자(사진 표지 포함) 제외
       const cs = getComputedStyle(e), w = +cs.fontWeight, c = cs.color;
       if (c === M || c === W) return;
       if ((w >= 600 && c !== T) || (w < 600 && c !== B)) out.add(`${e.closest('.kcard').id} 카드 "${e.textContent.trim().slice(0, 10)}" ${w >= 600 ? '굵은 글자인데 제목 컬러 아님' : '보통 글자인데 본문 컬러 아님'}`);
@@ -116,7 +157,7 @@ async function checkDeck(page, deck, fonts, deckWide) {
   });
   const fontBad = await page.evaluate(() => {
     const out = new Set();
-    document.querySelectorAll('.kcard *').forEach((e) => {
+    document.querySelectorAll('#deck .kcard *').forEach((e) => {
       if (![...e.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) return;
       if (!getComputedStyle(e).fontFamily.includes('Nanum Myeongjo')) return;
       const text = e.textContent.trim(), big = parseFloat(getComputedStyle(e).fontSize) >= 46 && /\d/.test(text);
@@ -128,14 +169,17 @@ async function checkDeck(page, deck, fonts, deckWide) {
 }
 const tasks = [];
 for (const deck of DECKS) { const k = Math.min(JOBS, fonts.length); for (let j = 0; j < k; j++) tasks.push([deck, fonts.filter((_, i) => i % k === j), j === 0]); }
+tasks.sort((x, y) => y[2] - x[2]); // 덱 전체 검사(모서리·색·폰트 쓰임)가 무거워서 먼저 시작한다 — 뒤에 몰리면 한 탭에서 줄줄이 돌아 3배 느려짐
 const pages = await Promise.all(Array.from({ length: Math.min(JOBS, tasks.length) }, newPage));
 let next = 0;
 await Promise.all(pages.map(async (page) => { while (next < tasks.length) await checkDeck(page, ...tasks[next++]); }));
 await browser.close();
-server.close();
+server.closeAllConnections(); server.close(); // 열린 연결(keep-alive)을 끊어야 바로 끝난다 — 안 끊으면 끝난 뒤 25초 넘게 기다림
 
 // 결과 정리: 같은 문제는 조합마다 반복되므로 카드별로 묶고, 고치는 방법을 붙인다
 const HINTS = [
+  [/볼드 \(도식 영역은 세미볼드\)/, '볼드 ✗ → 그 부품의 font-weight를 var(--title-weight)(본문 폰트 글자)나 var(--headline-weight)(.k-body 안에서 자동 세미볼드)로. 숫자 700 직접 쓰기 ✗.'],
+  [/메인 컬러가 한 군데도/, '메인 컬러 ✗ → 강조할 한 곳(가장 중요한 항목·숫자)에 .hl·.accent·메인 칩을 준다. 큰 숫자 .k-hero를 더해도 된다.'],
   [/넘침/, '넘침 → 그 카드의 줄·항목 수를 줄이거나, 부품의 세로 여백(padding·gap·height)을 "최대"값 이상 줄인다. 글자 높이가 큰 폰트(해바라기·에스코어 드림)에서 먼저 넘친다.'],
   [/5단계 밖/, '글자 크기 → kit.css 맨 아래 "글자 크기" 목록에 그 부품 선택자를 역할(heading·body·caption)에 맞게 넣는다. px 직접 지정 금지.'],
   [/글자 크기 직접/, '직접 지정 → cards.html의 font-size를 지우고 부품 역할(kit.css "글자 크기" 목록)로 정한다.'],
@@ -164,4 +208,5 @@ if (problems.length) {
   console.error(`부품 키트 검사 실패 (${lines.length}건)\n- ${lines.join('\n- ')}\n\n고치는 방법\n- ${hints.join('\n- ')}`);
   process.exit(1);
 }
-console.log(`부품 키트 검사 통과 [${DECKS.join(', ')}]: ${count}가지 조합(폰트 ${fonts.length} × 배경 5${DECKS.length > 1 ? ` × 덱 ${DECKS.length}` : ''}) — 넘침 없음, 글자 크기 5단계, 자간·줄간격 기준, 도형 모서리, 글자 색, 제목 폰트 쓰임, 오류 없음`);
+console.log(`부품 키트 검사 통과 [${DECKS.join(', ')}]: ${count}가지 조합(폰트 ${fonts.length}${opt.rep ? " 대표" : ""} × 배경 5${DECKS.length > 1 ? ` × 덱 ${DECKS.length}` : ''}) — 넘침 없음, 글자 크기 5단계, 자간·줄간격 기준, 도형 모서리, 글자 색, 제목 폰트 쓰임, 메인 컬러 한 곳 이상, 도식 세미볼드, 오류 없음`);
+process.exit(0); // 브라우저·서버를 닫은 뒤에도 남은 핸들 때문에 25초 넘게 안 끝나던 것 — 결과를 찍었으면 바로 끝낸다

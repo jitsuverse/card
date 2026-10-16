@@ -1,0 +1,124 @@
+<!-- 학교분석 10장(2026-10-16) — 정보형. 한빛중(가상 학교) 2학년 수학 2학기 기말 대비: 시험 한눈에 · 평균 추이 · 출제 출처 · 문항 종류 · 반영 비율 · 자주 틀린 단원 · 4주 대비 · Q&A · 대비반 안내.
+     기준 공식: 제목 2줄 = 결론, 부연설명 1줄 = 근거. 시각 3장(평균 꺾은선 · 출처 와플 · 반영 비율 블록) + 정보 6장. 학교 이름·수치는 예시.
+     사진 스타일용 사진(사진 모음 pool:주제 — 덱마다 다른 사진, assets/config.js PHOTO_POOL): 표지 교실, 자주 틀린 단원 카드 사진 강조(시험지에 쓰는 손), 도식이 작은 카드에 배경 후보. -->
+
+<!-- 1. 표지 -->
+<div class="kcard layout-cover" id="cover" data-bgimg="pool:school">
+  <p class="cover-tag">학교분석</p>
+  <h1 class="title">한빛중 수학,<br>서술형에서 갈려요</h1>
+  <p class="sub">2학년 2학기 기말 대비 · 에듀리치브레인</p>
+  <div data-photo="cover" data-icon="doc"></div>
+</div>
+
+<!-- 2. 정보 → 숫자 타일 2×2(설명 2줄), 평균 칸만 메인 -->
+<div class="kcard" id="a" data-bgimg="pool:exam">
+  <div class="k-head"><h2 class="k-title">한빛중 수학은<br>어렵게 나오는 편이에요</h2><p class="k-sub">올해 1학기 기말 2학년 기준</p></div>
+  <div class="k-body">
+    <div class="k-tiles k-tiles-text">
+      <div class="hl"><b>64점</b><span>2학년<br>학교 평균</span></div>
+      <div><b>12%</b><span>90점 이상<br>받은 학생 비율</span></div>
+      <div><b>40점</b><span>100점 중<br>서술형 배점</span></div>
+      <div><b>45분</b><span>24문항을<br>푸는 시간</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. 시각 → 큰 숫자 + 모눈종이 꺾은선(최근 네 번 시험 평균), 마지막 점만 메인 -->
+<div class="kcard" id="b">
+  <div class="k-head"><h2 class="k-title">학교 평균이<br>1년 새 10점 내렸어요</h2><p class="k-sub">최근 네 번 시험 2학년 수학 평균</p></div>
+  <div class="k-body">
+    <div class="k-hero"><span class="k-big">−10점</span><p class="k-p">작년 중간 74점에서<br>올해 기말 64점으로</p></div>
+    <div class="k-panel k-graph" data-values="74,71,68,64" data-labels="작년 중간,작년 기말,올해 중간,올해 기말" data-min="55" data-max="80"></div>
+  </div>
+</div>
+
+<!-- 4. 시각 → 출처 와플(48문항 = 48칸), 선생님 프린트만 메인 -->
+<div class="kcard" id="c">
+  <div class="k-head"><h2 class="k-title">교과서와 프린트에서<br>대부분 나와요</h2><p class="k-sub">최근 두 번 시험 48문항의 출처</p></div>
+  <div class="k-body">
+    <div class="k-waffle" data-parts="24,17,7" data-hl="1"></div>
+    <div class="k-key">
+      <p><i class="c0"></i><span>교과서 예제·유제</span><b>24문항</b></p>
+      <p class="hl"><i class="c1"></i><span>선생님 프린트</span><b>17문항</b></p>
+      <p><i class="c2"></i><span>외부 문제집</span><b>7문항</b></p>
+    </div>
+  </div>
+</div>
+
+<!-- 5. 정보 → 문항 종류 · 개수 · 한 줄 설명 3줄, 서술형만 메인 -->
+<div class="kcard" id="d" data-bgimg="pool:writing">
+  <div class="k-head"><h2 class="k-title">서술형은 과정마다<br>부분 점수를 줘요</h2><p class="k-sub">문항 종류별 출제 특징</p></div>
+  <div class="k-body">
+    <div class="k-panel k-areas">
+      <div><p><b class="k-h">객관식</b><em>17문항</em></p><span>교과서 예제를 숫자만 바꿔 내요</span></div>
+      <div class="hl"><p><b class="k-h">서술형</b><em>7문항</em></p><span>풀이 단계마다 점수를 나눠 줘요</span></div>
+      <div><p><b class="k-h">고난도</b><em>2문항</em></p><span>함수와 도형을 섞어서 물어요</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 6. 시각 → 반영 비율 블록(칸 폭 = 비율), 수행평가만 메인 + 수행 항목 줄 -->
+<div class="kcard" id="e">
+  <div class="k-head"><h2 class="k-title">수행평가가<br>성적의 40%예요</h2><p class="k-sub">2학년 수학 학기 성적 반영 비율</p></div>
+  <div class="k-body">
+    <div class="k-blocks k-blocks-short">
+      <div class="k-panel" style="flex:3"><b>지필평가</b><span class="k-big">60%</span><p class="k-p">중간 30 · 기말 30</p></div>
+      <div class="k-panel accent" style="flex:2"><b>수행평가</b><span class="k-big">40%</span><p class="k-p">과제 · 보고서</p></div>
+    </div>
+    <div class="k-rows k-pairs"><p><span>서술형 과제</span><b>15%</b></p><p><span>탐구 보고서</span><b>15%</b></p><p><span>수업 노트</span><b>10%</b></p></div>
+  </div>
+</div>
+
+<!-- 7. 정보 → 사진 강조(시험지에 쓰는 손, 사진 스타일에서만) + 자주 틀린 단원 3줄. 다른 스타일은 큰 숫자(.k-nophoto-only) -->
+<div class="kcard" id="f">
+  <div class="k-head"><h2 class="k-title">이차함수 서술형에서<br>점수가 많이 빠져요</h2><p class="k-sub">작년 2학기 기말 오답 분석</p></div>
+  <div class="k-body">
+    <div class="k-hero k-nophoto-only"><span class="k-big">38%</span><p class="k-p">이차함수 서술형<br>학교 정답률</p></div>
+    <div class="k-photo-hero">
+      <div data-photo="photo" data-slot="f-photo" data-caption="시험 보는 사진" data-src="pool:exam"></div>
+      <div class="k-panel k-reasons">
+        <p class="k-h">자주 틀린 단원</p>
+        <p><b>1</b><span>이차함수 그래프 해석</span></p>
+        <p><b>2</b><span>닮음 증명 과정 쓰기</span></p>
+        <p><b>3</b><span>경우의 수 빠뜨리기</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 8. 정보 → 시기 배지 줄 3개(4주 · 2주 · 1주 전), 마지막만 메인 -->
+<div class="kcard" id="g">
+  <div class="k-head"><h2 class="k-title">시험 4주 전부터<br>세 단계로 준비해요</h2><p class="k-sub">한빛중 맞춤 기말 대비</p></div>
+  <div class="k-body">
+    <div class="k-days">
+      <div class="k-panel"><em>4주</em><p><b class="k-h">교과서 정리</b><span>예제 숫자 바꿔 다시 풀기</span></p></div>
+      <div class="k-panel"><em>2주</em><p><b class="k-h">프린트 반복</b><span>선생님 프린트 세 번 풀기</span></p></div>
+      <div class="k-panel accent"><em>1주</em><p><b class="k-h">서술형 실전</b><span>시간 재고 과정 쓰기 연습</span></p></div>
+    </div>
+  </div>
+</div>
+
+<!-- 9. 정보 → 학부모 질문 Q&A 3개(답은 모두 펼침) -->
+<div class="kcard" id="h" data-bgimg="pool:desk">
+  <div class="k-head"><h2 class="k-title">교과서와 프린트가<br>대비의 기본이에요</h2><p class="k-sub">학부모님이 자주 묻는 질문</p></div>
+  <div class="k-body">
+    <div class="k-faq">
+      <div><p><b>Q</b><span>교과서만 보면 되나요?</span></p><p class="k-p">열 문제 중 여덟은 교과서와<br>선생님 프린트에서 나와요.</p></div>
+      <div><p><b>Q</b><span>서술형은 어떻게 채점하나요?</span></p><p class="k-p">풀이 단계마다 점수가 있어<br>답이 틀려도 부분 점수를 받아요.</p></div>
+      <div><p><b>Q</b><span>수행평가도 봐주시나요?</span></p><p class="k-p">탐구 보고서 주제와<br>서술형 과제를 함께 점검해요.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- 10. 상담 안내 → 큰 숫자 + 라벨 · 값 안내 -->
+<div class="kcard" id="i" data-bgimg="pool:books">
+  <div class="k-head"><h2 class="k-title">한빛중 맞춤반,<br>10월 말에 시작해요</h2><p class="k-sub">2학기 기말 대비반 안내</p></div>
+  <div class="k-body">
+    <div class="k-hero"><span class="k-big">12명</span><p class="k-p">학교별 소수 정예<br>선착순 모집</p></div>
+    <dl class="k-panel k-info">
+      <div><dt>대상</dt><dd>한빛중 2학년</dd></div>
+      <div><dt>기간</dt><dd>10월 27일부터 6주</dd></div>
+      <div><dt>신청</dt><dd>전화 또는 문자 예약</dd></div>
+    </dl>
+  </div>
+</div>

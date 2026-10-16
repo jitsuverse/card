@@ -1,0 +1,69 @@
+<!-- default-style: 사진 -->
+<!-- 이미지 위주 6장(2026-10-16) — 중2 영어 내신반. 표지(사진 스타일이면 교실 사진) · 강사(누끼) · 교재(목업) · 수업 사진 묶음 · 사진 강조(첨삭) · 배경 사진 + 체크.
+     강사 사진은 빈 자리 — 원장님 사진을 넣으면 배경이 자동으로 지워진다(얼굴 사진은 무료 사진으로 넣지 않는다). 교재 표지는 예시 사진(실제 교재 표지로 바꿔 넣기). -->
+<!-- 사진: Unsplash 무료 사진(Unsplash License — 상업적 사용 가능, 출처 표기 선택). 얼굴 정면 ✗, 건전한 교육 장면만 -->
+
+<!-- 1. 표지 → 사진 스타일이면 교실 사진 전체 -->
+<div class="kcard layout-cover" id="cover" data-bgimg="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1200&q=80&auto=format&fit=crop">
+  <p class="cover-tag">영어 내신반</p>
+  <h1 class="title">교재부터 첨삭까지<br>한 반에서 끝내요</h1>
+  <p class="sub">중2 영어 내신 · 에듀리치브레인</p>
+  <div data-photo="cover" data-icon="book"></div>
+</div>
+
+<!-- 2. 강사 → 상반신(사진을 넣으면 누끼) + 이름 · 직함 · 경력 숫자 -->
+<div class="kcard" id="a">
+  <div class="k-head"><h2 class="k-title">서술형을 직접 고쳐 주는<br>선생님이 가르쳐요</h2><p class="k-sub">중등 영어 지도 11년</p></div>
+  <div class="k-body k-profile">
+    <p class="k-h">김OO 선생님</p>
+    <span class="k-tag solid">영어 내신 대표 강사</span>
+    <div class="k-figs"><p><b>11년</b><span>중등 영어 지도</span></p><p><b>1,800명</b><span>서술형 첨삭 학생</span></p><p><b>5권</b><span>문법 교재 집필</span></p></div>
+  </div>
+  <div data-photo="teacher" data-slot="a-teacher" data-caption="강사 사진"></div>
+</div>
+
+<!-- 3. 교재 → 책 목업 + 구성 숫자 3줄 -->
+<div class="kcard" id="b">
+  <div class="k-head"><h2 class="k-title">시험 범위에 맞춰<br>학기마다 새로 만들어요</h2><p class="k-sub">학교별 문법·서술형 자체 교재</p></div>
+  <div class="k-body">
+    <div class="k-split k-book-split">
+      <div data-photo="book" data-slot="b-book" data-caption="교재 표지" data-src="https://images.unsplash.com/photo-1536880879850-e5a87ee99f1d?w=800&h=1100&q=80&auto=format&fit=crop"></div>
+      <div class="k-figs"><p class="hl"><b>24개</b><span>단원별 개념 정리</span></p><p><b>480문장</b><span>서술형 연습 문장</span></p><p><b>120문제</b><span>학교별 기출 문제</span></p></div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. 수업 현장 → 사진 묶음 3장(칸에 맞춰 채움) -->
+<div class="kcard" id="c">
+  <div class="k-head"><h2 class="k-title">수업은 여섯 명이<br>한 교실에서 해요</h2><p class="k-sub">한 반 정원 6명, 매 수업 한 번씩 발표</p></div>
+  <div class="k-body">
+    <div class="k-photoset" data-set="c" data-count="3" data-captions="교실,교실 책상,수업 자료" data-srcs="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1200&q=80&auto=format&fit=crop https://images.unsplash.com/photo-1602145095452-aba06946ed05?w=1200&q=80&auto=format&fit=crop https://images.unsplash.com/photo-1589988047635-39bf08b1720c?w=1200&q=80&auto=format&fit=crop"></div>
+  </div>
+</div>
+
+<!-- 5. 첨삭 → 사진 강조(필기하는 손) + 첨삭 포인트 2줄 -->
+<div class="kcard" id="d">
+  <div class="k-head"><h2 class="k-title">쓴 문장은<br>그날 바로 고쳐 줘요</h2><p class="k-sub">매 수업 서술형 첨삭</p></div>
+  <div class="k-body">
+    <div class="k-photo-hero">
+      <div data-photo="photo" data-slot="d-photo" data-caption="첨삭 사진" data-src="https://images.unsplash.com/photo-1588451658749-a65f4fc8763e?w=1200&q=80&auto=format&fit=crop"></div>
+      <div class="k-panel k-reasons">
+        <p class="k-h">첨삭 포인트</p>
+        <p><b>1</b><span>시제·수 일치 오류를 바로 표시</span></p>
+        <p><b>2</b><span>더 자연스러운 표현으로 다시 쓰기</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 6. 시험 대비 → 체크 3줄 (사진 스타일이면 아래에 시험지에 답을 쓰는 손 사진) -->
+<div class="kcard" id="e" data-bgimg="https://images.unsplash.com/photo-1649252504109-686f70fa38af?w=1200&q=80&auto=format&fit=crop">
+  <div class="k-head"><h2 class="k-title">시험 2주 전부터<br>실전처럼 풀어요</h2><p class="k-sub">학교별 기출 모의고사</p></div>
+  <div class="k-body">
+    <div class="k-panel k-checks">
+      <p><i data-ph="check-circle"></i>학교별 기출 3회분 풀이</p>
+      <p><i data-ph="check-circle"></i>시간을 재고 실전처럼 풀기</p>
+      <p><i data-ph="check-circle"></i>틀린 유형만 모아 다시 풀기</p>
+    </div>
+  </div>
+</div>

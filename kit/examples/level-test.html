@@ -1,0 +1,132 @@
+<!-- 레벨테스트 안내글 10장(2026-10-16) — 영업형. 중등 수학 무료 레벨테스트: 왜 · 구성 · 순서 · 결과지 · 상담 · 반 배정 · 준비물 · Q&A · 신청.
+     기준 공식: 제목 2줄 = 결론, 부연설명 1줄 = 근거. 시각 3장(시간 배분 다이얼 · 실제 결과지 · 반 카드) + 정보 6장.
+     사진 스타일용 사진(사진 모음 pool:주제 — 덱마다 다른 사진, assets/config.js PHOTO_POOL): 표지 교실, 준비물 카드 사진 강조(시험지에 쓰는 손), 도식이 작은 카드에 배경 후보. -->
+
+<!-- 1. 표지 -->
+<div class="kcard layout-cover" id="cover" data-bgimg="pool:classroom">
+  <p class="cover-tag">레벨테스트</p>
+  <h1 class="title">지금 실력을 정확히<br>알고 시작해요</h1>
+  <p class="sub">중등 수학 무료 레벨테스트 · 에듀리치브레인</p>
+  <div data-photo="cover" data-icon="target"></div>
+</div>
+
+<!-- 2. 정보 → 대비 두 칸(학년으로 배정 · 테스트로 배정), 테스트 쪽만 메인 -->
+<div class="kcard" id="a" data-bgimg="pool:writing">
+  <div class="k-head"><h2 class="k-title">같은 학년이어도<br>출발점은 달라요</h2><p class="k-sub">학년이 아니라 실력으로 반을 정해요</p></div>
+  <div class="k-body">
+    <div class="k-vs">
+      <div class="k-panel"><p class="k-h">학년으로 배정</p><div class="k-rows"><p>모두 같은 진도</p><p>빈틈은 그대로</p><p>너무 쉽거나 어려움</p></div></div>
+      <div class="k-panel accent"><p class="k-h">테스트로 배정</p><div class="k-rows"><p>실력에 맞는 진도</p><p>약점 단원부터</p><p>딱 맞는 난이도</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. 시각 → 시간 배분 다이얼(50분), 서술형만 메인 + 알약 흐름 -->
+<div class="kcard" id="b">
+  <div class="k-head"><h2 class="k-title">50분 동안<br>세 영역을 봐요</h2><p class="k-sub">개념 · 유형 · 서술형 25문항</p></div>
+  <div class="k-body">
+    <div class="k-timer" data-parts="개념:15,유형:20,서술형:15:hl"></div>
+    <div class="k-row" style="justify-content:center;gap:14px">
+      <span class="k-pill">개념 10문항</span><span class="k-arrow"></span>
+      <span class="k-pill">유형 10문항</span><span class="k-arrow"></span>
+      <span class="k-pill">서술형 5문항</span>
+    </div>
+  </div>
+</div>
+
+<!-- 4. 정보 → 번호 단계 3칸 + 라벨 · 값 안내 -->
+<div class="kcard" id="c">
+  <div class="k-head"><h2 class="k-title">신청부터 상담까지<br>일주일이면 끝나요</h2><p class="k-sub">세 단계로 진행돼요</p></div>
+  <div class="k-body">
+    <div class="k-steps3">
+      <div class="k-panel"><i data-ph="number-circle-1"></i><b>신청</b></div><span class="k-arrow"></span>
+      <div class="k-panel"><i data-ph="number-circle-2"></i><b>테스트</b></div><span class="k-arrow"></span>
+      <div class="k-panel"><i data-ph="number-circle-3"></i><b>결과 상담</b></div>
+    </div>
+    <dl class="k-panel k-info">
+      <div><dt>신청</dt><dd>전화나 문자로 날짜 예약</dd></div>
+      <div><dt>테스트</dt><dd>학원에서 50분 응시</dd></div>
+      <div><dt>상담</dt><dd>사흘 안에 결과 설명</dd></div>
+    </dl>
+  </div>
+</div>
+
+<!-- 5. 시각 → 실제 결과지(영역별 점수), 서술형 줄만 빨간 펜 동그라미 -->
+<div class="kcard" id="d">
+  <div class="k-head"><h2 class="k-title">결과지로<br>약한 영역을 짚어요</h2><p class="k-sub">영역별 점수와 단원별 정답률</p></div>
+  <div class="k-body">
+    <div class="k-panel k-report">
+      <p class="k-h">레벨테스트 결과지</p>
+      <p><b>개념 이해</b><i></i><em>90</em></p>
+      <p><b>계산 정확도</b><i></i><em>85</em></p>
+      <p><b>유형 풀이</b><i></i><em>70</em></p>
+      <p class="hl"><b>서술형</b><i></i><em>45</em></p>
+    </div>
+  </div>
+</div>
+
+<!-- 6. 정보 → 상담에서 다루는 세 가지(이름 + 값 + 설명), 학습 계획만 메인 -->
+<div class="kcard" id="e">
+  <div class="k-head"><h2 class="k-title">결과를 보고<br>20분 동안 상담해요</h2><p class="k-sub">상담에서 함께 정하는 세 가지</p></div>
+  <div class="k-body">
+    <div class="k-panel k-areas">
+      <div><p><b class="k-h">현재 위치</b><em>학년 기준</em></p><span>영역별 점수를 학년 평균과 비교해요</span></div>
+      <div><p><b class="k-h">약점 단원</b><em>정답률 순</em></p><span>먼저 채워야 할 단원을 골라요</span></div>
+      <div class="hl"><p><b class="k-h">학습 계획</b><em>3개월</em></p><span>반과 진도, 첫 달 목표를 정해요</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 7. 시각 → 반 카드 3장(목표 점수 큰 숫자 + 교재 칩), 심화반만 메인 -->
+<div class="kcard" id="f">
+  <div class="k-head"><h2 class="k-title">결과에 맞는 반으로<br>배정해요</h2><p class="k-sub">레벨에 따라 세 반으로 나눠요</p></div>
+  <div class="k-body">
+    <div class="k-tiers">
+      <div class="k-panel"><b class="k-h">기본반</b><strong>80점</strong><span>목표 점수</span><p><i>개념 보충</i><i>개념서</i></p></div>
+      <div class="k-panel accent"><b class="k-h">심화반</b><strong>90점</strong><span>목표 점수</span><p><i>유형 완성</i><i>유형서</i></p></div>
+      <div class="k-panel"><b class="k-h">최상위반</b><strong>100점</strong><span>목표 점수</span><p><i>심화 응용</i><i>심화서</i></p></div>
+    </div>
+  </div>
+</div>
+
+<!-- 8. 정보 → 사진 강조(시험지에 쓰는 손, 사진 스타일에서만) + 준비물 3줄. 다른 스타일은 사진 대신 큰 숫자(10분, .k-nophoto-only) -->
+<div class="kcard" id="g">
+  <div class="k-head"><h2 class="k-title">필기구만 있으면<br>바로 볼 수 있어요</h2><p class="k-sub">테스트 당일 안내</p></div>
+  <div class="k-body">
+    <div class="k-hero k-nophoto-only"><span class="k-big">10분</span><p class="k-p">시작 전까지<br>도착해 주세요</p></div>
+    <div class="k-photo-hero">
+      <div data-photo="photo" data-slot="g-photo" data-caption="시험 보는 사진" data-src="pool:exam"></div>
+      <div class="k-panel k-reasons">
+        <p class="k-h">당일 준비</p>
+        <p><b>1</b><span>연필과 지우개 (계산기는 없이)</span></p>
+        <p><b>2</b><span>최근 학교 시험지 (있으면)</span></p>
+        <p><b>3</b><span>물 한 병과 편한 마음</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 9. 정보 → 학부모 질문 Q&A 3개(답은 모두 펼침) -->
+<div class="kcard" id="h">
+  <div class="k-head"><h2 class="k-title">결과가 낮아도<br>걱정하지 않으셔도 돼요</h2><p class="k-sub">학부모님이 자주 묻는 질문</p></div>
+  <div class="k-body">
+    <div class="k-faq">
+      <div><p><b>Q</b><span>점수가 낮으면 등록이 안 되나요?</span></p><p class="k-p">아니요. 점수는 반을 정하는 기준일 뿐이에요.</p></div>
+      <div><p><b>Q</b><span>테스트만 보고 가도 되나요?</span></p><p class="k-p">네. 결과 상담까지 무료이고 등록은 선택이에요.</p></div>
+      <div><p><b>Q</b><span>선행 내용도 나오나요?</span></p><p class="k-p">현재 학년 범위만 나와요. 선행은 상담 때 봐요.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- 10. 신청 → 큰 숫자(0원) + 라벨 · 값 안내 -->
+<div class="kcard" id="i" data-bgimg="pool:desk">
+  <div class="k-head"><h2 class="k-title">매주 토요일,<br>무료로 볼 수 있어요</h2><p class="k-sub">레벨테스트 신청 안내</p></div>
+  <div class="k-body">
+    <div class="k-hero"><span class="k-big">0원</span><p class="k-p">테스트와 결과 상담<br>모두 무료예요</p></div>
+    <dl class="k-panel k-info">
+      <div><dt>일정</dt><dd>매주 토요일 오전 10시</dd></div>
+      <div><dt>대상</dt><dd>중학교 1~3학년</dd></div>
+      <div><dt>신청</dt><dd>전화 또는 문자 예약</dd></div>
+    </dl>
+  </div>
+</div>

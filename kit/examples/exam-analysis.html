@@ -1,43 +1,42 @@
-<!-- 대치중 국어 1학기 중간고사 시험분석 10장(등급컷 카드는 쓰지 않음, 2026-10-15) — 홈페이지 콘텐츠 스튜디오 '시험분석' 카드 글자만 가져와 우리 기준(제목·부연설명에 결론, 도식은 부연 — 아래 한 줄 요약 없음, 시각 30 · 정보 70)으로 다시 짬 -->
+<!-- 대치중 국어 1학기 중간고사 시험분석 10장 — 데브 서버 시험분석 섹션 순서(표지 · 시험 구성 · 난이도 · 출제 DNA · 등급을 가른 포인트 · 다음 시험 전략 · 적중 문항 · 수준별 공부법 · 학부모 가이드 · 총평, 2026-10-16) — 홈페이지 콘텐츠 스튜디오 '시험분석' 카드 글자만 가져와 우리 기준(제목·부연설명에 결론, 도식은 부연 — 아래 한 줄 요약 없음, 시각 30 · 정보 70)으로 다시 짬 -->
 
 <!-- 사진 스타일 배경(data-bgimg): Unsplash 무료 사진(Unsplash License — 상업적 사용 가능, 출처 표기 선택) -->
 
 <!-- 1. 표지 -->
-<div class="kcard layout-cover" id="cover" data-bgimg="https://images.unsplash.com/photo-1557989048-03456d01a26e?w=1200&q=80&auto=format&fit=crop">
+<div class="kcard layout-cover" id="cover" data-bgimg="pool:classroom">
   <p class="cover-tag">시험분석</p>
   <h1 class="title">대치중 국어<br>1학기 중간고사 분석</h1>
   <p class="sub">고등학교 1학년 국어 · 에듀리치브레인</p>
   <div data-photo="cover" data-icon="chart"></div>
 </div>
 
-<!-- 2. 개요 → 출제 특징 2줄 + 알약 흐름 + 한 줄 -->
+<!-- 2. 시험 구성 → 큰 숫자(총 문항) + 숫자 타일 2×2(배점 · 범위 · 외부 지문 · 고난도) -->
 <div class="kcard" id="a">
-  <div class="k-head"><h2 class="k-title">외운 지식보다<br>읽는 힘을 봤어요</h2><p class="k-sub">수능형 지문으로 사고력을 갈랐어요</p></div>
+  <div class="k-head"><h2 class="k-title">총 25문항으로<br>구성된 시험이에요</h2><p class="k-sub">기본과 응용이 함께 나온 시험 구성</p></div>
   <div class="k-body">
-    <div class="k-photo-hero">
-      <div data-photo="photo" data-slot="a-photo" data-caption="시험지 사진" data-src="https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?w=1200&q=80&auto=format&fit=crop"></div>
-      <div class="k-panel k-reasons">
-        <p class="k-h">출제 특징</p>
-        <p><b>1</b><span>실생활 소재와 수능 스타일 지문 출제</span></p>
-        <p><b>2</b><span>상위권과 중위권의 사고력 차이 부각</span></p>
-      </div>
+    <div class="k-hero"><span class="k-big">25문항</span><p class="k-p">객관식 20문항<br>서술형 5문항</p></div>
+    <div class="k-tiles">
+      <div><b>3~6점</b><span>문항당 배점</span></div>
+      <div><b>1~3단원</b><span>시험 범위 전체</span></div>
+      <div><b>3지문</b><span>교과서 밖 지문</span></div>
+      <div class="hl"><b>5문항</b><span>마지막 고난도</span></div>
     </div>
   </div>
 </div>
 
-<!-- 3. 시각 → 난이도 5단계 눈금(중상만 메인) + 핵심 · 변수 2줄 + 한 줄 -->
-<div class="kcard" id="b" data-bgimg="https://images.unsplash.com/photo-1534644107580-3a4dbd494a95?w=1200&q=80&auto=format&fit=crop">
-  <div class="k-head"><h2 class="k-title">지문이 길수록<br>추론에서 갈렸어요</h2><p class="k-sub">중상 난이도 · 긴 지문과 복합 자료</p></div>
+<!-- 3. 난이도 → 5단계 눈금(중상만 메인) + 문항 구간별 3줄 -->
+<div class="kcard" id="b" data-bgimg="pool:exam">
+  <div class="k-head"><h2 class="k-title">지문이 길수록<br>추론에서 갈렸어요</h2><p class="k-sub">전체 난이도 중상, 문항 구간별로 보면</p></div>
   <div class="k-body">
     <div class="k-panel k-level5">
       <p><i></i><span>하</span></p><p><i></i><span>중하</span></p><p><i></i><span>중</span></p><p class="hl"><i></i><span>중상</span></p><p><i></i><span>상</span></p>
     </div>
-    <div class="k-rows k-pairs"><p><span>핵심</span><b>긴 지문과 복합 자료</b></p><p><span>점수 차이</span><b>맥락 이해와 추론 능력</b></p></div>
+    <div class="k-rows k-pairs"><p><span>1~8번</span><b>익숙한 교과서 유형</b></p><p><span>9~18번</span><b>지문 변형과 복합 자료</b></p><p><span>19~25번</span><b>추론형 고난도</b></p></div>
   </div>
 </div>
 
-<!-- 4. 시각 → 큰 숫자(독해 90) + 영역별 점수 막대 5줄, 독해만 메인 -->
-<div class="kcard" id="c" data-bgimg="https://images.unsplash.com/photo-1581555866321-708b05cb9b4d?w=1200&q=80&auto=format&fit=crop">
+<!-- 4. 출제 DNA → 큰 숫자(독해 90) + 영역별 점수 막대 5줄, 독해만 메인 -->
+<div class="kcard" id="c" data-bgimg="pool:writing">
   <div class="k-head"><h2 class="k-title">독해 난이도가<br>가장 높았어요</h2><p class="k-sub">대치중 국어 출제 DNA</p></div>
   <div class="k-body">
     <div class="k-hero"><span class="k-big">90</span><p class="k-p">독해 난이도<br>가장 높은 영역</p></div>
@@ -51,9 +50,9 @@
   </div>
 </div>
 
-<!-- 5. 포인트 → 번호 배지 줄 3개(이름 + 설명) -->
-<div class="kcard" id="d" data-bgimg="https://images.unsplash.com/photo-1665979738276-e41e815df1e1?w=1200&q=80&auto=format&fit=crop">
-  <div class="k-head"><h2 class="k-title">세 가지 포인트에서<br>점수가 갈렸어요</h2><p class="k-sub">꼭 잡아야 할 포인트</p></div>
+<!-- 5. 등급을 가른 포인트 → 번호 배지 줄 3개(이름 + 설명), 고난도 문항 번호는 제목에 -->
+<div class="kcard" id="d" data-bgimg="pool:exam">
+  <div class="k-head"><h2 class="k-title">19~21번에서<br>등급이 갈렸어요</h2><p class="k-sub">꼭 잡아야 할 세 가지 포인트</p></div>
   <div class="k-body">
     <div class="k-days k-days-num">
       <div class="k-panel"><em>01</em><p><b class="k-h">계획과 실제 대조</b><span>방송 계획과 실제 방송의 불일치</span></p></div>
@@ -64,7 +63,7 @@
 </div>
 
 <!-- 6. 다음 시험 전략 → 큰 번호 3단, 마지막만 메인 -->
-<div class="kcard" id="e" data-bgimg="https://images.unsplash.com/photo-1630983358494-96012d838b84?w=1200&q=80&auto=format&fit=crop">
+<div class="kcard" id="e" data-bgimg="pool:desk">
   <div class="k-head"><h2 class="k-title">다음 시험은<br>실생활 지문부터 잡아요</h2><p class="k-sub">다음 시험 학습 전략 세 가지</p></div>
   <div class="k-body">
     <div class="k-essay">
@@ -75,21 +74,23 @@
   </div>
 </div>
 
-<!-- 8. 적중 → 문항 줄(번호 · 개념 · 난이도 칩 · 적중 체크) -->
-<div class="kcard" id="g" data-bgimg="https://images.unsplash.com/photo-1616089804112-f0a475d1b193?w=1200&q=80&auto=format&fit=crop">
-  <div class="k-head"><h2 class="k-title">짚었던 3문항이<br>모두 출제됐어요</h2><p class="k-sub">수업에서 다룬 개념이 그대로 나왔어요</p></div>
+<!-- 7. 학원 적중 문항 → 문항 줄 5개(번호 · 개념 · 난이도) -->
+<div class="kcard" id="g5" data-bgimg="pool:exam">
+  <div class="k-head"><h2 class="k-title">짚었던 5문항이<br>모두 출제됐어요</h2><p class="k-sub">수업에서 다룬 개념이 그대로 나왔어요</p></div>
   <div class="k-body">
     <div class="k-panel k-hits">
       <p class="k-hits-head"><span>문항</span><span>개념</span><span>난이도</span></p>
       <p><b>1번</b><span>방송 진행자의 말하기 방식</span><em>중</em></p>
       <p><b>2번</b><span>계획과 실제 내용 대조</span><em class="up">상</em></p>
       <p><b>3번</b><span>청취자 반응 분석</span><em class="up">상</em></p>
+      <p><b>4번</b><span>글쓴이의 관점과 표현 방식 파악</span><em>중</em></p>
+      <p><b>5번</b><span>자료를 활용한 글쓰기 계획</span><em>하</em></p>
     </div>
   </div>
 </div>
 
-<!-- 9. 수준별 전략 → 대상 · 할 일 · 설명 칸 -->
-<div class="kcard" id="h" data-bgimg="https://images.unsplash.com/photo-1598981457915-aea220950616?w=1200&q=80&auto=format&fit=crop">
+<!-- 8. 수준별 공부법 → 대상 · 할 일 · 설명 칸 -->
+<div class="kcard" id="h" data-bgimg="pool:help">
   <div class="k-head"><h2 class="k-title">상위권은 논리,<br>중위권은 구조부터</h2><p class="k-sub">수준별 학습 전략</p></div>
   <div class="k-body">
     <div class="k-panel k-areas">
@@ -100,29 +101,31 @@
   </div>
 </div>
 
-<!-- 10. 학부모 이야기 → 큰 인용 -->
+<!-- 9. 학부모 가이드 → 집에서 나눌 대화 3줄(학부모 · 아이) + 알약 흐름 -->
 <div class="kcard" id="i">
-  <div class="k-head"><h2 class="k-title">비교하는 문제를<br>가장 어려워했어요</h2><p class="k-sub">학부모님이 전해 주신 이야기</p></div>
+  <div class="k-head"><h2 class="k-title">아이의 약점은<br>대화로 함께 찾아 주세요</h2><p class="k-sub">다음 시험을 위해 집에서 해 줄 수 있는 일</p></div>
   <div class="k-body">
-    <div class="k-photo-hero">
-      <div data-photo="photo" data-slot="i-photo" data-caption="학부모 사진" data-src="https://images.unsplash.com/photo-1596392954601-545d4243c2cb?w=1200&q=80&auto=format&fit=crop"></div>
-      <figure class="k-panel k-quote">
-        <i class="k-quote-mark"></i>
-        <blockquote>아이가 2번 문제에서 방송 계획과 실제 내용을 비교하는 부분을 많이 어려워했어요.</blockquote>
-        <figcaption>이○○ 어머님 · 대치중 1학년 학부모</figcaption>
-      </figure>
+    <div class="k-chat">
+      <div class="k-msg"><div><b class="k-who">학부모</b><p class="k-bubble">어떤 문제에서 자주 막혔어?</p></div></div>
+      <div class="k-msg me"><div><b class="k-who">아이</b><p class="k-bubble">계획과 실제를 비교하는 문제요</p></div></div>
+      <div class="k-msg"><div><b class="k-who">학부모</b><p class="k-bubble">그 문제를 말로 설명해 볼래?</p></div></div>
+    </div>
+    <div class="k-row" style="justify-content:center;gap:14px">
+      <span class="k-pill">오답 노트 확인</span><span class="k-arrow"></span>
+      <span class="k-pill">말로 설명</span><span class="k-arrow"></span>
+      <span class="k-pill">계획 세우기</span>
     </div>
   </div>
 </div>
 
-<!-- 11. 총평 → 체크 3줄 + 한 줄 -->
-<div class="kcard" id="j" data-bgimg="https://images.unsplash.com/photo-1665979738279-bd2441290e02?w=1200&q=80&auto=format&fit=crop">
+<!-- 10. 총평 → 등급을 가른 두 힘(독해력 메인 · 논리력) + 출제 방식 · 다음 시험 2줄 -->
+<div class="kcard" id="j" data-bgimg="pool:books">
   <div class="k-head"><h2 class="k-title">독해력과 논리력이<br>등급을 결정했어요</h2><p class="k-sub">이번 시험 총평</p></div>
   <div class="k-body">
-    <div class="k-panel k-checks">
-      <p><i data-ph="check-circle"></i>수능형 문제와 실생활 소재 융합</p>
-      <p><i data-ph="check-circle"></i>계획과 실제, 발화자와 청취자 구분</p>
-      <p><i data-ph="check-circle"></i>다음 시험은 실전형 독해력 강화</p>
+    <div class="k-duo">
+      <div class="k-panel accent"><b class="k-h">독해력</b><span>실생활 지문 속 계획과 실제 대조</span></div>
+      <div class="k-panel"><b class="k-h">논리력</b><span>발화자와 청취자의 입장 구분</span></div>
     </div>
+    <div class="k-rows k-pairs"><p><span>출제 방식</span><b>수능형 문제 + 실생활 소재</b></p><p><span>다음 시험</span><b>실전형 독해력 강화</b></p></div>
   </div>
 </div>
