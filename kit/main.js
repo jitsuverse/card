@@ -174,12 +174,11 @@ const DECK = ((d) => (/^[\w/-]+$/.test(d ?? '') ? d : 'cards'))(new URLSearchPar
 
 // ---------- 그리기 ----------
 // ---------- 결과 화면 섹션 (데브 서버 SectionBlock과 같은 겉모습) ----------
-// 카드마다: 'N. 섹션 제목'(카드 제목 글자) + [카드 문구 수정][이 부분만 다시] / 왼쪽 카드 + 이미지 저장, 오른쪽 블로그 본문 칸(더미 글).
+// 카드마다: 'N. 섹션 제목'(카드 제목 글자) + [이 부분만 다시] ('카드 문구 수정'은 뺐다 — 카드 글자를 더블클릭해 바로 고친다, 2026-10-17 사용자) / 왼쪽 카드 + 이미지 저장, 오른쪽 블로그 본문 칸(더미 글).
 // 이 웹앱엔 글을 만드는 로직이 없어서 본문은 더미. '내용 편집하기'를 누르면 초록 테두리 편집 모드(데브 서버와 같음).
 const DUMMY_TEXT = '이 칸에는 카드 내용을 풀어 쓴 블로그 본문이 들어가요. 실제 서비스에서는 AI가 카드 문구에 맞춰 학부모님이 읽기 좋은 글을 써 주고, 원장님은 편집 모드에서 문장을 다듬을 수 있어요. 지금 웹앱에서는 화면 배치를 확인하기 위한 예시 글이에요.';
 const sectionTitle = (c) => (c.querySelector('.k-title, .title')?.innerText ?? '').replace(/\s*\n\s*/g, ' ').trim() || '카드';
 let editMode = false;
-const PEN = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
 const REDO = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg>';
 const SAVE = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>';
 const COPY = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
@@ -190,11 +189,62 @@ function wrapSection(frame, card, i) {
   const t = sectionTitle(card).replace(/"/g, '&quot;');
   sec.innerHTML = `<div class="res-sec-head"><span class="res-num">${i + 1}.</span>
       <input class="res-sec-title" value="${t}" readonly><h3>${t}</h3>
-      <span class="res-acts"><button type="button">${PEN}카드 문구 수정</button><button type="button">${REDO}이 부분만 다시</button></span></div>
+      <span class="res-acts"><button type="button">${REDO}이 부분만 다시</button></span></div>
     <div class="res-grid"><div class="res-card"><button type="button" class="res-save">${SAVE}이미지 저장</button></div>
       <div class="res-text"><div class="res-text-head"><b class="mode"></b><button type="button">${COPY}텍스트 복사</button></div><textarea readonly>${DUMMY_TEXT}</textarea></div></div>`;
   frame.replaceWith(sec);
   sec.querySelector('.res-card').prepend(frame);
+}
+
+// ---------- 카드 글자 바로 고치기 (2026-10-17 사용자): 글자 위에서 입력 커서, 더블클릭하면 그 자리에서 편집 ----------
+// 덱 원본(cardsHTML)의 글자 요소마다 data-eid를 붙여 두고, 편집이 끝나면 원본의 같은 요소를 바꾼 뒤 다시 그린다 —
+// 스타일·옵션을 바꿔 다시 그려도 고친 글자가 남는다(새로고침하면 처음 덱으로). 달력·타이머처럼 data-* 값으로 만드는 글자는 대상 아님.
+function tagEditable(html) {
+  const t = document.createElement('template');
+  t.innerHTML = html;
+  let n = 0;
+  t.content.querySelectorAll('.kcard *').forEach((el) => {
+    if ([...el.childNodes].some((c) => c.nodeType === 3 && c.textContent.trim())) el.dataset.eid = n++;
+  });
+  return t.innerHTML;
+}
+function initTextEdit() {
+  let editing = null, before = '';
+  const finish = (save) => {
+    const el = editing;
+    if (!el) return;
+    editing = null;
+    el.removeAttribute('contenteditable');
+    if (!save) { el.innerHTML = before; return; }
+    const html = el.innerHTML.replace(/<div>/g, '<br>').replace(/<\/div>|&nbsp;$/g, '').replace(/(<br>\s*)+$/, ''); // 줄바꿈은 <br>로
+    if (html === before) return;
+    const t = document.createElement('template');
+    t.innerHTML = cardsHTML;
+    const src = t.content.querySelector(`[data-eid="${el.dataset.eid}"]`);
+    if (!src) return;
+    src.innerHTML = html;
+    cardsHTML = t.innerHTML;
+    render();
+  };
+  deck.addEventListener('dblclick', (e) => {
+    const el = e.target.closest('.kcard [data-eid]');
+    if (!el || el === editing) return;
+    finish(true);
+    editing = el; before = el.innerHTML;
+    el.setAttribute('contenteditable', 'true');
+    el.focus();
+  });
+  deck.addEventListener('keydown', (e) => {
+    if (!editing) return;
+    if (e.key === 'Escape') { e.preventDefault(); finish(false); }
+    else if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); finish(true); } // Shift+Enter = 줄바꿈
+  });
+  deck.addEventListener('focusout', (e) => { if (e.target === editing) finish(true); });
+  deck.addEventListener('paste', (e) => { // 붙여 넣기는 글자만
+    if (!editing) return;
+    e.preventDefault();
+    document.execCommand('insertText', false, e.clipboardData.getData('text/plain'));
+  });
 }
 
 async function render() {
@@ -205,6 +255,7 @@ async function render() {
     // 덱 맨 위 <!-- default-style: 사진 --> → 처음 열 때 그 추천 스타일로 (규칙: 사진은 사진 스타일에서만이라, 이미지 덱은 사진 스타일로 열린다)
     const def = /<!--\s*default-style:\s*([^>]+?)\s*-->/.exec(cardsHTML)?.[1];
     if (def && panel?.chooseByName(def)) { panel.update(); Object.entries(themeVars(state)).forEach(([k, v]) => deck.style.setProperty(k, v)); }
+    cardsHTML = tagEditable(cardsHTML); // 글자가 든 요소마다 data-eid — 더블클릭 편집을 원본에 저장하는 자리
   }
   deck.innerHTML = cardsHTML;
   resolvePools(deck); // pool:주제 → 덱마다 다른 사진 주소
@@ -678,5 +729,6 @@ function initStudio() {
 panel = setupPanel(state, render, { brand: getBrand }); // 왼쪽 옵션(내 스타일·폰트·컬러·도형·배경…) — 스타일을 골라도 메인은 학원 색
 initPhotos();
 initStudio();
+initTextEdit();
 $('#export').addEventListener('click', exportZip);
 render().then(drawStyleThumbs);
