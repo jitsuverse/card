@@ -19,7 +19,7 @@
    - 사진 모음: 덱의 `pool:주제`(`data-bgimg`·`data-src`·`data-srcs`)를 `config.js PHOTO_POOL` 사진으로 바꾸기(`resolvePools` — 덱마다 다르게, 덱 안에서 겹치지 않게) + 사진 도구 '다른 사진' 버튼
    - 사진 유형 5가지: 교재 목업 · 강사 누끼 · 사진 묶음(1~4장)은 모든 스타일, **사진 강조(사진 1장 + 도식)와 배경 사진은 사진 스타일에서만**(배경 사진은 덱마다 첫 한 장 — `fit.js fitPhoto`) — 다른 스타일이면 사진 강조의 사진만 빼고 카드에 `.no-photo`(`stripPhotos`), 배경 사진은 사진 스타일에서만 깔기(`bgPhoto`)
    - 메인 컬러 표지의 아이콘: `renderIcon(이름, 강조색, 메인 컬러, true)` — 세 번째 값이 **메인 컬러**(배경색 ✗)
-6. **v1.4 홈페이지 코드 요청 6건은 [`docs/HOMEPAGE-FIXES.md`](docs/HOMEPAGE-FIXES.md) 위쪽 표** — 그림자·호버 · 스타일 칸 127px · 반복 도식 다시 만들기 · 넘침 자동 재생성 · 첫 장으로 캐시 데우기(비용) · 새 콘텐츠 타입 `study_tip` · `parent_guide`.
+6. **v1.4 홈페이지 코드 작업은 [`docs/CLAUDE-TASKS-HOMEPAGE-v1.4.md`](docs/CLAUDE-TASKS-HOMEPAGE-v1.4.md)** — Claude에게 그대로 맡기는 작업 요청서(그림자·호버 · 견본 127px · 반복 도식 다시 만들기 · 넘침 자동 재생성 · 배경 사진 덱마다 한 장). 원본 표는 `docs/HOMEPAGE-FIXES.md`.
 
 ## 폴더 구조
 
