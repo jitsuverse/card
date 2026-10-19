@@ -81,3 +81,99 @@ scripts/            kit-check.mjs(검사) · kit-shot.mjs(사진) · kit-lib.mjs
 ## 옵션 이름
 
 화면에 보이는 이름(쉬운 우리말): 도형 모양 각진형/둥근형, 도형 스타일 기본/그림자/테두리(세부: 테두리 굵기·색), 본문 카드 배경 기본/카드형/테두리형/상단 강조, 교재 목업 정면/책등/옆면/옆면 넓게. 코드의 id(`solid`·`panel`·`outline`·`split` 등)는 그대로.
+
+## 2026-10-19 덱 기록 (PARTS.md에서 옮김 — 비용 최적화로 프롬프트에서 뺌)
+
+### 상담 안내 덱 — `examples/consultation.html` (영업형, 2026-10-19)
+
+새 부품 없이: 고민 말풍선(`.k-says`, a) · 상담 달력(`.k-month-box`, b 시각) · 40분 상담 시간표(`.k-sched-text`, c) · 상담 요약지 편지(`.k-letter`, d 시각) · 함께 보는 세 가지(`.k-areas`, e) · 준비물 사진 강조(`.k-photo-hero` + `.k-reasons`, 사진이 빠지면 `.k-nophoto-only` 큰 숫자, f) · 상담 뒤 세 단계(`.k-essay`, g) · Q&A(`.k-faq`, i) · 상담 쿠폰 + 예약 알약(`.k-coupon`, j 시각).
+
+
+### 학원 철학 2 덱 — `examples/academy-philosophy-2.html` (영업형, 2026-10-19 — '빨리보다 바르게', 첫 철학 덱과 부품이 겹치지 않게)
+
+새 부품 없이: 비교표(`.k-matrix`, a) · 꺾은선 + 큰 숫자(`.k-graph`, b 시각) · 세 약속(`.k-essay`, c) · 요일 배지(`.k-days`, d) · 학생 쪽지(`.k-notes`, e 시각) · 숫자 타일(`.k-tiles-text`, f — 타일 `b`는 숫자만, '매달'처럼 글자면 제목 폰트 검사에 걸림) · 원장 한마디(`.k-photo-hero` + `.k-quote`, 사진이 빠지면 `.k-nophoto-only`, g) · 습관 상장(`.k-cert`, h 시각) · 맞는 학생 체크(`.k-checks`, i).
+
+
+### 입시칼럼 2 덱 — `examples/admission-column-2.html` (정보형, 2026-10-19 — '수시 원서 6장', 첫 입시칼럼 덱과 부품이 겹치지 않게)
+
+와플 + 범례(`.k-waffle` · `.k-key`, a — 칸 색은 순서대로 c0 흰색 · c1 메인 · c2 회색이라 강조할 값을 두 번째에) · 전형 네 가지(`.k-reasons`, b) · 교과 vs 종합(`.k-vs`, c) · 고3 1년 노선도(`.k-metro` 5역 한 줄형, d 시각) · 3합 7 큰 숫자 + 등급 합 계산(`.k-hero` + 새 부품 `.k-sums`, e) · 원서 6장 영수증(`.k-receipt`, f 시각) · 상담 선생님 한마디(`.k-photo-hero` + `.k-quote`, g) · 원서 전 점검(`.k-checks`, h) · 상담 초대권(`.k-ticket`, i 시각).
+
+| 부품 | 쓰임 |
+|---|---|
+| `.k-sums` > `.k-panel`(`.hl` 통과 줄) > `span`(`small`과목 + `b`등급)×3 + `i`(+ · =) + `p`(`strong`합계 + `em`통과/탈락 칩) | 등급 합 계산 (입시칼럼2 e, 2026-10-19): 수능 최저 '3합 7'처럼 과목 등급을 더하는 식. 통과 줄만 합계·칩 메인, 줄은 2개 |
+
+
+### 수업 소개 2 덱 — `examples/class-intro-2.html` (홍보형, 2026-10-19 — 중등 국어 독해반, 첫 수업 소개 덱(영어)과 부품이 겹치지 않게)
+
+새 부품 없이: 숫자 세 칸 → 결론(`.k-stats3` + `.k-verdict`, a) · 지문 표시(`.k-annot`, b 시각) · 90분 시간표(`.k-sched-text`, c) · 어휘 카드(`.k-vocab`, d 시각) · 반 카드 3장(`.k-tiers`, e — 칸 안 설명은 5자 안팎, 카드형 배경에서 꺾임) · 교재 목차(`.k-toc`, f 시각) · 큰 숫자 + 전후 점 막대(`.k-hero` + `.k-db`, g) · 학생 한마디(`.k-photo-hero` + `.k-quote`, h) · 등록 단계(`.k-steps3` + `.k-info`, i).
+
+
+### 성적 상승자 후기 덱 — `examples/score-rise-review.html` (홍보형, 2026-10-19 — 한 학생의 62→91점 1년, 우수자 후기 덱과 부품이 겹치지 않게)
+
+새 부품 없이: 큰 숫자 + 꺾은선(`.k-hero` + `.k-graph`, a 시각) · 첫 진단 숫자 세 칸 → 결론(`.k-stats3` + `.k-verdict`, b) · 전후 공부법(`.k-vs`, c) · 오답 카드(`.k-flash`, d 시각) · 공부 시간 비율(`.k-blocks` 같은 폭 2칸, e 시각) · 학부모 한마디(`.k-photo-hero` + `.k-quote`, f) · 과목별 상승(`.k-panel.k-rank`, g — 흰 도형으로 감쌈) · 학생 Q&A(`.k-faq`, h — 본문 배경 사진 한 장) · 맞는 학생 체크(`.k-checks`, i).
+
+
+### 겨울방학 특강 덱 — `examples/winter-special.html` (모집형, 2026-10-19 — 자유 주제, 특강 타입 예시)
+
+새 부품 없이: 12회 주제 달력(`.k-cal`, a) · 큰 숫자 + 출발 안내판(`.k-hero` + `.k-board`, b 시각 — 칸 가운데 이음선은 뺌) · 숫자 타일(`.k-tiles-text`, c) · 학기 중 vs 방학(`.k-vs`, d) · 교재 바인더(`.k-binder`, e 시각) · 준비물 사진 강조(`.k-photo-hero` + `.k-reasons`, f) · Q&A(`.k-faq`, g — 본문 배경 사진 한 장) · 맞는 학생(`.k-checks`, h) · 얼리버드 쿠폰(`.k-coupon`, i 시각 — 큰 글자 자리는 숫자만, '교재'처럼 글자면 검사에 걸림).
+
+
+### 시험 2주 전 공부법 덱 — `examples/study-d14.html` (정보형, 2026-10-19 — 자유 주제, 학부모·학생이 저장하는 공부 팁)
+
+새 부품 없이: 일력 D-14 + 기간별 할 일(`.k-row.k-dday`, a 시각) · 하루 네 단계(`.k-steps4`, b) · 과목별 시간 연필 막대(`.k-panel` > `.k-pencils`, c 시각 — 흰 도형으로 감쌈) · 실수 TOP 3 시상대(`.k-podium`, d) · 매일·주말·전날 체크(`.k-cycle`, e) · 시험 전날 사진 강조(`.k-photo-hero` + `.k-reasons`, f) · 학부모 대화 + 알약 흐름(`.k-chat`, g) · Q&A(`.k-faq`, h — 본문 배경 사진 한 장) · 응원 엽서(`.k-postcard`, i 시각).
+
+
+### 예비 중1 가이드 덱 — `examples/pre-middle-guide.html` (정보형 + 모집, 2026-10-19 — 자유 주제, 학부모 안내)
+
+새 부품 없이: 수학 학년 계단(`.k-stair3`, a 시각 — 칸 안 단원 6자 안팎) · 초등 vs 중학교 평가(`.k-vs`, b) · 겨울방학 세 가지(`.k-essay`, c) · 챙겨 갈 습관 수하물 태그(`.k-luggage`, d 시각) · 선배 한마디(`.k-photo-hero` + `.k-quote`, e — 사진 스타일에서 인용문이 길면 넘침, 줄은 짧게) · 숫자로 본 중학교(`.k-tiles-text`, f) · 시기 배지(`.k-days`, g) · Q&A(`.k-faq`, h — 본문 배경 사진 한 장) · 예비 중1반 탑승권 + 신청 알약(`.k-pass`, i 시각).
+
+
+### 매일 10분 연산 덱 — `examples/daily-calc.html` (정보형 + 모집, 2026-10-19 — 자유 주제, 초등 3~4학년)
+
+이유 목록(`.k-reasons`, a) · 10분 타이머(`.k-timer`, b 시각) · 빨리 vs 정확히(`.k-vs`, c — 판 배경에서 칸이 좁아 항목은 7자 안팎) · 연산 레벨 맵(`.k-panel.k-levels-box` > `.k-levels`, d 시각 — 새 클래스 `.k-levels-box`: 레벨 맵을 흰 도형 안에, 이름은 5자 안팎) · 요일 배지(`.k-days`, e) · 도장 카드(`.k-stamps`, f 시각 — 16칸까지, 20칸 이상은 넘침) · 학부모 한마디(`.k-photo-hero` + `.k-quote`, g) · Q&A(`.k-faq`, h — 본문 배경 사진 한 장) · 진단 단계(`.k-steps3` + `.k-info`, i).
+
+
+### 고1 첫 모의고사 가이드 덱 — `examples/first-mock-exam.html` (정보형 + 상담, 2026-10-19 — 자유 주제)
+
+새 부품 없이: 과목별 시간·문항 타일(`.k-tiles-text`, a) · 시험 날 시간표(`.k-sched-text`, b 시각 — flex = 시험 분) · 연습 OMR(`.k-omr`, c 시각) · 내신 vs 모의고사(`.k-vs`, d) · 2주 준비(`.k-essay`, e) · 준비물 사진 강조(`.k-photo-hero` + `.k-reasons`, f) · 큰 숫자 + 성적표(`.k-hero` + `.k-report`, g 시각) · Q&A(`.k-faq`, h — 본문 배경 사진 한 장) · 분석 상담 초대권(`.k-ticket`, i).
+
+
+### 초등 독서 습관 덱 — `examples/reading-habit.html` (정보형 + 모집, 2026-10-19 — 자유 주제, 초등 5~6학년)
+
+새 부품 없이: 숫자 세 칸 → 결론(`.k-stats3` + `.k-verdict`, a) · 책 문장 표시(`.k-window` + `.k-read`, b 시각 — 발췌는 지어낸 예문, 실제 책 인용 ✗) · 요일 배지(`.k-days`, c) · 장르 비교표(`.k-matrix`, d) · 읽기 시간 비율(`.k-blocks` 3:1, e) · 큰 숫자 + 독서 기록 목차(`.k-hero` + `.k-toc`, f 시각) · 반원 게이지(`.k-gauge`, g — 본문 배경 사진 한 장) · 학생 한마디(`.k-photo-hero` + `.k-quote`, h) · 독서반 쿠폰(`.k-coupon`, i 시각).
+
+
+### 고교학점제 가이드 덱 — `examples/credit-system.html` (정보형 + 상담, 2026-10-19 — 자유 주제, 중3 학부모)
+
+새 부품 없이: 졸업 학점 타일(`.k-tiles-text`, a) · 과목 구성 개념 지도(`.k-cmap`, b 시각) · 예전 vs 학점제(`.k-vs`, c) · 학생마다 다른 시간표(`.k-panel` > `.k-week` 3줄, d 시각 — 흰 도형으로 감쌈) · 큰 숫자 + 이수 기준 체크(`.k-hero` + `.k-checks`, e) · 과목 고르는 순서(`.k-essay`, f) · 선배 한마디(`.k-photo-hero` + `.k-quote`, g) · Q&A(`.k-faq`, h — 본문 배경 사진 한 장) · 상담 명함(`.k-cards`, i 시각).
+
+
+### 수학 서술형 덱 — `examples/math-written.html` (정보형 + 클리닉, 2026-10-19 — 자유 주제, 중학 수학)
+
+새 부품 없이: 큰 숫자 + 감점 이유 막대(`.k-hero` + `.k-scores`, a) · 실제 풀이 첨삭 + 알약(`.k-proof.k-proof-math`, b 시각) · 채점 기준 세 칸(`.k-areas`, c) · 감점 vs 만점 답안(`.k-vs`, d) · 쓰는 네 단계 높아지는 막대(`.k-climb`, e 시각 — 큰 글자 `strong`은 숫자만, '식·답' 같은 글자는 검사에 걸림) · 전후 막대(`.k-rise`, f 시각) · 학생 한마디(`.k-photo-hero` + `.k-quote`, g) · Q&A(`.k-faq`, h — 본문 배경 사진 한 장) · 진단 단계(`.k-steps3` + `.k-info`, i).
+
+
+### 중학 영단어 덱 — `examples/english-words.html` (정보형 + 모집, 2026-10-19 — 자유 주제)
+
+새 부품 없이: 숫자 세 칸 → 결론(`.k-stats3` + `.k-verdict`, a) · 방법별 순위 막대(`.k-panel.k-rank`, b — 이름은 5자 안팎, 길면 막대와 겹침) · 쌓인 어휘 카드(`.k-vocab`, c 시각 — 뒤 카드에 다른 단어) · 눈 vs 입과 손(`.k-vs`, d) · 복습 날 달력(`.k-month-box`, e 시각) · 20분 비율 블록(`.k-blocks`, f) · 준비물 사진 강조(`.k-photo-hero` + `.k-reasons`, g) · Q&A(`.k-faq`, h — 본문 배경 사진 한 장) · 체험 수하물 태그(`.k-luggage`, i 시각).
+
+
+### 초등 겨울방학 루틴 덱 — `examples/winter-routine.html` (정보형 + 방학반, 2026-10-19 — 자유 주제)
+
+숫자 세 칸 → 결론(`.k-stats3` + `.k-verdict`, a) · 오전 시간표(`.k-sched-text`, b 시각) · 아이콘 세 칸 습관(`.k-features`, c) · 학기 vs 방학(`.k-vs`, d) · 큰 숫자 + 메달(`.k-hero` + `.k-panel.k-medals-box` > `.k-medals`, e 시각 — 새 클래스 `.k-medals-box`: 메달을 흰 도형 안에, 리본이 숨지 않게 isolation) · 주기별 체크(`.k-cycle`, f) · 학부모 한마디(`.k-photo-hero` + `.k-quote`, g) · Q&A(`.k-faq`, h — 본문 배경 사진 한 장) · 방학반 두 가지(`.k-plans`, i 시각).
+
+
+### 과학 실험 보고서 덱 — `examples/science-report.html` (정보형 + 클리닉, 2026-10-19 — 자유 주제, 중학 과학 수행평가)
+
+새 부품 없이: 큰 숫자 + 구간 막대(`.k-hero` + `.k-seg`, a — 막대와 같은 내용의 줄 목록은 덧붙이지 않음) · 보고서 다섯 칸 목차(`.k-toc`, b 시각) · 결론 문장 첨삭(`.k-proof`, c 시각 — 끼워 넣는 말이 문장 끝 근처면 오른쪽으로 넘침, 첫 줄은 짧게) · 쓰는 네 단계(`.k-steps4`, d) · 감점 vs 만점(`.k-vs`, e) · 숫자 타일(`.k-tiles-text`, f) · 학생 한마디(`.k-photo-hero` + `.k-quote`, g) · Q&A(`.k-faq`, h — 본문 배경 사진 한 장) · 클리닉 초대권(`.k-ticket`, i).
+
+
+### 시험 기간 스마트폰 거리 두기 덱 — `examples/phone-distance.html` (정보형 + 자습실, 2026-10-19 — 자유 주제)
+
+새 부품 없이: 숫자 세 칸 → 결론(`.k-stats3` + `.k-verdict`, a — 칸 설명은 5자 안팎, 카드형에서 꺾임) · 공부 앱만 남긴 태블릿 홈 화면(`.k-tablet`, b 시각 — 앱 이름은 일반 이름, 상표 ✗) · 거리 두는 세 가지(`.k-essay`, c) · 큰 숫자 + 배터리 전후(`.k-hero` + `.k-batt`, d 시각) · 50분/10분 비율 블록(`.k-blocks`, e — 좁은 칸도 flex 2 이상) · 큰 숫자 + 가족 약속 체크(`.k-hero` + `.k-checks`, f) · 학생 한마디(`.k-photo-hero` + `.k-quote`, g) · Q&A(`.k-faq`, h — 본문 배경 사진 한 장) · 자습실 초대권(`.k-ticket`, i).
+
+
+### 학원 고를 때 다섯 가지 덱 — `examples/choose-academy.html` (학부모 가이드 + 상담·체험, 2026-10-19 — 자유 주제)
+
+새 부품 없이: 체크리스트 다섯 줄(`.k-reasons`, a) · 큰 숫자 + 순위 막대(`.k-hero` + `.k-rank`, b) · 광고 문구 vs 직접 확인(`.k-vs`, c — 칸 이름은 4~5자, 다른 학원 비방 ✗) · 고르는 네 단계(`.k-steps4`, d) · 큰 숫자 + 리포트 결과지(`.k-hero` + `.k-report`, e 시각) · 상담 질문 세 칸(`.k-areas`, f — 본문 배경 사진 한 장) · 아이 엽서(`.k-postcard`, g 시각) · 준비물 사진 강조(`.k-photo-hero` + `.k-reasons`, h) · 체험 탑승권 + 알약(`.k-pass`, i 시각).
+

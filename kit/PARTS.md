@@ -29,6 +29,7 @@
 ```
 
 - 표지는 `class="kcard layout-cover"`로 만든다. 안에 `.cover-tag`, `h1.title`, `.sub`, `<div data-photo="cover" data-icon="아이콘">`을 둔다.
+- **표지 아이콘은 덱 주제에 맞게, 다른 덱과 겹치지 않게**(2026-10-19 사용자 '다양화' — 23종): bulb 아이디어·철학 · chart 성적·통계 · check 일정·관리 · heart 마음·철학 · star 후기·추천 · chat 상담·대화 · target 목표·레벨 · doc 문법·자료 · book 독서·교재 · clock 시간·습관 · people 반·모임 · cap 입시·대학 · rocket 코딩·도약 · megaphone 모집·설명회 · pencil 글쓰기·서술형 · trophy 우수자·수상 · search 분석·진단 · flask 과학·실험 · globe 영어·외국어 · calc 수학·연산 · gift 이벤트·무료 체험 · compass 진로·전략 · house 학교·가정·우리 학원
 - `.k-body`는 도식을 영역 가운데에 둔다. 넘치면 잘리지 않고 검사(`scripts/kit-check.mjs`)에서 걸린다.
 
 ## 글자
@@ -93,7 +94,7 @@
 | `.k-shelf` > `.k-spine` | 책등 높이 |
 | `.k-stat` + `.k-track` | 점수 줄 |
 | `.k-podium` > `.r1/.r2/.r3` | 시상대 (과학 p). 가운데 1등이 `.hl` |
-| `.k-matrix` | 비교표 (과학 l). 첫 줄 머리, 우리 열은 `.hl`, 체크는 `<i data-ph="check-circle">`, 빈 `<i>`는 없음 |
+| `.k-matrix` | 비교표 (과학 l). 첫 줄 머리, 우리 열은 `.hl`(흰 도형 + 메인 머리·체크, 2026-10-19), 체크는 `<i data-ph="check-circle">`, 빈 `<i>`는 없음 |
 
 ## 사람·사진·아이콘
 
@@ -106,8 +107,8 @@
 | `<div class="k-photoset" data-set data-count="3" data-captions="a,b,c,d" [data-srcs="주소1 주소2 …"]>` | 사진 묶음 1~4장 (과학 h). 묶음만 있는 카드는 높이 740, 아래 글이 있으면 600에서 줄어듦. **기본은 칸에 맞춰 채움, 원본 비율은 버튼**(사용자 확정 2026-10-16): 사진 도구의 '원본 비율로/칸에 맞춰 채우기' 버튼(강사·교재 목업 제외 모든 사진) 또는 덱의 `data-fits="contain …"`(시험지·교재 사진은 덱을 만들 때 contain으로). 원본 비율 사진이 하나라도 있으면 fit.js `fitPhotoSets`가 원본 비율 줄 배치(잘림 없음), 모두 채움이면 격자. `.k-photo-hero`의 사진도 `data-fit`으로 정할 수 있다. 미리보기에서 + 추가 / × 빼기, 장수에 따라 1장·나란히·왼쪽 큰 1+2·2×2 |
 | `.k-photos` / `.k-photos-side` | 사진 3장 고정 배치 (예전) |
 | `.k-photo-hero` > `div data-photo="photo" data-src="사진 주소"` + `.k-panel`(`.k-reasons`·`.k-quote` 등) | (사진 스타일에서만 사진이 보임 — 다른 스타일은 흰 도형만) 사진 강조: 큰 사진(시험지·학생·학부모) 아래에 흰 도형이 겹친다. 글이 길면 사진이 줄어든다(최소 300) (시험분석 a·i) |
-| 카드에 `data-bgimg="pool:주제"`(또는 사진 주소) | **사진 스타일**(내 스타일 6번)에서만 보이는 배경 사진: 도식이 작은 카드에만 자동으로 켜지고(도식은 위로, 사진은 아래 50% 투명), 표지는 전체 + 어두운 막·흰 글자. 후보 카드엔 다 달아 두면 된다. `.k-photo-hero` 카드에는 넣지 않는다 |
-| `<i data-icon2d="이름">` | 2D 아이콘 14종 |
+| 카드에 `data-bgimg="pool:주제"`(또는 사진 주소) | **사진 스타일**(내 스타일 6번)에서만 보이는 배경 사진 — **덱마다 한 장**(첫 `data-bgimg` 카드만 켜짐, 2026-10-19). 도식 아래 자리가 440px 이상이면 도식을 위로 올리고 그 아래부터, 모자라면 도식은 제자리·사진은 도식 영역 가운데부터 옅게(`.photo-faint`). 사진 강조 카드엔 넣지 않는다 |
+| `<i data-icon2d="이름">` | 2D 아이콘 23종 (도감 `gallery/icons.png` — 밝은·어두운·메인 바탕) |
 | `<i data-ph="이름">` | Phosphor 아이콘 |
 | `.k-tag` | 회색 칩 (`.solid` = 직함 등 강조) |
 | `.k-caret` | 회색 caret (정지 이미지이므로 토글에는 쓰지 않는다) |
@@ -124,14 +125,14 @@
 | `.k-stamps-head` + `.k-stamps data-total data-done` | 도장 카드 (글쓰기 d). 찍힌 칸은 메인 테두리 + 기울기 |
 | `.k-pencils` > `p style="--v"` > `b` + `span.k-pencil > i` + `em` | 연필 길이 막대 (글쓰기 e). 강조 줄은 `.hl` |
 | `.k-letter` > `.k-panel` | 봉투에서 꺼낸 편지·리포트 (글쓰기 f). 안에는 3줄 정도만 |
-| `.k-panel.k-cert` > `p.k-h` + `b` + `p` + `span.k-seal` | 상장 + 도장 (글쓰기 g) |
+| `.k-panel.k-cert` > `p.k-h`(상 장) + `b`(상 이름) + `p`(받는 사람) + `p`(내용, `<br>`로 뜻 단위) + `p.k-cert-by`(수여자 + `span.k-seal` 도장) | 상장 (글쓰기 g, 2026-10-19 다시 그림): 종이 폭 760 · 두 줄 액자 · '── 상 장 ──' · 상 이름은 양끝 파인 리본 띠(메인 면 + `--on-main` 글자) · 수여자 끝에 메인 도장. 도장 글자는 3자(원장인 등) |
 | `.k-coupon` > `div`(`b.k-name` `span.k-big` `span`) + `div > dl` | 쿠폰 (글쓰기 i, 2026-10-16 다듬음): 왼쪽 떼는 쪽 = 메인 면 + `--on-main` 글자, 가운데 점선 절취선 + 위아래 반원 홈, 양 끝 물결 테두리. 모서리는 고정 20px 이하(둥근 스타일의 `--r-sm` 999px 피함) |
 
 ## 사물 부품 (수학 덱)
 
 | 부품 | 쓰임 |
 |---|---|
-| `.k-panel` > `p.k-h` + `.k-omr data-answers="2,4,1…" data-wrong="3,6"` | OMR 답안지 (수학 a). 2열 × 5줄, 틀린 줄 번호에 메인 채점 빗금 |
+| `.k-panel` > `p.k-h` + `.k-omr data-answers="2,4,1…" data-wrong="3,6"` | OMR 답안지 (수학 a). 2열 × 5줄, 칸은 정동그라미 · 마킹은 메인(2026-10-19), 틀린 줄 번호에 메인 채점 빗금 |
 | `.k-timer data-parts="이름:분,이름:분:hl,…"` | 타이머 다이얼 + 범례 (수학 c). 가운데 총 시간, 강조 구간만 메인 |
 | `.k-panel.k-graph data-values data-labels data-min data-max` | 모눈종이 꺾은선 (수학 f). 마지막 점·값만 메인. 위에 `.k-hero`를 얹으면 좋다 |
 | `.k-flash` > `.k-flash-card` > `p.k-h` + `p.k-p` + `.k-flash-checks` > `.k-checkrow`(`.todo`) | 왼쪽에 펀치 구멍이 줄지어 뚫린 오답 카드 (수학 e, 2026-10-16 사용자: 클립 고리 ✗). 폭 800(영역 폭 가까이, 2026-10-16 사용자 — 640은 작음), 안도 맞춰 키움: `.k-h` 머리 = 38 메인 라벨, `.k-p` 오답 내용 = 46 세미볼드(12자 안팎 — 넓은 폰트·카드형 배경에서 두 줄이면 넘침), 체크 52 |
@@ -142,7 +143,7 @@
 | 부품 | 쓰임 |
 |---|---|
 | `.k-code` > `p.hat` + `.loop`(`b`이름 + `div` > `p`…) + `p` | 끼워지는 코딩 블록 (코딩 b). 반복 블록만 메인 C자 |
-| `.k-levels` > `p`(`.done`/`.hl`) > `b` + `span` | 게임 레벨 맵 (코딩 c). 한 칸씩 높아지는 번호 동그라미 + 점선 길, 지금 단계만 메인 |
+| `.k-levels` > `p`(`.done`/`.hl`) > `b` + `span` | 게임 레벨 맵 (코딩 c). 한 칸씩 높아지는 번호 동그라미 + 점선 길, 지금 단계만 메인 · 나머지는 모두 회색(2026-10-19) · 흰 도형으로 감쌀 땐 `.k-panel.k-levels-box` |
 | `.k-hands` > `.k-panel` > `.k-toy` > `.k-pad` 또는 `.k-keys`(`i`×12 + `i.space` + `i.enter`) + `p.k-h` + `.k-rows` | 게임패드 vs 키보드 대비 (코딩 a). Enter 키만 메인 |
 | `.k-tablet` > `.k-apps` > `p`(`.hl`) > `b`첫 글자 + `span`이름 | 태블릿 홈 화면 앱 6개 (코딩 d) |
 | `.k-panel.k-batt` > `.k-legend` + `p style="--a;--b"` > `b` + `span.k-cell > i` + `em` | 배터리 전후 비교 (코딩 f). 늘어난 칸만 메인 |
@@ -159,11 +160,11 @@
 | `.k-pass` > `.k-pass-main`(`.k-pass-route` 출발 `.k-arrow` 도착 + `dl`) + `.k-pass-stub`(`.k-big`) | 탑승권 (영어1 b). 떼는 조각만 메인 |
 | `.k-panel.k-passport` > `p`(`.round`/`.oval`, `--r`) > `b` | 여권 도장 3×2 (영어1 c). 메인 잉크 선 |
 | `.k-rec` > `.k-rec-grill` + `.k-rec-screen` > `p`(`b` + `.k-wave` > `i style="--v"`) + `.k-rec-keys`(`.play` `.rec` `.stop`) | 녹음기 파형 비교 (영어 d). 녹음 버튼만 메인 |
-| `.k-metro` > `p`(`.hl`) > `b`역 + `span`기간 | 세로 지하철 노선도 (영어1 e). 도착역만 메인 환승역 |
+| `.k-metro` > `p`(`.hl`) > `b`역 + `span`설명 | 세로 노선도 (영어1 e, 2026-10-19 다시 그림): 왼쪽 레일(6px, 맨 위·아래 동그라미 가운데에서 끝) 위 역 동그라미(32px, 테두리 7px) · 동그라미와 칸 사이 54px + 역마다 흰 도형 한 칸(역 이름 세미볼드 · 설명 한 줄, 이름 칸 폭은 모든 역이 같이). 도착역 `.hl`만 메인 면. 역 4~6개, 설명은 12자 안팎 |
 | `.k-receipt` > `p.k-receipt-head` + `p`(`span` `em`) + `p.k-receipt-total`(`b` + `.k-big`) | 톱니 영수증 (영어 f). 합계만 큰 숫자 |
 | `.k-panel.k-postcard` > `.k-postcard-msg`(`p.k-p` + `b`보낸 사람) + `.k-postcard-side`(`.k-postcard-stamp` > `i data-icon2d` + `.k-postcard-mark` + `i`×3) | 엽서 후기 (영어 g). 우표만 메인 |
 | `.k-panel.k-board` > `p.k-board-head`(`b`×4) + `p`(`.hl`) > `b` + `span`×3 | 출발 안내판 넘김판 (영어1 h). 강조 줄의 마지막 칸만 메인 |
-| `.k-luggage` > `div` > `.k-luggage-band`(`p.k-h` + `p.k-p`) + `dl` | 수하물 태그 + 끈 (영어1 i). 위쪽 띠만 메인 |
+| `.k-luggage` > `div` > `.k-luggage-band`(`p.k-h` + `p.k-p`) + `dl` | 항공 수하물 태그 (영어1 i, 2026-10-19 다시 그림): 메인 띠 · 점선 절취선 · 바코드 줄무늬. dl은 3줄 안팎 |
 
 ## 일반 형태 (영어 덱)
 
@@ -188,7 +189,7 @@
 | `.k-news-wrap` > `.k-panel.k-news`(`.k-news-top` + `p.k-h` + `.k-news-cols`) + `p.k-news-tag` | 사물: 신문 + 메인 꼬리표 (사회 d) |
 | `.k-essay` > `.k-panel`(`.accent`) > `em`번호 + `p`(`b.k-h` + `span`) | 큰 번호 3단 (사회 e). 마지막 단만 메인 |
 | `.k-panel.k-rise` > `div style="--v"`(`.hl`) > `strong` + `i` + `span` · `p.k-rise-chip` | 전후 막대 두 개 + 상승 칩 (사회 f) |
-| `.k-binder` > `p.k-binder-tabs` > `b`(`.hl`) + `.k-panel`(`.k-binder-big` + `.k-rows`) | 사물: 인덱스 탭 바인더 (사회 g). 펼친 탭만 메인 |
+| `.k-binder` > `p.k-binder-tabs` > `b`(`.hl`) + `.k-panel`(`.k-binder-big` + `.k-rows`) | 사물: 인덱스 탭 바인더 (사회 g). 펼친 탭만 메인 · 흰 도형은 네 모서리 모두 모양 옵션대로(둥근형이면 모두 둥글게), 링 구멍 없음(2026-10-19) |
 | `.k-week` > 머리 `span` + `b`×6, 줄마다 `b` + `em`(수업)/`i`(빈칸) | 주간 시간표 격자 (사회 h). 특강 칸 `em.hl`만 메인 |
 | `.k-cards` > `.k-cards-back`(`b.k-h`) + `.k-panel.k-cards-front`(`p.k-h` + `dl`) | 사물: 명함 두 장 (사회 i). 뒤 장만 메인 |
 
@@ -216,7 +217,7 @@
 | `.k-panel.k-stats3` > `p`×3(`strong` + `span`) + `span.k-down data-ph="caret-down"` + `.k-panel.accent.k-verdict`(`.k-big` + `p.k-p`) | 일반: 숫자 세 칸 → 결론 칸(메인) (국어 a) |
 | `.k-panel.k-annot` > `.k-annot-text`(`i.u`/`i.c`/`.brk > i`, `--w`) + `.k-annot-notes > b style="--t:줄번호"` | 시각: 밑줄·동그라미·괄호로 표시한 지문 + 여백 메모 칩 (국어 b) |
 | `.k-hero` + `.k-panel.k-scores` > `.k-stat`(`span` + `.k-track > i style="width"` + `b`)×4 | 일반: 큰 숫자 + 점수 막대 칸 (국어 c) |
-| `.k-vocab` > `.k-panel.back2` + `.back1` + `.front`(`p.k-vocab-word` > `b` + `.k-tag`, `p.k-p`, `p.k-vocab-ex`) | 시각: 겹친 어휘 카드 (국어 e) |
+| `.k-vocab` > `.k-panel.back2`(`b` 다른 낱말) + `.back1`(`b`) + `.front`(`p.k-vocab-word` > `b` + `.k-tag`, `p.k-p`, `p.k-vocab-ex`) | 시각: 쌓인 어휘 카드 (국어 e, 2026-10-19 펼침): 뒤 카드 두 장이 위로 비켜 기울어지고 왼쪽 위에 다른 낱말이 보임 — 뒤 카드에도 낱말을 넣는다 |
 
 재사용: `.k-plans`(d), `.k-essay`(f), `.k-tiles`(g), `.k-timer`(h 시각), `.k-checks`(i).
 
@@ -327,6 +328,7 @@
 | `.k-rows > p.hl` · `.k-pairs > p.hl` · `.k-figs > p.hl` | 목록의 강조 줄: 글자(값)가 메인 컬러. 교재 강조 카드(`.k-book-split`)의 첫 숫자에 쓴다 |
 | `.k-notes .hl` | 포스트잇 강조 장: 메인 바탕 + `--on-main` 글자(사용자 2026-10-16, 한 장만) |
 | `.k-curri > .k-panel.accent` | 학년 × 학기 표의 강조 칸 |
+| `.k-quote` 모양 | 기본은 `figure.k-panel.k-quote` > `i.k-quote-mark` + `blockquote` + `figcaption`. 따옴표 표시 없이 `blockquote`로 시작하거나 말한 사람을 `p`(`b` 이름 + `span.k-tag.solid` 칩)로 써도 같은 간격(2026-10-19 dev 서버에서 AI가 만든 모양) |
 | `.k-quote blockquote` | 공책 줄: 줄간격 190% + 글자 줄마다 밑줄 + 빈 줄 하나(선 간격 = 1lh, 사진 강조 안에서는 빈 줄 ✗) — 인용문 전부 |
 
 ## 관리 프로그램 덱 — `examples/management-program.html` (홍보형, 2026-10-16)
@@ -349,3 +351,20 @@
 ## 학원 철학 덱 — `examples/academy-philosophy.html` (영업형, 2026-10-16)
 
 새 부품 없이: 대비(`.k-vs`, a 첫 카드) · 실제 수학 풀이 첨삭(`.k-proof.k-proof-math` — 수식 줄 46, 끼워 넣기 글자 자리는 `.k-ins`가 있는 줄에만, 글자 높이만큼 고정(`--air` ✗ — 도형 위가 휑해짐). 빠진 줄을 `.k-ins`로 첫 줄 끝에 끼워 넣기, 시각 b. `.k-ins`만 있는 줄은 표시가 칸 밖으로 나감) · 세 원칙(`.k-areas`, c) · 90분 타이머(`.k-timer`, 시각 d) · 학생 질문 말풍선(`.k-says`, e) · 자습 도장 카드(`.k-stamps`, 시각 f) · 설문 게이지(`.k-gauge` + `.k-pairs`, g) · 선생님 질문(사진 강조 + `.k-reasons` + `.k-nophoto-only`, h) · 상담 단계(`.k-steps3` + `.k-info`, i 마지막 카드).
+
+## 2026-10-19 덱 18개 — 새 부품과 주의점만 (덱별 구성은 `docs/DESIGN-NOTES.md` '2026-10-19 덱 기록')
+
+예시 덱: consultation · academy-philosophy-2 · admission-column-2 · class-intro-2 · score-rise-review · winter-special · study-d14 · pre-middle-guide · daily-calc · first-mock-exam · reading-habit · credit-system · math-written · english-words · winter-routine · science-report · phone-distance · choose-academy.
+
+| 부품 | 쓰임 |
+|---|---|
+| `.k-sums` > `.k-panel`(`.hl` 통과 줄) > `span`(`small`과목 + `b`등급)×3 + `i`(+ · =) + `p`(`strong`합계 + `em`통과/탈락 칩) | 등급 합 계산 (입시칼럼2 e, 2026-10-19): 수능 최저 '3합 7'처럼 과목 등급을 더하는 식. 통과 줄만 합계·칩 메인, 줄은 2개 |
+| `.k-panel.k-levels-box` > `.k-levels` | 게임 레벨 맵을 흰 도형 안에 (daily-calc d) — 흰 도형이 없는 카드 ✗ 규칙 |
+| `.k-panel.k-medals-box` > `.k-medals` | 메달 세 개를 흰 도형 안에 (winter-routine e) |
+
+주의점(검사에 걸리거나 넘친 것):
+- 큰 숫자 자리(`.k-big` · `.k-tiles b` · `.k-climb strong` · 쿠폰 `.k-big`)는 **숫자로 시작**하는 말만 — '매달·교재·과목마다·식' 같은 글자는 제목 폰트 검사에 걸림.
+- 좁은 칸 글자: 대비 두 칸·숫자 세 칸 설명·순위 막대 이름은 5~7자 안팎(카드형 배경에서 꺾이거나 막대와 겹침), 반 카드 칸 설명 5자 안팎.
+- 도장 카드 `.k-stamps`는 16칸까지(20칸 이상 넘침). 첨삭 `.k-proof` 첫 줄은 짧게(끼워 넣는 말이 오른쪽 밖으로). 사진 강조 안 인용문은 짧게(사진 스타일에서 넘침).
+- 작고 여백이 많은 시각 카드(안내판·성적표·탑승권·첨삭·대화)는 위에 `.k-hero` 큰 숫자나 아래 알약 흐름을 더해 채운다. 막대·목록과 같은 내용을 흰 도형으로 한 번 더 보여 주지 않는다.
+- 본문 배경 사진(`data-bgimg`)은 덱에 한 장, 사진 강조 1장 — 사진 스타일 사진.

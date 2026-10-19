@@ -1,22 +1,74 @@
 {
-  "_설명": "홈페이지 콘텐츠 타입(DB content_type 코드)별로 AI 프롬프트에 넣을 예시 덱. 전부 넣지 않고 기준 덱(always) + 그 타입 덱만 넣어 프롬프트를 줄인다(docs/PROMPT-CACHING.md '콘텐츠 타입별 예시 덱'). 새 덱을 만들면 여기에 한 줄 더한다.",
-  "always": ["english-grammar"],
+  "_설명": "홈페이지 콘텐츠 타입(DB content_type 코드)별로 AI 프롬프트에 넣을 예시 덱. 전부 넣지 않고 기준 덱(always) + 그 타입 덱만 넣어 프롬프트를 줄인다(docs/PROMPT-CACHING.md '콘텐츠 타입별 예시 덱'). 새 덱을 만들면 여기에 한 줄 더한다. 타입마다 예시 덱은 2개 이내(2026-10-19 비용 최적화 — 많이 넣어도 질은 비슷하고 토큰만 늘어남). 표에 없는 덱은 키트(웹앱)에만 두는 참고 덱.",
+  "always": [
+    "english-grammar"
+  ],
   "types": {
-    "exam_analysis": ["exam-analysis"],
-    "school_analysis": ["school-analysis"],
-    "admission_column": ["admission-column"],
-    "mom_cafe": ["admission-column", "school-analysis"],
-    "program_intro": ["class-intro"],
-    "management_program": ["management-program"],
-    "success_story": ["top-students-review"],
-    "success_story_top": ["top-students-review"],
-    "top_students": ["top-students"],
-    "academy_philosophy": ["academy-philosophy"],
-    "consultation_info": ["level-test", "info-session"],
-    "level_test_guide": ["level-test"],
-    "seminar_promo": ["info-session"],
-    "special_lecture": ["class-intro", "info-session"]
+    "exam_analysis": [
+      "exam-analysis"
+    ],
+    "school_analysis": [
+      "school-analysis"
+    ],
+    "admission_column": [
+      "admission-column",
+      "admission-column-2"
+    ],
+    "mom_cafe": [
+      "admission-column",
+      "school-analysis"
+    ],
+    "program_intro": [
+      "class-intro",
+      "class-intro-2"
+    ],
+    "management_program": [
+      "management-program"
+    ],
+    "success_story": [
+      "top-students-review",
+      "score-rise-review"
+    ],
+    "success_story_top": [
+      "top-students-review"
+    ],
+    "top_students": [
+      "top-students"
+    ],
+    "academy_philosophy": [
+      "academy-philosophy",
+      "academy-philosophy-2"
+    ],
+    "consultation_info": [
+      "consultation"
+    ],
+    "level_test_guide": [
+      "level-test"
+    ],
+    "seminar_promo": [
+      "info-session"
+    ],
+    "special_lecture": [
+      "winter-special"
+    ],
+    "study_tip": [
+      "study-d14",
+      "daily-calc"
+    ],
+    "parent_guide": [
+      "pre-middle-guide",
+      "choose-academy"
+    ]
   },
-  "fallback": ["class-intro", "info-session"],
-  "notForPrompt": ["photo-test", "english-v1", "korean", "korean-text", "korean-formula"]
+  "fallback": [
+    "class-intro",
+    "info-session"
+  ],
+  "notForPrompt": [
+    "photo-test",
+    "english-v1",
+    "korean",
+    "korean-text",
+    "korean-formula"
+  ]
 }

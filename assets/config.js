@@ -201,7 +201,7 @@ export const PRESET_STYLES = [
   { name: "라인 스타일", opts: {"fontTitle":"paperlogy","fontBody":"paperlogy","colors":{"main":"#3B5BFD","bg":"#f2f2f2","title":"#111111","body":"#45464D"},"shape":"square","shapeStyle":"line","shapeLine":{"width":3,"color":"#000000"},"cardStyle":"outline","panelLine":{"width":3,"color":"#000000"}} },
   { name: "상단 스타일", opts: {"fontTitle":"tmoney-round","colors":{"main":"#3B5BFD","bg":"#f2f2f2","title":"#111111","body":"#45464D"},"cardStyle":"split","coverAlign":"center"} },
   { name: "다크 스타일", opts: {"colors":{"main":"#3B5BFD","bg":"#000000","title":"#ffffff","body":"#c2c2c2"},"coverAlign":"center"} },
-  { name: "사진 스타일", opts: {"shape":"square","coverAlign":"bottom","photo":true} },
+  { name: "사진 스타일", opts: {"colors":{"main":"#3B5BFD","bg":"#f2f2f2","title":"#111111","body":"#45464D"},"shape":"square","coverAlign":"bottom","photo":true} }, // 배경 #f2f2f2(2026-10-19 사용자 — 기본값 #F1F3F8 대신, 다른 스타일과 같은 회색)
 ];
 
 export const DEFAULT_OPTIONS = {

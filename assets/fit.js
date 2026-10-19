@@ -89,21 +89,36 @@ export function fitAir(root = document, P = CARD_PARTS) {
     const per = contentHeight(body) - h1; // --air 1 늘 때 늘어나는 높이
     const air = per > 0 ? Math.min(AIR.max, Math.max(1, 1 + (body.clientHeight * AIR.fill - h1) / per)) : 1;
     if (air > 1) card.style.setProperty('--air', air.toFixed(3)); else card.style.removeProperty('--air');
+    placeFaintPhoto(card);
   }
 }
 
-// ---------- 사진 스타일: 도식이 작은 카드에만 배경 사진 (2026-10-15 사용자) ----------
-// 도식을 콘텐츠 영역 위쪽에 붙여 보고(.with-photo), 그 아래 남는 자리가 minRoom 이상일 때만 사진을 켠다(.on).
-// 사진은 도식 아래 끝에서 overlap만큼 위부터 깔린다 — 도식과 사진이 많이 겹치지 않게. 표지는 항상 전체 사진.
+// ---------- 사진 스타일: 배경 사진은 덱마다 한 장만 (2026-10-15 사용자, 2026-10-19 B안) ----------
+// 표지는 항상 전체 사진. 본문 카드는 data-bgimg가 있는 카드 중 **덱에서 첫 번째 한 장만** 켠다(2026-10-19 사용자 — 그라데이션 배경은 카드뉴스당 한 번).
+// 그 카드의 도식 아래 남는 자리가 minRoom 이상이면 도식을 위로 올리고 도식 아래 끝(overlap만큼 위)부터 사진,
+// 모자라면(B안) 도식 위치는 그대로 두고 도식 영역의 세로 가운데부터 사진을 깔아 아래로 갈수록 보이게(.photo-faint).
+// 옅은 배경 사진(.photo-faint)의 위 끝 = 도식 영역 세로 가운데. fitAir·fitLift가 도식 간격·위치를 바꾼 뒤에도 다시 맞춘다
+function placeFaintPhoto(card) {
+  const ph = card.matches('.photo-faint') && card.querySelector(':scope > .card-photo.on');
+  const body = card.querySelector(':scope > .k-body');
+  if (!ph || !body) return;
+  const kids = [...body.children].filter((el) => el.offsetParent);
+  if (!kids.length) return;
+  const k = card.getBoundingClientRect().height / card.offsetHeight || 1, top0 = card.getBoundingClientRect().top;
+  const t = (kids[0].getBoundingClientRect().top - top0) / k, b = (kids.at(-1).getBoundingClientRect().bottom - top0) / k;
+  ph.style.top = `${Math.round((t + b) / 2)}px`;
+}
 export const PHOTO = { minRoom: 440, overlap: 90, rise: 0.25 }; // rise: 사진 카드에서 도식 위 여백 = 남는 자리 × 0.25
 export function fitPhoto(root = document, P = CARD_PARTS) {
+  let used = false; // 본문 카드 배경 사진은 덱마다 한 장
   for (const card of root.querySelectorAll(P.card)) {
     const ph = card.querySelector(':scope > .card-photo');
-    card.classList.remove('with-photo');
+    card.classList.remove('with-photo', 'photo-faint');
     if (!ph) continue;
     ph.classList.remove('on');
     ph.style.removeProperty('top');
     if (card.matches('.layout-cover')) { card.classList.add('with-photo'); ph.classList.add('on'); continue; }
+    if (used) continue;
     const body = card.querySelector(':scope > .k-body');
     const kids = body ? [...body.children].filter((el) => el.offsetParent) : [];
     if (!kids.length || body.matches('.k-profile')) continue;
@@ -114,8 +129,16 @@ export function fitPhoto(root = document, P = CARD_PARTS) {
     // 도식은 위로 '적당히만' — 남는 자리의 PHOTO.rise 비율만큼 위 여백을 남긴다(맨 위에 붙이면 부연설명과 너무 가깝다, 사용자 2026-10-16)
     body.style.paddingTop = `${Math.round(Math.max(0, free) * PHOTO.rise)}px`;
     const k = card.getBoundingClientRect().height / card.offsetHeight || 1;
-    const bottom = (kids.at(-1).getBoundingClientRect().bottom - card.getBoundingClientRect().top) / k;
-    if (card.offsetHeight - bottom < PHOTO.minRoom) { card.classList.remove('with-photo'); body.style.removeProperty('padding-top'); continue; }
+    const top0 = card.getBoundingClientRect().top;
+    const bottom = (kids.at(-1).getBoundingClientRect().bottom - top0) / k;
+    used = true;
+    if (card.offsetHeight - bottom < PHOTO.minRoom) {
+      // B안(2026-10-19 사용자): 자리가 모자라면 도식은 제자리, 사진은 도식 영역 가운데부터
+      card.classList.remove('with-photo'); body.style.removeProperty('padding-top');
+      card.classList.add('photo-faint'); ph.classList.add('on');
+      placeFaintPhoto(card);
+      continue;
+    }
     ph.classList.add('on');
     ph.style.top = `${Math.round(bottom - PHOTO.overlap)}px`;
   }
@@ -199,5 +222,29 @@ export function fitLift(root = document, P = CARD_PARTS) {
     if (!body || body.matches('.k-profile')) continue;
     const free = body.clientHeight - contentHeight(body);
     if (free / 2 < LIFT) card.style.setProperty('--optical-lift', `${Math.max(0, Math.floor(free / 2))}px`);
+    placeFaintPhoto(card);
   }
+}
+
+// ---------- 넘침 재기 (2026-10-19 사용자 — dev 서버에서 AI가 만든 노선도 카드가 115px 넘쳐 부연설명을 덮음) ----------
+// 홈페이지는 AI가 만든 카드를 검사 없이 보여 준다 → 결과 화면에 그린 뒤(fit 보정까지 끝난 다음) 이 함수로 재서,
+// 넘친 카드만 '이 부분만 다시'처럼 다시 만든다(render.js kitOverflowNote). kit-check의 넘침 검사와 같은 기준.
+export const OVERFLOW_TOLERANCE = 2; // px — 이보다 작으면 넘침으로 안 본다
+/** 카드 하나의 넘침(카드 1080px 기준 px). { body: 도식이 콘텐츠 영역보다 긴 만큼, panel: 흰 도형 밖으로 나간 글자, px: 둘 중 큰 값 } */
+export function measureKitOverflow(card, P = CARD_PARTS) {
+  const body = card.querySelector('.k-body');
+  const scale = card.getBoundingClientRect().width / card.offsetWidth || 1; // 미리보기에서 줄여 그려도 카드 원래 크기로
+  const bodyOver = body ? Math.max(0, body.scrollHeight - body.clientHeight) : 0;
+  let panelOver = 0;
+  card.querySelectorAll('.k-panel').forEach((pan) => {
+    if (getComputedStyle(pan).overflow === 'hidden') return;
+    const pr = pan.getBoundingClientRect();
+    pan.querySelectorAll('*').forEach((e) => {
+      if (e.closest('.k-tip, .card-photo') || ![...e.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) return;
+      const r = e.getBoundingClientRect();
+      panelOver = Math.max(panelOver, Math.round(Math.max(r.bottom - pr.bottom, r.right - pr.right, pr.top - r.top, pr.left - r.left) / scale));
+    });
+  });
+  const px = Math.max(bodyOver, panelOver);
+  return { body: bodyOver, panel: panelOver, px: px > OVERFLOW_TOLERANCE ? px : 0 };
 }

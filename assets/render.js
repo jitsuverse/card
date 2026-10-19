@@ -87,7 +87,7 @@ export function themeVars(opts) {
     '--accent-shadow-alpha': SHAPE_TOKENS.accentShadowAlpha,
     '--line-width': `${opts.shapeLine?.width ?? 3}px`,
     '--line-color': opts.shapeLine?.color ?? '#D9D9DE',
-    '--panel-fill': PANEL_TOKENS.fill,
+    '--panel-fill': isDark(c) ? SHAPE_TOKENS.darkFill : PANEL_TOKENS.fill, // 판(카드형·테두리형·상단 강조 머리): 어두운 배경이면 유리 도형 색 — 흰 판에 흰 제목이 안 보이던 것(2026-10-19)
     '--panel-inset': `${PANEL_TOKENS.inset}px`,
     '--content-padding': PANEL_TOKENS.padding,
     '--panel-content-padding': PANEL_TOKENS.panelPadding,
@@ -159,3 +159,53 @@ export function teacherFigure(img = {}, slot = '', extra = '') {
       : `<div class="photo-placeholder">${PHOTO_ICON}<span>${plain(caption)}<br>(상반신)</span></div>`}</figure>`;
 }
 
+
+// ---------- 한 덱 안에서 같은 주 도식 반복 막기 (2026-10-19 사용자 — dev 서버에서 2·4번, 3·7번이 같은 도식) ----------
+// 홈페이지는 카드를 동시에 만들어서 각 카드가 다른 카드의 도식을 모른다 → 다 만든 뒤 겹친 뒤쪽 카드만 다시 만든다(A안).
+// DOM 없이(서버 Node에서도) 쓰도록 태그만 훑는다. 주 도식 = .k-body 바로 아래 첫 부품(보조 부품은 건너뜀)의 k- 클래스.
+const MAIN_SKIP = new Set(['k-hero', 'k-row', 'k-label', 'k-nophoto-only', 'k-pill', 'k-arrow', 'k-down', 'k-foot', 'k-legend', 'k-key']); // 보조 부품
+const NOT_PART = new Set(['k-panel', 'k-h', 'k-p', 'k-big', 'k-tag', 'k-tip', 'k-anchor', 'k-mark', 'k-hl', 'k-rows', 'k-name', 'k-who', 'k-time', 'k-slot']); // 부품 이름이 아닌 공통 클래스
+const VOID = new Set(['br', 'img', 'input', 'hr', 'meta', 'link', 'source', 'wbr', 'col', 'area', 'path', 'circle', 'rect', 'polyline', 'line']);
+const kClasses = (attrs) => (/class="([^"]*)"/.exec(attrs)?.[1] ?? '').split(/\s+/).filter((c) => c.startsWith('k-'));
+export function kitMainPart(cardHtml) {
+  const html = String(cardHtml ?? '');
+  const start = html.search(/<div[^>]*class="[^"]*\bk-body\b[^"]*"[^>]*>/);
+  if (start < 0) return null; // 표지 등
+  const own = kClasses(html.slice(start, html.indexOf('>', start))).find((c) => c !== 'k-body' && !NOT_PART.has(c));
+  if (own) return own; // 강사 카드처럼 .k-body 자체에 붙은 부품(k-profile)
+  const re = /<(\/?)([a-zA-Z][\w-]*)([^>]*?)(\/?)>/g;
+  re.lastIndex = html.indexOf('>', start) + 1;
+  let depth = 0, inMain = false, mainDepth = 0, m;
+  while ((m = re.exec(html))) {
+    const [, close, tag, attrs, self] = m;
+    const name = tag.toLowerCase();
+    if (close) { if (depth === 0) break; depth--; if (inMain && depth < mainDepth) return null; continue; }
+    const isVoid = self || VOID.has(name);
+    const cls = kClasses(attrs);
+    if (!inMain && depth === 0) {
+      const helperOnly = cls.some((c) => MAIN_SKIP.has(c)) && cls.every((c) => MAIN_SKIP.has(c) || NOT_PART.has(c)); // k-row k-dday처럼 부품 이름이 같이 있으면 보조가 아니다
+      if (helperOnly) { if (!isVoid) { depth++; skipTo(depth); } continue; }
+      inMain = true; mainDepth = 1;
+    }
+    if (inMain) { const part = cls.find((c) => !NOT_PART.has(c) && !MAIN_SKIP.has(c)); if (part) return part; }
+    if (!isVoid) depth++;
+  }
+  return null;
+  function skipTo(d) { // 보조 부품의 안쪽은 통째로 건너뛴다
+    let n;
+    while ((n = re.exec(html))) {
+      if (n[1]) { depth--; if (depth < d) return; } else if (!(n[4] || VOID.has(n[2].toLowerCase()))) depth++;
+    }
+  }
+}
+/** 덱 카드 HTML 배열 → 앞 카드와 주 도식이 같은 뒤쪽 카드들 [{ index, part, avoid }] — avoid = 그 카드를 다시 만들 때 쓰지 말 도식(덱에서 이미 쓴 것) */
+export function kitRepeatedCards(htmls) {
+  const parts = htmls.map(kitMainPart), seen = new Set(), out = [];
+  parts.forEach((p, i) => { if (!p) return; if (seen.has(p)) out.push({ index: i }); seen.add(p); });
+  const used = [...new Set(parts.filter(Boolean))];
+  return out.map(({ index }) => ({ index, part: parts[index], avoid: used }));
+}
+/** 다시 만들 카드 요청 끝에 붙이는 문구 */
+export const kitAvoidNote = (avoid) => `[이미 쓴 도식 — 이 카드에서는 쓰지 않는다] ${avoid.join(', ')}\n같은 덱의 다른 카드와 다른 부품으로 이 카드의 주 도식을 고른다.`;
+/** 넘친 카드를 다시 만들 때 요청 끝에 붙이는 문구(fit.js measureKitOverflow의 px) */
+export const kitOverflowNote = (px) => `[넘침 — 다시 만들기] 지난번 이 카드는 도식이 콘텐츠 영역보다 ${px}px 길어 화면 밖으로 나갔다. 같은 내용을 더 짧게: 항목 수를 줄이거나(예: 6개 → 4개), 설명을 한 줄로 줄이거나, 세로로 덜 긴 부품을 고른다. 제목·부연설명은 그대로.`;

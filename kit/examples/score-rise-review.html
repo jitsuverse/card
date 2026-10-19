@@ -1,0 +1,127 @@
+<!-- 성적 상승자 후기 — 10장(2026-10-19) — 홍보형. '62점에서 91점까지' 한 학생의 1년 — 점수 흐름 · 첫 진단 · 바꾼 공부법 · 오답 카드 · 공부 시간 비율 · 학부모 한마디 · 과목별 상승 · 학생 Q&A · 상담 안내.
+     기존 성적 우수자 후기 덱(examples/top-students-review — 전후 막대·포스트잇·말풍선)과 부품이 겹치지 않게. 기준 공식: 제목 2줄 = 결론, 부연설명 1줄 = 근거. 시각 3장(꺾은선 · 오답 카드 · 비율 블록) + 정보 6장.
+     숫자는 예시 — 실제 학생 기록으로 바꿔 쓴다. 이름은 가린 예시(김○○), 학부모 동의를 받은 후기만.
+     사진 스타일용 사진(pool:주제): 표지 공부 책상, 학부모 한마디 사진 강조(공부 돕기), 본문 배경 사진은 덱에 한 장(학생 Q&A). -->
+
+<!-- 1. 표지 -->
+<div class="kcard layout-cover" id="cover" data-bgimg="pool:desk">
+  <p class="cover-tag">성적 상승 후기</p>
+  <h1 class="title">62점에서<br>91점까지, 1년</h1>
+  <p class="sub">중2 김○○ 학생의 수학 기록</p>
+  <div data-photo="cover" data-icon="chart"></div>
+</div>
+
+<!-- 2. 시각 → 큰 숫자 + 모눈종이 꺾은선(1년 점수), 마지막 점만 메인 -->
+<div class="kcard" id="a">
+  <div class="k-head"><h2 class="k-title">네 번의 시험마다<br>점수가 올랐어요</h2><p class="k-sub">중2 수학 내신 점수 흐름</p></div>
+  <div class="k-body">
+    <div class="k-hero"><span class="k-big">+29점</span><p class="k-p">1학기 중간고사부터<br>2학기 기말고사까지</p></div>
+    <div class="k-panel k-graph" data-values="62,70,83,91" data-labels="1학기 중간,1학기 기말,2학기 중간,2학기 기말" data-min="50" data-max="100"></div>
+  </div>
+</div>
+
+<!-- 3. 정보 → 숫자 세 칸 → 결론 칸(메인), 처음 상담에서 본 것 -->
+<div class="kcard" id="b">
+  <div class="k-head"><h2 class="k-title">처음엔 공부 시간보다<br>방법이 문제였어요</h2><p class="k-sub">첫 상담 때 함께 본 기록</p></div>
+  <div class="k-body">
+    <div class="k-panel k-stats3">
+      <p><strong>2시간</strong><span>하루 공부</span></p>
+      <p><strong>18개</strong><span>시험 오답</span></p>
+      <p><strong>0번</strong><span>오답 다시 풀기</span></p>
+    </div>
+    <span class="k-down" data-ph="caret-down"></span>
+    <div class="k-panel accent k-verdict"><span class="k-big">3개</span><p class="k-p">빈 개념 단원부터<br>다시 채우기로 했어요</p></div>
+  </div>
+</div>
+
+<!-- 4. 정보 → 대비 두 칸(전 vs 후 공부법), 후만 메인 -->
+<div class="kcard" id="c">
+  <div class="k-head"><h2 class="k-title">문제 수는 줄이고<br>다시 푸는 횟수를 늘렸어요</h2><p class="k-sub">학원에 오기 전과 후의 공부법</p></div>
+  <div class="k-body">
+    <div class="k-vs">
+      <div class="k-panel"><p class="k-h">예전 공부법</p><div class="k-rows"><p>하루 50문제</p><p>채점 후 넘어가기</p><p>시험 전 몰아서</p></div></div>
+      <div class="k-panel accent"><p class="k-h">바꾼 공부법</p><div class="k-rows"><p>하루 20문제</p><p>틀린 문제 세 번</p><p>매주 단원 정리</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. 시각 → 오답 카드(세 번 다시 풀기 체크) -->
+<div class="kcard" id="d">
+  <div class="k-head"><h2 class="k-title">오답 카드 120장이<br>점수를 바꿨어요</h2><p class="k-sub">세 번 다 맞혀야 카드를 졸업해요</p></div>
+  <div class="k-body">
+    <div class="k-flash"><div class="k-flash-card">
+      <p class="k-h">오답 카드 87번</p>
+      <p class="k-p">일차함수 기울기 부호 실수</p>
+      <div class="k-flash-checks">
+        <div class="k-checkrow"><span class="k-check"></span>1일 뒤 다시 풀기</div>
+        <div class="k-checkrow"><span class="k-check"></span>1주 뒤 다시 풀기</div>
+        <div class="k-checkrow todo"><span class="k-check"></span>1달 뒤 다시 풀기</div>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- 6. 시각 → 비율 블록(하루 2시간 공부 배분), 오답 시간만 메인 -->
+<div class="kcard" id="e">
+  <div class="k-head"><h2 class="k-title">같은 2시간,<br>오답에 절반을 써요</h2><p class="k-sub">바꾼 뒤 하루 공부 시간 배분</p></div>
+  <div class="k-body">
+    <div class="k-blocks">
+      <div class="k-panel" style="flex:1"><b>새 문제</b><span class="k-big">60분</span><p class="k-p">개념 확인<br>20문제</p></div>
+      <div class="k-panel accent" style="flex:1"><b>오답</b><span class="k-big">60분</span><p class="k-p">오답 카드<br>다시 풀기</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- 7. 정보 → 사진 강조(공부 돕기, 사진 스타일에서만) + 학부모 한마디 / 사진이 빠지면 큰 숫자 -->
+<div class="kcard" id="f">
+  <div class="k-head"><h2 class="k-title">점수보다 먼저<br>표정이 달라졌어요</h2><p class="k-sub">김○○ 학생 어머님의 한마디</p></div>
+  <div class="k-body">
+    <div class="k-hero k-nophoto-only"><span class="k-big">1년</span><p class="k-p">수학을 피하던 아이가<br>먼저 문제를 꺼내요</p></div>
+    <div class="k-photo-hero">
+      <div data-photo="photo" data-slot="f-photo" data-caption="공부를 돕는 사진" data-src="pool:help"></div>
+      <figure class="k-panel k-quote">
+        <i class="k-quote-mark"></i>
+        <blockquote>틀린 문제를 숨기던 아이가,<br>이제는 오답 카드를<br>먼저 보여 줘요.</blockquote>
+        <figcaption>김○○ 학생 어머님</figcaption>
+      </figure>
+    </div>
+  </div>
+</div>
+
+<!-- 8. 정보 → 순위 막대(과목별 오른 점수), 수학만 메인 -->
+<div class="kcard" id="g">
+  <div class="k-head"><h2 class="k-title">수학만이 아니라<br>다른 과목도 올랐어요</h2><p class="k-sub">1년 동안 과목별로 오른 점수</p></div>
+  <div class="k-body">
+    <div class="k-panel k-rank">
+      <p class="hl" style="--v:100"><b>1</b><span>수학</span><i></i><em>+29점</em></p>
+      <p style="--v:59"><b>2</b><span>과학</span><i></i><em>+17점</em></p>
+      <p style="--v:38"><b>3</b><span>영어</span><i></i><em>+11점</em></p>
+      <p style="--v:28"><b>4</b><span>국어</span><i></i><em>+8점</em></p>
+    </div>
+  </div>
+</div>
+
+<!-- 9. 정보 → Q&A 다 펼침(학생에게 물었어요) — 본문 배경 사진은 이 카드 한 장 -->
+<div class="kcard" id="h" data-bgimg="pool:writing">
+  <div class="k-head"><h2 class="k-title">김○○ 학생에게<br>직접 물어봤어요</h2><p class="k-sub">1년을 돌아보며 한 대답</p></div>
+  <div class="k-body">
+    <div class="k-faq">
+      <div><p><b>Q</b><span>가장 힘들었던 때는?</span></p><p class="k-p">오답을 세 번 푸는 게 처음엔 지루했어요.</p></div>
+      <div><p><b>Q</b><span>가장 도움이 된 건?</span></p><p class="k-p">틀린 이유를 한 줄로 적는 습관이요.</p></div>
+      <div><p><b>Q</b><span>후배에게 한마디?</span></p><p class="k-p">많이 푸는 것보다 다시 푸는 게 먼저예요.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- 10. 정보 → 체크 목록(이런 학생이라면) + 상담 안내 -->
+<div class="kcard" id="i">
+  <div class="k-head"><h2 class="k-title">우리 아이도<br>같은 길을 갈 수 있어요</h2><p class="k-sub">첫 상담에서 공부 기록부터 함께 봐요</p></div>
+  <div class="k-body">
+    <div class="k-panel k-checks">
+      <p><i data-ph="check-circle"></i>공부 시간에 비해 점수가 안 오르는 학생</p>
+      <p><i data-ph="check-circle"></i>틀린 문제를 또 틀리는 학생</p>
+      <p><i data-ph="check-circle"></i>시험 전에만 몰아서 공부하는 학생</p>
+    </div>
+    <p class="k-label">※ 첫 상담 40분은 무료예요</p>
+  </div>
+</div>

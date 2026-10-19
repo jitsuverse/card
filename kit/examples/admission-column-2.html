@@ -1,0 +1,135 @@
+<!-- 입시칼럼 2 — 10장(2026-10-19) — 정보형. '수시 원서 6장, 이렇게 나눠 써요' — 수시 비중 · 전형 네 가지 · 교과 vs 종합 · 고3 1년 노선도 · 수능 최저 · 원서 6장 영수증 · 상담 선생님 한마디 · 원서 전 점검 · 상담 초대권.
+     기존 입시칼럼 덱(examples/admission-column — 2028 대입 개편)과 주제·부품이 겹치지 않게. 기준 공식: 제목 2줄 = 결론, 부연설명 1줄 = 근거. 시각 3장(노선도 · 영수증 · 초대권) + 정보 6장.
+     수치는 최근 대입 모집 인원 기준의 대략값(수시 약 80%). 수시 원서는 최대 6장(사관학교·과기원 등 특수 대학 제외).
+     사진 스타일용 사진(pool:주제): 표지 공부 책상, 상담 선생님 한마디 사진 강조(필기), 도식이 작은 카드에 배경 후보. -->
+
+<!-- 1. 표지 -->
+<div class="kcard layout-cover" id="cover" data-bgimg="pool:desk">
+  <p class="cover-tag">입시칼럼</p>
+  <h1 class="title">수시 원서 6장,<br>이렇게 나눠 써요</h1>
+  <p class="sub">고2·고3 학부모님이 알아 둘 수시 기본</p>
+  <div data-photo="cover" data-icon="compass"></div>
+</div>
+
+<!-- 2. 정보 → 와플(60칸 중 수시 48칸 — 칸 순서대로 c0 흰색 · c1 메인이라 정시를 앞에) + 범례, 수시만 메인 -->
+<div class="kcard" id="a">
+  <div class="k-head"><h2 class="k-title">신입생 10명 중 8명은<br>수시로 뽑아요</h2><p class="k-sub">그래서 고3 1학기까지의 학생부가 중요해요</p></div>
+  <div class="k-body">
+    <div class="k-waffle" data-parts="12,48"></div>
+    <div class="k-key">
+      <p class="hl"><i class="c1"></i><span>수시 모집</span><b>약 80%</b></p>
+      <p><i class="c0"></i><span>정시 모집</span><b>약 20%</b></p>
+    </div>
+    <p class="k-label">※ 최근 대입 전체 모집 인원 기준</p>
+  </div>
+</div>
+
+<!-- 3. 정보 → 머리 + 번호 목록(수시 전형 네 가지) -->
+<div class="kcard" id="b" data-bgimg="pool:books">
+  <div class="k-head"><h2 class="k-title">수시는 네 가지 길로<br>나뉘어요</h2><p class="k-sub">무엇으로 뽑는지가 전형마다 달라요</p></div>
+  <div class="k-body">
+    <div class="k-panel k-reasons">
+      <p class="k-h">수시 전형 네 가지</p>
+      <p><b>1</b><span>학생부교과 · 내신 등급 중심</span></p>
+      <p><b>2</b><span>학생부종합 · 학생부 전체</span></p>
+      <p><b>3</b><span>논술 · 대학별 논술 시험</span></p>
+      <p><b>4</b><span>실기 · 예체능 실기 평가</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- 4. 정보 → 대비 두 칸(교과 vs 종합이 보는 것), 종합만 메인 -->
+<div class="kcard" id="c">
+  <div class="k-head"><h2 class="k-title">교과는 숫자를,<br>종합은 이야기를 봐요</h2><p class="k-sub">가장 많이 쓰는 두 전형의 차이</p></div>
+  <div class="k-body">
+    <div class="k-vs">
+      <div class="k-panel"><p class="k-h">학생부교과</p><div class="k-rows"><p>내신 등급</p><p>수능 최저 기준</p><p>출결·봉사 일부</p></div></div>
+      <div class="k-panel accent"><p class="k-h">학생부종합</p><div class="k-rows"><p>세특·탐구 활동</p><p>진로와 전공 흐름</p><p>면접(대학별)</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. 시각 → 지하철 노선도(고2 겨울부터 수능까지), 원서 접수만 메인 환승역 -->
+<div class="kcard" id="d">
+  <div class="k-head"><h2 class="k-title">원서는 9월이지만<br>준비는 고2 겨울부터</h2><p class="k-sub">고3 1년, 수시 준비 노선도</p></div>
+  <div class="k-body">
+    <div class="k-metro">
+      <p><b>고2 겨울</b><span>희망 전형 좁히기</span></p>
+      <p><b>3월</b><span>첫 모의고사로 위치 확인</span></p>
+      <p><b>6월</b><span>모의평가 뒤 원서 후보</span></p>
+      <p class="hl"><b>9월</b><span>수시 원서 6장 접수</span></p>
+      <p><b>11월</b><span>수능 · 최저 기준 확인</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- 6. 정보 → 큰 숫자(3합 7) + 등급 합 계산 두 줄(.k-sums — 통과 줄만 메인) -->
+<div class="kcard" id="e">
+  <div class="k-head"><h2 class="k-title">수능 최저를 맞추면<br>실제 경쟁률이 줄어요</h2><p class="k-sub">최저를 못 맞춘 지원자는 합격할 수 없어서</p></div>
+  <div class="k-body">
+    <div class="k-hero"><span class="k-big">3합 7</span><p class="k-p">세 과목 등급을 더해<br>7 이내라는 뜻</p></div>
+    <div class="k-sums">
+      <div class="k-panel hl"><span><small>국어</small><b>2</b></span><i>+</i><span><small>수학</small><b>3</b></span><i>+</i><span><small>영어</small><b>2</b></span><i>=</i><p><strong>7</strong><em>통과</em></p></div>
+      <div class="k-panel"><span><small>국어</small><b>3</b></span><i>+</i><span><small>수학</small><b>3</b></span><i>+</i><span><small>영어</small><b>2</b></span><i>=</i><p><strong>8</strong><em>탈락</em></p></div>
+    </div>
+  </div>
+</div>
+
+<!-- 7. 시각 → 톱니 영수증(원서 6장 배분), 합계만 큰 숫자 -->
+<div class="kcard" id="f">
+  <div class="k-head"><h2 class="k-title">6장은 상향·적정·안정으로<br>두 장씩 나눠요</h2><p class="k-sub">한쪽으로 몰아 쓰면 위험해요</p></div>
+  <div class="k-body">
+    <div class="k-receipt">
+      <p class="k-receipt-head"><b>수시 원서 영수증</b></p>
+      <p><span>상향 · 조금 높은 대학</span><em>2장</em></p>
+      <p><span>적정 · 내 성적 그대로</span><em>2장</em></p>
+      <p><span>안정 · 합격 가능성 높게</span><em>2장</em></p>
+      <p class="k-receipt-total"><b>합계</b><span><span class="k-big">6</span>장</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- 8. 정보 → 사진 강조(필기, 사진 스타일에서만) + 입시 상담 선생님 인용 / 사진이 빠지면 큰 숫자 -->
+<div class="kcard" id="g">
+  <div class="k-head"><h2 class="k-title">원서는 성적보다<br>학생부 흐름에 맞춰요</h2><p class="k-sub">입시 상담 선생님이 가장 많이 하는 말</p></div>
+  <div class="k-body">
+    <div class="k-hero k-nophoto-only"><span class="k-big">3년</span><p class="k-p">고1부터 쌓은 학생부가<br>원서의 방향을 정해요</p></div>
+    <div class="k-photo-hero">
+      <div data-photo="photo" data-slot="g-photo" data-caption="필기 사진" data-src="pool:writing"></div>
+      <figure class="k-panel k-quote">
+        <i class="k-quote-mark"></i>
+        <blockquote>세특에 쌓인 이야기와<br>지원 학과가 이어질 때,<br>종합전형은 힘이 생겨요.</blockquote>
+        <figcaption>에듀리치브레인 입시 상담 선생님</figcaption>
+      </figure>
+    </div>
+  </div>
+</div>
+
+<!-- 9. 정보 → 체크 목록(원서 쓰기 전 점검) -->
+<div class="kcard" id="h">
+  <div class="k-head"><h2 class="k-title">원서 쓰기 전에<br>네 가지를 확인하세요</h2><p class="k-sub">9월 전에 미리 정리해 두면 편해요</p></div>
+  <div class="k-body">
+    <div class="k-panel k-checks">
+      <p><i data-ph="check-circle"></i>학년별 내신 등급 흐름</p>
+      <p><i data-ph="check-circle"></i>6월 모의평가 등급</p>
+      <p><i data-ph="check-circle"></i>세특에 이어진 진로 주제</p>
+      <p><i data-ph="check-circle"></i>대학별 수능 최저 기준</p>
+    </div>
+  </div>
+</div>
+
+<!-- 10. 시각 → 초대권 티켓(수시 원서 상담) -->
+<div class="kcard" id="i">
+  <div class="k-head"><h2 class="k-title">우리 아이 6장,<br>함께 나눠 봐요</h2><p class="k-sub">고3 수시 원서 1:1 상담 안내</p></div>
+  <div class="k-body">
+    <div class="k-ticket-shadow"><div class="k-ticket">
+      <div class="k-ticket-top"><p class="k-h">수시 원서 상담</p><p class="k-p">1:1 · 60분 · 무료</p></div>
+      <dl class="k-ticket-body">
+        <div><dt>대상</dt><dd>고3 · 고2 학부모님</dd></div>
+        <div><dt>준비</dt><dd>학생부 · 모의고사 성적표</dd></div>
+        <div><dt>기간</dt><dd>6월 모의평가 이후</dd></div>
+        <div><dt>신청</dt><dd>전화·문자로 예약</dd></div>
+      </dl>
+    </div></div>
+  </div>
+</div>

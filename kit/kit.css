@@ -1110,7 +1110,7 @@
 .k-blocks .accent .k-big { color: var(--on-main); }
 
 /* 말풍선: 좌우로 번갈아, 꼬리 달린 흰 도형 안에 상황 이름 | 영어 문장 */
-.k-says { display: flex; flex-direction: column; gap: 30px; }
+.k-says { display: flex; flex-direction: column; gap: calc(48px * var(--air, 1)); } /* 꼬리(14px)가 아래 간격을 먹으니 넉넉히 + 남는 자리만큼 넓게(2026-10-19 사용자 — 다닥다닥) */
 .k-says > p { position: relative; align-self: flex-start; display: flex; align-items: center; gap: 28px; padding: 34px 44px; }
 .k-says > p:nth-child(even) { align-self: flex-end; }
 .k-says > p::after { content: ''; position: absolute; left: 56px; bottom: -14px; width: 30px; height: 30px; rotate: 45deg; background: inherit; border-radius: 0 0 6px 0; }
@@ -1140,6 +1140,7 @@
 .k-steps3 { display: flex; align-items: center; gap: 12px; }
 .k-steps3 > .k-panel { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 36px 12px; }
 .k-steps3 .k-ph { width: 68px; height: 68px; color: var(--main); }
+.k-steps3 > .accent .k-ph { color: var(--on-main); } /* 강조 칸(메인 면) 위 번호는 흰색 — 메인 위 메인이라 안 보이던 것(2026-10-19 dev 점검) */
 .k-steps3 b { white-space: nowrap; }
 .k-steps3 > .k-arrow { width: 36px; height: 36px; }
 .k-steps3 + .k-info > div { padding: 22px 0; }
@@ -1625,7 +1626,7 @@
 .kcard.with-photo .k-body > .k-rows:not(.k-panel) { background: color-mix(in srgb, var(--bg) 82%, transparent); border-radius: var(--r-sm); padding-inline: 32px; backdrop-filter: blur(6px); }
 /* 표지 */
 .layout-cover > .card-photo { top: 0; }
-.layout-cover > .card-photo::after { background: linear-gradient(to top, rgb(0 0 0 / .9) 0%, rgb(0 0 0 / .82) 35%, rgb(0 0 0 / .7) 58%, rgb(0 0 0 / .42) 76%, rgb(0 0 0 / .14) 90%, rgb(0 0 0 / 0) 100%); } /* 아래에서 위로 옅어지는 검은 그라데이션 — 제목이 있는 아래쪽만, 위쪽 사진은 그대로 (사용자 2026-10-16) */
+.layout-cover > .card-photo::after { background: linear-gradient(to top, rgb(0 0 0 / .9) 0%, rgb(0 0 0 / .84) 35%, rgb(0 0 0 / .66) 50%, rgb(0 0 0 / .44) 58%, rgb(0 0 0 / .26) 65%, rgb(0 0 0 / .13) 71%, rgb(0 0 0 / .05) 77%, rgb(0 0 0 / 0) 82%); } /* 2026-10-19 사용자: 아래에서 70%쯤까지만 깔고 82%까지 완만하게 사라짐 — 위쪽 사진은 원래 밝기(예전엔 카드 전체를 덮어 사진 위쪽이 눌렸음) */ /* 아래에서 위로 옅어지는 검은 그라데이션 — 제목이 있는 아래쪽만, 위쪽 사진은 그대로 (사용자 2026-10-16) */
 .layout-cover.with-photo .title { color: #FFFFFF; }
 .layout-cover.with-photo .cover-tag { color: var(--main); } /* 키워드 태그는 사진 위에서도 메인 컬러 (사용자 2026-10-15) */
 .layout-cover.with-photo :is(.sub, .note) { color: rgb(255 255 255 / .85); opacity: 1; }
@@ -1684,7 +1685,7 @@
 
 /* 두 힘 나란히 .k-duo (시험분석 총평): 칸마다 이름(46) + 설명 2줄, 결정적인 쪽만 메인(.accent) — 2026-10-16 */
 .k-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
-.k-duo > .k-panel { display: flex; flex-direction: column; gap: calc(20px * var(--air, 1)); padding: calc(56px * var(--air, 1)) 48px; }
+.k-duo > .k-panel { display: flex; flex-direction: column; gap: calc(20px * var(--air, 1)); padding: 48px; } /* 도형 안쪽 여백은 위아래 = 좌우로 고정(--air를 곱하면 자리가 남는 카드에서 위아래만 90px까지 늘어남, 2026-10-19 dev 점검) — 남는 자리는 이름과 설명 사이에만 */
 .k-duo > .k-panel > span { color: var(--body); line-height: var(--lh-body); }
 .k-duo > .k-panel.accent > :is(b, span) { color: var(--on-main); }
 .k-duo + .k-pairs { margin-top: calc(24px * var(--air, 1)); }
@@ -1705,8 +1706,10 @@
 .layout-cover[data-align=bottom] > .cover-book .book { height: 360px; } /* 교재: 그림자·기울기까지 1:1 영역 안 */
 .layout-cover[data-align=bottom] > .cover-book { top: calc(var(--cover-safe-top) + var(--cover-inset) + 8px); }
 /* 강사: 1:1 영역 위쪽에 서고, 아래는 투명하게 사라진다(중간에 뚝 끊기지 않게) */
-.layout-cover[data-align=bottom] .cover-teacher { top: calc(var(--cover-safe-top) + var(--cover-inset)); bottom: auto; height: 560px;
-  -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%); mask-image: linear-gradient(to bottom, #000 62%, transparent 100%); }
+.layout-cover[data-align=bottom] .cover-teacher { top: calc(var(--cover-safe-top) + var(--cover-inset)); bottom: auto; height: 560px; }
+/* 아래로 사라지는 마스크는 사진(img)에 건다 — 틀에 걸면 사진을 키웠을 때 틀 위로 넘어간 머리까지 지워져 평평하게 잘렸다(2026-10-19 dev 점검) */
+.layout-cover[data-align=bottom] .cover-teacher img { -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%); mask-image: linear-gradient(to bottom, #000 62%, transparent 100%); }
+.layout-cover[data-align=bottom] .cover-teacher:not(.has-img) { -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%); mask-image: linear-gradient(to bottom, #000 62%, transparent 100%); } /* 사진 넣기 전 빈 자리는 그대로 */
 .layout-cover[data-align=bottom] .cover-teacher-backdrop { top: calc(var(--cover-safe-top) + var(--cover-inset) - 40px); bottom: auto; right: 10px; width: 600px; height: 600px; }
 
 /* 등급 막대 비교 .k-gradebar (입시칼럼 a): 줄마다 이름 + 1등급 비율, 막대 칸 폭 = 등급 비율(style flex). 1등급 칸만 진하게, 강조 줄(.hl)의 1등급만 메인 — 2026-10-16 */
@@ -1799,3 +1802,252 @@
 /* 수학 풀이 첨삭(학원 철학 b, 2026-10-16 사용자 — 수식이 작음): 수식 줄·끼워 넣은 식은 발췌문처럼 46, 메모는 그대로 38 */
 .kcard .k-proof.k-proof-math > p, .kcard .k-proof.k-proof-math .k-ins b { font-size: var(--fs-heading); line-height: var(--lh-title); }
 .kcard .k-proof.k-proof-math > p:has(.k-ins) { padding-top: 70px; }
+
+/* 인용문 칸 — AI가 만드는 다른 모양도 같은 간격(2026-10-19 dev 서버 점검): 따옴표 표시 없이 blockquote로 시작하면 위 간격 없이(칸 안쪽 여백만),
+   말한 사람을 figcaption 대신 p(b 이름 + .k-tag 칩)로 쓰면 figcaption처럼 마지막 줄과 띄운다 */
+.kcard .k-quote > blockquote:first-child { margin-top: 0; }
+.kcard .k-quote > blockquote + p { margin: calc(40px * var(--air, 1)) 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; font-size: var(--fs-body); line-height: var(--lh-title); } /* 글자 기본값이 닿지 않는 자리라 본문 38을 직접 */
+
+/* 흰 도형 안 줄 목록은 맨 위·맨 아래 선 없이 — 도형이 이미 감싸고 있어서(2026-10-19 사용자). 목록이 곧 도형(.k-panel.k-rows)일 때와,
+   도형의 맨 위에 목록이 올 때. 도형 안 제목 아래 목록(대비 두 칸 '오해/현실' 아래)처럼 내용 사이 선은 그대로 */
+.k-panel:is(.k-rows, .k-figs, .k-key, .k-rank, .k-pairs) > :first-child,
+.k-panel > :is(.k-rows, .k-figs, .k-key, .k-rank, .k-pairs, .k-pencils):first-child > :first-child { border-top: 0; }
+.k-panel > .k-pencils:last-child > :last-child { border-bottom: 0; } /* 연필 막대도 흰 도형 안이면 맨 위·아래 선 없이(2026-10-19 사용자) */
+.k-panel:is(.k-rows, .k-figs, .k-key, .k-rank, .k-pairs) > :last-child { border-bottom: 0; }
+
+/* 노선도 .k-metro — 역이 5개 이상이면 한 줄형(2026-10-19 dev 점검: 역 6개가 콘텐츠 영역보다 115px 길어 부연설명을 덮고 아래가 잘림).
+   동그라미를 작게, 이름(월)과 설명을 한 줄에 나란히 — 역 하나 높이가 약 117px → 64px. 4개 이하는 예전 모양 그대로
+   → 2026-10-19 노선도를 다시 그리며(맨 아래 '노선도 다시 그림') 역 수와 상관없이 한 줄형이 되어 이 규칙들은 지움 */
+
+/* 흰 도형 위아래 안쪽 여백은 좌우와 같게 고정 — 남는 자리(--air)는 줄·항목 사이에만(2026-10-19 dev 점검: .k-duo가 90px까지 늘어남).
+   같은 원칙을 아직 따르지 않던 칸들: 점수 막대 칸, 사진을 뺀 교재·강사 카드의 숫자 칸 */
+.k-scores { padding-block: 44px; }
+.kcard:is(.no-book, .no-teacher) .k-figs p { padding-block: 44px; }
+
+/* 흰 도형이 하나도 없는 카드의 줄 목록은 흰 도형으로 감싼다(2026-10-19 dev 점검 — 큰 숫자 + 배경 위 줄 목록만 있어 허전함).
+   .k-panel과 같은 색·모서리·그림자(판 배경·다크·테두리 스타일은 --surface·옵션 규칙을 그대로 따름), 안쪽 맨 위·맨 아래 선은 뺀다 */
+.kcard .k-body:not(:has(.k-panel)) > :is(.k-rows, .k-pairs) { margin-top: 0; padding: 8px 48px; background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--shadow); }
+.kcard .k-body:not(:has(.k-panel)) > :is(.k-rows, .k-pairs) > :first-child { border-top: 0; }
+.kcard .k-body:not(:has(.k-panel)) > :is(.k-rows, .k-pairs) > :last-child { border-bottom: 0; }
+.kcard[data-style=line] .k-body:not(:has(.k-panel)) > :is(.k-rows, .k-pairs) { border: var(--line-width) solid var(--line-color); box-shadow: none; }
+
+/* 상장 .k-cert 다시 그림(2026-10-19 사용자 — 퀄리티가 떨어짐): 진짜 상장처럼
+   종이 폭(760) · 두 줄 액자(바깥 굵은 선 + 안쪽 가는 선) · '── 상 장 ──' · 상 이름은 양끝이 파인 메인 컬러 리본 띠(2026-10-19 사용자 — 옅은 메인 ✗) ·
+   받는 사람 세미볼드 · 내용 · 아래 '수여자 + 겹쳐 찍힌 도장'(.k-cert-by, 도장만 메인 — 강조 한 곳). .k-cert-by가 없는 예전 마크업은 도장이 오른쪽 아래 */
+.kcard .k-cert { width: min(100%, 760px); margin-inline: auto; padding: calc(84px + 12px * var(--air, 1)) 84px 150px; outline: 0; display: flex; flex-direction: column; align-items: center; gap: calc(22px * var(--air, 1)); }
+.kcard .k-cert:has(.k-cert-by) { padding-bottom: 84px; }
+.k-cert::before, .k-cert::after { content: ''; position: absolute; pointer-events: none; border-radius: min(var(--r-lg), 18px); }
+.k-cert::before { inset: 22px; border: 4px solid color-mix(in srgb, var(--title) 26%, transparent); }
+.k-cert::after { inset: 34px; border: 2px solid color-mix(in srgb, var(--title) 14%, transparent); }
+.kcard .k-cert .k-h { display: flex; align-items: center; gap: 28px; margin: 0 0 calc(6px * var(--air, 1)); word-spacing: .5em; color: var(--title); }
+.k-cert .k-h::before, .k-cert .k-h::after { content: ''; width: 72px; height: 3px; background: color-mix(in srgb, var(--title) 26%, transparent); }
+.kcard .k-cert b { display: block; position: relative; padding: 14px 84px; background: var(--main); color: var(--on-main); clip-path: polygon(0 0, 100% 0, calc(100% - 30px) 50%, 100% 100%, 0 100%, 30px 50%); white-space: nowrap; }
+.kcard .k-cert b + p { color: var(--title); font-weight: var(--figure-weight, 600); margin-top: calc(6px * var(--air, 1)); }
+.kcard .k-cert b + p ~ p:not(.k-cert-by) { color: var(--body); }
+.kcard .k-cert .k-cert-by { position: relative; align-self: flex-end; margin: calc(18px * var(--air, 1)) 150px 0 0; color: var(--title); font-weight: var(--figure-weight, 600); }
+.kcard .k-cert-by .k-seal { right: -150px; bottom: 50%; translate: 0 50%; }
+.kcard .k-cert .k-seal { width: 150px; height: 150px; font-size: var(--fs-caption); line-height: var(--lh-title); border-width: 6px; }
+
+/* 비교표 .k-matrix 우리 열: 옅은 메인 면 대신 흰 도형(2026-10-19 사용자) — 머리 글자·체크만 메인.
+   판 배경(카드형·테두리형) 위에서는 판 위 도형 규칙대로 배경색, 라인 스타일은 도형처럼 테두리 */
+.kcard .k-matrix > .hl { background: var(--shape-fill); }
+.kcard:is([data-card=panel], [data-card=outline]) .k-matrix > .hl { background: var(--bg); }
+.kcard[data-style=line] .k-matrix > .hl { border-inline: var(--line-width) solid var(--line-color); }
+.kcard[data-style=line] .k-matrix > b.hl { border-top: var(--line-width) solid var(--line-color); }
+.kcard[data-style=line] .k-matrix > i.hl:last-child { border-bottom: var(--line-width) solid var(--line-color); }
+
+/* 와플 흰 칸(c0): 판 배경(카드형·테두리형) 위에서는 판과 같은 흰색이라 안 보임 → 판 위 도형 규칙대로 배경색(2026-10-19) */
+.kcard:is([data-card=panel], [data-card=outline]) :is(.k-waffle, .k-key) .c0 { background: var(--bg); box-shadow: none; }
+
+/* 노선도 .k-metro 다시 그림(2026-10-19 사용자 — 디자인이 별로): 왼쪽 레일 위 역 동그라미 + 역마다 오른쪽에 흰 도형 한 칸(역 이름 · 설명 한 줄).
+   도착역(.hl)은 칸이 메인 면 + --on-main 글자, 동그라미도 메인. 역 수와 상관없이 같은 모양(5개 이상 한 줄형 규칙을 덮음) */
+.kcard .k-metro { align-self: stretch; display: grid; grid-template-columns: 60px max-content 1fr; row-gap: calc(22px * var(--air, 1)); column-gap: 0; padding-left: 0; } /* 역 이름 칸 폭을 모든 역이 같이 쓰게(subgrid) */
+.kcard .k-metro::before { left: 27px; top: 60px; bottom: 60px; width: 6px; border-radius: 3px; background: var(--toy); } /* 레일 6px, 맨 위·맨 아래 동그라미 가운데에서 끝(역 칸 높이 120의 절반) — 2026-10-19 사용자: 10은 굵고 3·4는 얇음, 끝이 튀어나옴 */
+.kcard .k-metro p { isolation: isolate; grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; grid-template-rows: auto; column-gap: 0; align-items: center; min-height: 120px; }
+.kcard .k-metro p::before { position: absolute; left: 14px; top: 50%; translate: 0 -50%; width: 32px; height: 32px; border-width: 7px; background: var(--bg); box-shadow: none; } /* 동그라미 32px(2026-10-19 사용자 — 60·40은 크고 24는 작음) */
+.kcard .k-metro p::after { content: ''; position: absolute; z-index: -1; left: 100px; right: 0; /* 동그라미와 칸 사이 54px(2026-10-19 사용자 — 18·38px은 붙어 보임) */ top: 0; bottom: 0; border-radius: min(var(--r-lg), 28px); background: var(--shape-fill); box-shadow: var(--shadow); }
+.kcard[data-style=line] .k-metro p::after { border: var(--line-width) solid var(--line-color); }
+.kcard:is([data-card=panel], [data-card=outline]) .k-metro p::after { background: var(--bg); box-shadow: none; }
+.kcard .k-metro b { grid-column: 2; padding: 24px 0 24px 80px; /* 칸 안 왼쪽 여백 40 = 오른쪽 40 (칸이 100에서 시작, 이름 칸은 60에서) */ box-sizing: content-box; white-space: nowrap; font-size: var(--fs-body); font-weight: var(--figure-weight, 600); }
+.kcard .k-metro span { grid-column: 3; padding: 24px 40px 24px 28px; }
+.kcard .k-metro .hl::before { border-color: var(--main); box-shadow: 0 0 0 5px var(--bg), 0 0 0 10px var(--main); }
+.kcard .k-metro .hl::after, .kcard:is([data-card=panel], [data-card=outline]) .k-metro .hl::after { background: var(--main); box-shadow: none; border: 0; }
+.kcard .k-metro .hl :is(b, span) { color: var(--on-main); }
+
+/* 등급 합 계산 .k-sums(2026-10-19 — 수능 최저 '3합 7' 카드가 여백만 많고 밋밋해서 새로 만듦, 입시칼럼2 e):
+   줄마다 흰 도형 한 칸 = 과목 타일 3개(과목 이름 + 등급 숫자 68) + ＋·＝ 기호 + 합계 칸(숫자 68 + 통과/탈락 칩).
+   통과 줄(.hl)만 합계 숫자 메인 + 칩 메인 면, 탈락 줄은 제목 컬러 + 회색 칩. 타일은 도형 안 도형이라 배경색(판 배경 위에서는 흰색으로 번갈아) */
+.k-sums { display: flex; flex-direction: column; gap: calc(24px * var(--air, 1)); }
+.k-sums > .k-panel { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 36px 32px; }
+.k-sums span { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 118px; padding: 16px 0 12px; border-radius: min(var(--r-lg), 24px); background: var(--bg); }
+.kcard:is([data-card=panel], [data-card=outline]) .k-sums span { background: var(--panel-fill); }
+.k-sums small { color: var(--body); }
+.kcard .k-sums :is(b, strong) { font-family: var(--font-title); font-size: var(--fs-title); line-height: 1.1; font-weight: var(--figure-weight, 600); color: var(--title); }
+.kcard .k-sums i { font-style: normal; font-size: var(--fs-heading); color: var(--body); }
+.k-sums p { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 128px; }
+.k-sums em { font-style: normal; padding: 4px 22px; border-radius: var(--r-sm); background: var(--toy); color: var(--title); font-weight: var(--figure-weight, 600); white-space: nowrap; }
+.kcard .k-sums .hl strong { color: var(--main); }
+.kcard .k-sums .hl em { background: var(--main); color: var(--on-main); }
+.kcard .k-sums :is(small, em) { font-size: var(--fs-body); line-height: var(--lh-title); }
+
+/* 어휘 카드 .k-vocab 부채꼴로 펼침(2026-10-19 사용자 — 겹친 카드가 너무 정돈돼 여백이 많음):
+   뒤 카드 두 장을 좌우로 기울여 펼치고(불투명), 보이는 위 모서리에 다른 낱말(b)을 둔다 — 쌓인 카드처럼 읽히고 영역이 꽉 참. 앞 카드는 살짝 기울임 */
+.kcard .k-vocab { width: min(100%, 800px); height: calc(600px + 40px * var(--air, 1)); }
+.kcard .k-vocab > .k-panel { inset: 170px 44px 0 44px; }
+.kcard .k-vocab > .back2 { rotate: 3deg; translate: 18px -150px; opacity: 1; } /* 왼쪽이 들리게 — 왼쪽 위 낱말이 다음 카드에 안 가려지게 */
+.kcard .k-vocab > .back1 { rotate: -2.5deg; translate: -20px -76px; opacity: 1; }
+.kcard .k-vocab > .front { rotate: 1deg; }
+.k-vocab > :is(.back1, .back2) > b { position: absolute; top: 14px; color: var(--title); font-size: var(--fs-heading); line-height: var(--lh-title); font-weight: var(--figure-weight, 600); }
+.k-vocab > .back2 > b { left: 44px; }
+.k-vocab > .back1 > b { left: 44px; } /* 낱말은 모두 왼쪽 위 — 카드마다 위로 비켜 보이는 띠 안에 */
+.kcard .k-vocab.compact { height: 480px; }
+.kcard .k-vocab.compact > .k-panel { inset: 96px 44px 0 44px; }
+
+/* 배경 사진 B안(2026-10-19 사용자 확정): 도식 아래 자리가 모자란 카드 — 사진은 도식 영역 가운데부터(fit.js가 top을 줌), 위 끝은 기본 그라데이션으로 녹임. 도식이 사진 위에 놓이므로 조금 더 옅게 */
+.kcard.photo-faint > .card-photo img { opacity: .4; }
+
+/* 체크 원형 .k-check: 다크에서는 회색 대신 메인 컬러(2026-10-19 사용자 — 어두운 바탕에서 회색 체크가 묻힘). 아직 안 한 칸(.todo)·메인 면 위(.accent)는 그대로 */
+.kcard.dark :not(.accent) > .k-checkrow:not(.todo) > .k-check,
+.kcard.dark .k-flash-checks .k-checkrow:not(.todo) .k-check { background: var(--main); }
+.kcard.dark .k-checkrow:not(.todo) .k-check::after { border-color: var(--on-main); }
+
+/* 출발 안내판 .k-board: 칸 가운데 넘김판 이음선 뺌(2026-10-19 — 글자 한가운데를 지나 취소선처럼 읽힘) */
+.kcard .k-board > p:not(.k-board-head) > * { background-image: none; }
+/* 출발 안내판 칸 색: 짙은 회색(--toy) 대신 배경색 — 흰 도형 안 도형은 배경색 규칙(2026-10-19 사용자 — 회색이 너무 짙음, 이 도식만 먼저) */
+.kcard .k-board > p:not(.k-board-head) > * { background-color: var(--bg); }
+.kcard:is([data-card=panel], [data-card=outline]) .k-board > p:not(.k-board-head) > * { background-color: var(--panel-fill); }
+
+/* 흰 도형 안 회색(--toy)을 배경색으로(2026-10-19 사용자 — 칩·칸·트랙의 회색이 너무 짙음, 안내판에서 먼저 바꾼 뒤 전체로).
+   흰 도형 안 도형은 배경색 규칙과 같게: 기본·다크는 --bg, 판 배경(카드형·테두리형) 위 도형 안은 판 색. 메인 면(.accent) 안은 그대로 */
+.kcard .k-panel:not(.accent) { --toy: var(--bg); }
+.kcard:is([data-card=panel], [data-card=outline]) .k-panel:not(.accent) { --toy: var(--panel-fill); }
+
+/* 인덱스 탭 바인더 .k-binder(2026-10-19 사용자): 왼쪽 링 구멍 뺌 · 흰 도형은 네 모서리 모두 같은 모양(한쪽만 각져 어색 — 사용자: 모두 둥글게, 모양 옵션을 따름) */
+.kcard .k-binder > .k-panel { padding-left: 56px; border-radius: var(--r-lg); }
+.kcard .k-binder > .k-panel::before { content: none; }
+
+/* 시상대 .k-podium: 남는 자리만큼 막대가 길어지게(2026-10-19 사용자 — 여백이 많은데 막대가 짧음). 비율(1등:2등:3등)은 그대로, --air만큼 같이 늘어남 */
+.kcard .k-podium { height: auto; } /* 상자 = 가장 높은 막대(1등 + 값 글자) — 고정 높이면 막대 위가 비어 도식이 아래로 쏠림(2026-10-19 사용자) */
+.kcard .k-podium .r1 > div { height: calc(380px * var(--air, 1)); }
+.kcard .k-podium .r2 > div { height: calc(280px * var(--air, 1)); }
+.kcard .k-podium .r3 > div { height: calc(210px * var(--air, 1)); }
+.kcard .k-podium > div { max-width: 260px; }
+
+/* 일력 .k-daypad 머리띠: 회색 대신 메인 컬러(2026-10-19 사용자). 고리 구멍은 그대로 바탕색 */
+.kcard .k-daypad::before { background: radial-gradient(circle at 30% 50%, var(--bg) 9px, transparent 10px), radial-gradient(circle at 70% 50%, var(--bg) 9px, transparent 10px), var(--main); }
+.kcard:is([data-card=panel], [data-card=outline]) .k-daypad::before { background: radial-gradient(circle at 30% 50%, var(--panel-fill) 9px, transparent 10px), radial-gradient(circle at 70% 50%, var(--panel-fill) 9px, transparent 10px), var(--main); }
+/* 일력 머리띠 52 → 68px(2026-10-19 사용자 — 조금 더 두껍게), 아래 글자도 같이 내림 */
+.kcard .k-daypad { padding-top: 120px; }
+.kcard .k-daypad::before { height: 68px; }
+
+/* 수하물 태그 .k-luggage 다시 그림(2026-10-19 사용자 — 끈·구멍 뺀 뒤에도 태그 느낌이 안 남): 항공 수하물 태그
+   긴 둥근 라벨(기울이지 않음) · 위 메인 띠(항공사 띠처럼) · 띠 아래 점선 절취선과 양옆 반원 홈 · 오른쪽 세로 바코드 줄무늬(장식, 글자 없음) */
+.kcard .k-luggage { padding-left: 0; width: min(100%, 780px); } /* 기울이지 않음(2026-10-19 사용자) */
+.kcard .k-luggage::before { content: none; }
+.kcard .k-luggage > div { padding: 0 150px 0 0; clip-path: none; -webkit-mask: none; mask: none; border-radius: var(--r-lg); overflow: hidden; }
+.kcard .k-luggage-band { margin: 0 -150px 0 0; padding: 44px 56px 40px; border-radius: 0; position: relative; }
+.kcard .k-luggage dl { position: relative; padding: calc(16px * var(--air, 1)) 0 calc(28px * var(--air, 1)) 56px; border-top: 4px dashed color-mix(in srgb, var(--body) 28%, transparent); }
+/* 절취선 양 끝 반원 홈(바탕색) — 띠 아래 끝(= 점선)에 */
+.kcard .k-luggage-band::before, .kcard .k-luggage-band::after { content: ''; position: absolute; z-index: 1; bottom: -24px; width: 48px; height: 48px; border-radius: 50%; background: var(--bg); }
+.kcard .k-luggage-band::before { left: -24px; }
+.kcard .k-luggage-band::after { right: -24px; }
+.kcard:is([data-card=panel], [data-card=outline]) .k-luggage-band::before, .kcard:is([data-card=panel], [data-card=outline]) .k-luggage-band::after { background: var(--panel-fill); }
+/* 바코드: 띠 아래 오른쪽 세로 줄무늬 */
+.kcard .k-luggage dl::after { content: ''; position: absolute; right: -110px; top: 36px; bottom: 36px; width: 64px;
+  background: repeating-linear-gradient(to bottom, var(--title) 0 6px, transparent 6px 10px, var(--title) 10px 12px, transparent 12px 17px, var(--title) 17px 21px, transparent 21px 24px, var(--title) 24px 26px, transparent 26px 31px); opacity: .85; }
+
+/* 게임 레벨 맵을 흰 도형 안에(.k-levels-box, 2026-10-19 — 흰 도형이 없는 카드 ✗ 규칙). 판 안이라 안쪽 여백만 */
+.k-levels-box { padding: 56px 48px; }
+/* 레벨 맵: 지나온 단계(.done)도 앞으로 갈 단계와 같은 회색 — 지금 단계(.hl)만 메인(2026-10-19 사용자 — 검정 동그라미가 튐) */
+.kcard .k-levels .done .k-ph { color: color-mix(in srgb, var(--body) 30%, var(--bg)); }
+
+/* OMR 답안지 .k-omr(2026-10-19 사용자): 칸은 1:1 정동그라미, 마킹은 메인 컬러 */
+.kcard .k-omr i { width: 38px; height: 38px; flex-shrink: 0; }
+.kcard .k-omr i.on { background: var(--main); border-color: var(--main); }
+
+/* 낱말 팁 .k-tip: 강조 낱말이 문장 맨 앞이면 팁이 창 밖으로 잘림(2026-10-19 사용자) → 맨 앞 낱말은 팁을 낱말 왼쪽 끝에 맞추고 꼬리도 왼쪽 */
+.k-excerpt > .k-anchor:first-child > .k-tip { left: 0; transform: none; }
+.k-excerpt > .k-anchor:first-child > .k-tip::after { left: 40px; margin-left: 0; }
+
+/* 비교표 우리 열 흰 도형을 표보다 조금 크게(2026-10-19 사용자 — 표 일부를 강조하는 거라 살짝 튀어나오게): 위아래 18px · 양옆 14px.
+   칸 자체 배경 대신 칸 뒤에 깐 판(::before)으로 넓힌다 — 같은 열 칸끼리 이어져 한 도형으로 보임 */
+.kcard .k-matrix { isolation: isolate; }
+.kcard .k-matrix > .hl { position: relative; background: none; }
+.kcard .k-matrix > .hl::before { content: ''; position: absolute; z-index: -1; inset: 0 -14px; background: var(--shape-fill); }
+.kcard:is([data-card=panel], [data-card=outline]) .k-matrix > .hl::before { background: var(--bg); }
+.kcard .k-matrix > b.hl::before { top: -18px; border-radius: min(var(--r-lg), 24px) min(var(--r-lg), 24px) 0 0; }
+.kcard .k-matrix > i.hl:last-child::before { bottom: -18px; border-radius: 0 0 min(var(--r-lg), 24px) min(var(--r-lg), 24px); }
+.kcard[data-style=shadow] .k-matrix > i.hl:last-child::before { box-shadow: var(--shadow); }
+.kcard[data-style=line] .k-matrix > .hl { border-inline: 0; }
+.kcard[data-style=line] .k-matrix > .hl::before { border-inline: var(--line-width) solid var(--line-color); }
+.kcard[data-style=line] .k-matrix > b.hl { border-top: 0; }
+.kcard[data-style=line] .k-matrix > b.hl::before { border-top: var(--line-width) solid var(--line-color); }
+.kcard[data-style=line] .k-matrix > i.hl:last-child { border-bottom: 0; }
+.kcard[data-style=line] .k-matrix > i.hl:last-child::before { border-bottom: var(--line-width) solid var(--line-color); }
+.kcard .k-matrix > .hl { border-top-color: transparent; border-bottom-color: transparent; } /* 줄 구분선은 흰 도형 안에서 끊김 */
+/* 강조 열 판이 옆 칸 가로선 위에 오게: 강조 칸마다 쌓임 맥락(z 1)을 만들고 판(::before)은 그 안 맨 아래 — 옆 칸 선이 흰 도형 위로 올라오지 않음.
+   칸 테두리 자리(2px)까지 덮어 칸 사이 옅은 선이 안 비치게, 맨 아래 칸 그림자는 뺌(2026-10-19 사용자 — 선이 깨져 보임) */
+.kcard .k-matrix > .hl { z-index: 1; }
+.kcard .k-matrix > .hl::before { top: -2px; bottom: -2px; }
+.kcard .k-matrix > b.hl::before { top: -18px; }
+.kcard .k-matrix > i.hl:last-child::before { bottom: -18px; }
+.kcard[data-style=shadow] .k-matrix > i.hl:last-child::before { box-shadow: none; }
+
+/* 주간 시간표 .k-week가 흰 도형 안에 있으면 수업 칸은 배경색(흰 위 흰 ✗ — 2026-10-19 사용자), 판 배경 위 도형 안이면 판 색. 그림자 없음 */
+.kcard .k-panel .k-week em:not(.hl) { background: var(--bg); box-shadow: none; }
+.kcard:is([data-card=panel], [data-card=outline]) .k-panel .k-week em:not(.hl) { background: var(--panel-fill); }
+
+/* 첨삭지 .k-proof: 메모 칸 바로 위 줄은 밑줄 없음(2026-10-19 사용자 — 메모 칸이 이미 구분됨) */
+.kcard .k-proof p:has(+ .k-memo) { border-bottom: 0; }
+
+/* 전후 막대 .k-rise: 막대를 기준선에 딱 붙임(2026-10-19 사용자 — 살짝 띄어져 애매). 숫자와 막대 사이만 간격 */
+.kcard .k-rise > div { gap: 0; }
+.kcard .k-rise strong { margin-bottom: 18px; }
+
+/* 높아지는 막대 .k-climb: 칸 안 설명(p)은 본문처럼 — 보통 굵기 + 본문 컬러(2026-10-19 사용자 — 다 세미볼드라 다 제목처럼 보임). 단계 이름(b)·숫자(strong)만 굵게 */
+.kcard .k-climb p { font-weight: 400; color: var(--body); }
+.kcard .k-climb .accent p { color: var(--on-main); }
+
+/* 다크에서 겹친 도형 구분(2026-10-19 사용자 — 겹친 카드가 같은 색이라 겹친 느낌이 안 남): 뒤로 갈수록 어둡게, 앞 장이 가장 밝게(테두리 선은 넣지 않음 — 선은 라인 스타일에서만, 2026-10-19 사용자) */
+.kcard.dark .k-vocab > .back2 { background: color-mix(in srgb, #FFFFFF 5%, var(--bg)); }
+.kcard.dark .k-vocab > .back1 { background: color-mix(in srgb, #FFFFFF 8%, var(--bg)); }
+.kcard.dark .k-vocab > .front { background: color-mix(in srgb, #FFFFFF 13%, var(--bg)); }
+.kcard.dark .k-vocab > .k-panel { box-shadow: 0 16px 40px rgb(0 0 0 / .45); }
+/* 같은 원칙을 다른 겹친 부품에도(다크): 앞 장은 밝게(13%) + 그림자, 뒤 장은 어둡게(테두리 선 ✗) */
+.kcard.dark .k-flash::before { background: color-mix(in srgb, #FFFFFF 4%, var(--bg)); }
+.kcard.dark .k-flash::after { background: color-mix(in srgb, #FFFFFF 7%, var(--bg)); }
+.kcard.dark .k-flash-card, .kcard.dark .k-daypad { background: color-mix(in srgb, #FFFFFF 13%, var(--bg)); box-shadow: 0 16px 40px rgb(0 0 0 / .45); }
+.kcard.dark .k-letter .k-panel { background: color-mix(in srgb, #FFFFFF 13%, var(--bg)); }
+.kcard.dark .k-letter::before { background: color-mix(in srgb, var(--main) 10%, var(--bg)); }
+.kcard.dark .k-letter::after { background: color-mix(in srgb, var(--main) 18%, var(--bg)); }
+
+/* 메달 세 개를 흰 도형 안에(.k-medals-box, 2026-10-19 — 흰 도형이 없는 카드 ✗) */
+.k-medals-box { padding: 48px 40px 40px; isolation: isolate; } /* 리본(z -1)이 흰 도형 뒤로 숨지 않게 */
+
+/* 인용 따옴표 88×64 → 56×40(2026-10-19 사용자 — 크기 줄이기), 문장과의 간격도 비례해서 */
+.kcard .k-quote-mark { width: 56px; height: 40px; }
+.kcard .k-quote-mark + blockquote { margin-top: 28px; }
+
+/* 구간 막대 .k-seg: 남는 자리만큼 칸을 키우고(높이 × --air) 이름은 위, 점수는 아래로 — 칸 안이 빽빽하지 않게(2026-10-19 사용자 — 위는 빽빽, 아래는 휑) */
+.kcard .k-seg { height: calc(220px * var(--air, 1)); gap: 12px; }
+.kcard .k-seg > div { justify-content: space-between; padding: 28px 24px; border-radius: min(var(--r-lg), 24px); }
+.kcard .k-seg b { font-size: var(--fs-heading); line-height: var(--lh-title); } /* 칸 이름 38 → 46(2026-10-19 사용자 — 칸이 커져 한 단계 키움) */
+
+/* 흰 틀이지만 .k-panel이 아닌 부품도 안쪽 회색(--toy)은 배경색으로(2026-10-19 사용자 — 태블릿 앱 칸이 짙은 회색으로 남음).
+   태블릿·오답 카드·쿠폰·티켓·영수증·편지 판·수하물 태그·화이트보드·녹음기 화면 */
+.kcard :is(.k-tablet, .k-flash-card, .k-coupon, .k-ticket-body, .k-receipt, .k-luggage > div, .k-wb-board, .k-rec-screen, .k-pass-main) { --toy: var(--bg); }
+.kcard:is([data-card=panel], [data-card=outline]) :is(.k-tablet, .k-flash-card, .k-coupon, .k-ticket-body, .k-receipt, .k-luggage > div, .k-wb-board, .k-rec-screen, .k-pass-main) { --toy: var(--panel-fill); }
+
+/* 배터리 테두리·머리 회색을 옅게(2026-10-19 사용자): 본문 55% → 30% */
+.kcard .k-cell { border-color: color-mix(in srgb, var(--body) 30%, var(--bg)); }
+.kcard .k-cell::after { background: color-mix(in srgb, var(--body) 30%, var(--bg)); }
+.kcard.dark .k-cell { border-color: color-mix(in srgb, #FFFFFF 28%, var(--bg)); }
+.kcard.dark .k-cell::after { background: color-mix(in srgb, #FFFFFF 28%, var(--bg)); }
+
+/* 회색 선·틀(--toy-dark)을 배터리 테두리와 같은 옅은 회색으로(2026-10-19 사용자 — 본문 55% → 30%, 다크 45% → 28%).
+   게임패드 십자·버튼, 카트리지 손잡이, 녹음기 망·버튼, 노선도 역 동그라미, 문장 역할 밑줄, 등급컷 눈금, 교과서 쪽 머리 등이 같이 바뀜.
+   점수 막대 값(.k-scores .k-track i)은 데이터라 예전 진하기 그대로 */
+.kcard { --toy-dark: color-mix(in srgb, var(--body) 30%, var(--bg)); }
+.kcard.dark { --toy-dark: color-mix(in srgb, #FFFFFF 28%, var(--bg)); }
+.kcard .k-scores .k-track i { background: color-mix(in srgb, var(--body) 55%, var(--bg)); }
+.kcard.dark .k-scores .k-track i { background: color-mix(in srgb, #FFFFFF 45%, var(--bg)); }

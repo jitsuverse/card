@@ -100,7 +100,7 @@ body.studio .slot-del { border: 0; background: transparent; color: var(--text-mu
 .design-head { gap: 8px; }
 
 /* 추천 스타일: 카드 썸네일 3열 (main.js drawStyleThumbs가 지금 덱의 카드를 그 스타일로 복제) */
-.preset-picker { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; } /* 한 줄에 3개 (사용자 2026-10-16) */
+.preset-picker { display: grid; grid-template-columns: repeat(auto-fill, 127px); gap: 8px; } /* 견본 칸은 무조건 127px(사용자 2026-10-19 — 1706px 창에서 고른 크기), 한 줄 개수는 패널 폭에 따라 자동 */
 .style-tile { display: flex; flex-direction: column; gap: 6px; padding: 5px; border: 1px solid var(--border-subtle); border-radius: 10px; background: var(--bg-card);
   color: var(--text-secondary); font: inherit; font-size: 11px; font-weight: 600; cursor: pointer; transition: border-color .2s, transform .2s; }
 .style-tile:hover { border-color: #3b82f699; transform: translateY(-1px); }

@@ -29,6 +29,18 @@ const ALL_DECKS = ['cards', ...readdirSync(join(ROOT, 'kit/examples')).filter((f
 const usesRe = opt.uses && new RegExp(`class="[^"]*\\b(${String(opt.uses).split(',').map((c) => c.trim().replace(/^\./, '').replace(/[-]/g, '\\-')).join('|')})\\b`);
 const DECKS = opt.all ? ALL_DECKS : usesRe ? ALL_DECKS.filter((d) => usesRe.test(readFileSync(join(ROOT, `kit/${d}.html`), 'utf8'))) : [opt.deck ?? 'cards'];
 if (!DECKS.length) { console.log(`--uses ${opt.uses}: 이 클래스를 쓰는 덱이 없습니다`); process.exit(0); }
+// 0. 한 덱 안에서 같은 주 도식 반복 금지(2026-10-19 사용자) — 홈페이지와 같은 함수(assets/render.js kitMainPart). 프롬프트에 안 들어가는 비교용·점검용 덱(deck-types.json notForPrompt)은 빼고
+{
+  const { kitRepeatedCards, kitMainPart } = await import('../assets/render.js');
+  let skip = [];
+  try { skip = JSON.parse(readFileSync(join(ROOT, 'kit/examples/deck-types.json'), 'utf8')).notForPrompt ?? []; } catch { /* 표 없음 */ }
+  for (const deck of DECKS) {
+    if (skip.includes(deck.replace(/^examples\//, ''))) continue;
+    const cards = readFileSync(join(ROOT, `kit/${deck}.html`), 'utf8').split(/(?=<div class="kcard)/).filter((c) => c.includes('kcard'));
+    const parts = cards.map(kitMainPart), id = (c) => /id="([^"]+)"/.exec(c)?.[1];
+    for (const r of kitRepeatedCards(cards)) problems.push(`[${deck}] ${id(cards[r.index])} 카드 주 도식 ${r.part}가 ${id(cards[parts.indexOf(r.part)])} 카드와 반복`);
+  }
+}
 // 1. 카드에 글자 크기 직접 쓰기 금지 — 부품 역할(kit.css 맨 아래 '글자 크기' 목록)로만 정한다
 for (const deck of DECKS) for (const m of readFileSync(join(ROOT, `kit/${deck}.html`), 'utf8').matchAll(/font-size\s*:[^;"]*/g)) problems.push(`[${deck}] ${deck}.html에 글자 크기 직접 지정: ${m[0]}`);
 
@@ -105,7 +117,7 @@ async function checkDeck(page, deck, fonts, deckWide) {
       const cs = getComputedStyle(e), r = e.getBoundingClientRect();
       if (cs.backgroundColor === 'rgba(0, 0, 0, 0)' && cs.boxShadow === 'none') return;
       const c = e.closest('.kcard'), k = c.getBoundingClientRect().height / c.offsetHeight || 1; // 미리보기 배율과 상관없이 카드 원래 크기(px)로
-      if (r.width / k < 67 || r.height / k < 67 || e.closest('.card-paper, .book-item, svg, .k-matrix') || clipped(e)) return;
+      if (r.width / k < 67 || r.height / k < 67 || e.closest('.card-paper, .book-item, svg, .k-matrix') || clipped(e) || cs.clipPath !== 'none') return; // clip-path로 모양을 정한 도형(상장 리본 띠 등)은 모서리 대상 아님
       if (parseFloat(cs.borderTopLeftRadius) === 0 && parseFloat(cs.borderBottomRightRadius) === 0) out.add(`${e.closest('.kcard').id} 카드 .${[...e.classList].join('.') || e.tagName.toLowerCase()} 모서리가 각짐 (둥근 사각형 옵션)`);
     });
     return [...out];
@@ -178,6 +190,7 @@ server.closeAllConnections(); server.close(); // 열린 연결(keep-alive)을 �
 
 // 결과 정리: 같은 문제는 조합마다 반복되므로 카드별로 묶고, 고치는 방법을 붙인다
 const HINTS = [
+  [/주 도식 .*반복/, '반복 → 한 덱 안에서 같은 주 도식(.k-body 맨 위 부품)은 한 번만. 뒤쪽 카드를 PARTS.md의 다른 부품으로 바꾼다(홈페이지는 kitRepeatedCards로 그 카드만 다시 만든다).'],
   [/볼드 \(도식 영역은 세미볼드\)/, '볼드 ✗ → 그 부품의 font-weight를 var(--title-weight)(본문 폰트 글자)나 var(--headline-weight)(.k-body 안에서 자동 세미볼드)로. 숫자 700 직접 쓰기 ✗.'],
   [/메인 컬러가 한 군데도/, '메인 컬러 ✗ → 강조할 한 곳(가장 중요한 항목·숫자)에 .hl·.accent·메인 칩을 준다. 큰 숫자 .k-hero를 더해도 된다.'],
   [/넘침/, '넘침 → 그 카드의 줄·항목 수를 줄이거나, 부품의 세로 여백(padding·gap·height)을 "최대"값 이상 줄인다. 글자 높이가 큰 폰트(해바라기·에스코어 드림)에서 먼저 넘친다.'],
@@ -208,5 +221,5 @@ if (problems.length) {
   console.error(`부품 키트 검사 실패 (${lines.length}건)\n- ${lines.join('\n- ')}\n\n고치는 방법\n- ${hints.join('\n- ')}`);
   process.exit(1);
 }
-console.log(`부품 키트 검사 통과 [${DECKS.join(', ')}]: ${count}가지 조합(폰트 ${fonts.length}${opt.rep ? " 대표" : ""} × 배경 5${DECKS.length > 1 ? ` × 덱 ${DECKS.length}` : ''}) — 넘침 없음, 글자 크기 5단계, 자간·줄간격 기준, 도형 모서리, 글자 색, 제목 폰트 쓰임, 메인 컬러 한 곳 이상, 도식 세미볼드, 오류 없음`);
+console.log(`부품 키트 검사 통과 [${DECKS.join(', ')}]: ${count}가지 조합(폰트 ${fonts.length}${opt.rep ? " 대표" : ""} × 배경 5${DECKS.length > 1 ? ` × 덱 ${DECKS.length}` : ''}) — 주 도식 반복 없음, 넘침 없음, 글자 크기 5단계, 자간·줄간격 기준, 도형 모서리, 글자 색, 제목 폰트 쓰임, 메인 컬러 한 곳 이상, 도식 세미볼드, 오류 없음`);
 process.exit(0); // 브라우저·서버를 닫은 뒤에도 남은 핸들 때문에 25초 넘게 안 끝나던 것 — 결과를 찍었으면 바로 끝낸다

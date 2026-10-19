@@ -21,7 +21,7 @@ export const ICONS = {
 
 // 2D 플랫: [톤, 패스, 옵션] — 면 위주, 선 없음, 모서리는 모두 둥글게
 // 톤: gray(옅은 회색 몸체) · grayDark(회색 그늘) · main(메인 컬러) · deep(진한 메인) · white · ink(메인 조각 위의 흰 조각)
-// 옵션: { t: transform, round: 다각형 모서리를 둥글게 만드는 같은 색 테두리 두께 }
+// 옵션: { t: transform, round: 다각형 모서리를 둥글게 만드는 같은 색 테두리 두께, line: 채우지 않고 끝이 둥근 선으로만 그릴 두께 }
 export const ICONS_2D = {
   bulb: [
     ['gray', circle(50, 38, 27)],
@@ -112,6 +112,71 @@ export const ICONS_2D = {
     ['gray', 'M26 40L70 18v64L26 60Z', { round: 8 }],
     ['deep', rrect(68, 14, 10, 72, 5)],
   ],
+  // 2026-10-19 사용자 '표지 아이콘 다양화' — 학원 콘텐츠에 자주 맞는 9개 더함(같은 아이콘이 덱마다 반복되던 것)
+  pencil: [ // 연필 (글쓰기·필기·서술형)
+    ['gray', rrect(37, 22, 26, 50, 5), { t: 'rotate(40 50 50)' }],
+    ['main', rrect(37, 6, 26, 18, 8), { t: 'rotate(40 50 50)' }],
+    ['deep', rrect(37, 21, 26, 7, 2), { t: 'rotate(40 50 50)' }],
+    ['grayDark', 'M37 72h26L50 93Z', { t: 'rotate(40 50 50)', round: 4 }],
+    ['deep', 'M45 85h10L50 93Z', { t: 'rotate(40 50 50)', round: 2 }],
+  ],
+  trophy: [ // 트로피 (성적 우수·수상·합격)
+    ['gray', `${rrect(14, 18, 22, 24, 11)} ${rrect(64, 18, 22, 24, 11)}`],
+    ['main', 'M28 12h44v24q0 24-22 24T28 36Z', { round: 6 }],
+    ['ink', ICONS.star, { t: 'translate(40.5 21) scale(0.19)', round: 12 }],
+    ['deep', rrect(44, 58, 12, 14, 3)],
+    ['gray', rrect(32, 70, 36, 9, 4.5)],
+    ['grayDark', rrect(26, 80, 48, 10, 5)],
+  ],
+  search: [ // 돋보기 + 막대 (분석·진단)
+    ['deep', 'M64 70l6-6 20 20q3 3 0 6t-6 0Z', { round: 6 }],
+    ['main', circle(42, 42, 32)],
+    ['ink', circle(42, 42, 23)],
+    ['main', rrect(30, 44, 6, 12, 3)],
+    ['deep', rrect(39, 36, 6, 20, 3)],
+    ['main', rrect(48, 30, 6, 26, 3)],
+  ],
+  flask: [ // 실험 플라스크 (과학·탐구)
+    ['gray', 'M40 14h20v24l22 38q4 10-6 12H24q-10-2-6-12l22-38Z', { round: 6 }],
+    ['main', 'M31 60h38l11 18q2 6-4 7H24q-6-1-4-7Z', { round: 4 }],
+    ['ink', `${circle(44, 72, 4)} ${circle(57, 67, 3)}`],
+    ['deep', rrect(35, 8, 30, 9, 4.5)],
+  ],
+  globe: [ // 지구본 (영어·외국어·해외) — 2026-10-19 다시 그림: 메인 구 + 끝 둥근 받침 고리 + 둥근 받침대(대륙 덩어리 ✗, 각진 선 ✗)
+    ['grayDark', 'M54 9.5A37 37 0 0 1 54 82.5', { line: 7 }],
+    ['main', circle(46, 46, 30)],
+    // 구 안 경위선은 뺌(2026-10-19 사용자 — 미니멀하게): 메인 구 + 받침 고리 + 받침대만
+    ['deep', rrect(43, 81, 10, 9, 4)],
+    ['gray', rrect(28, 89, 40, 8, 4)],
+  ],
+  calc: [ // 계산기 (수학·연산)
+    ['gray', rrect(20, 8, 60, 84, 14)],
+    ['ink', rrect(29, 17, 42, 20, 6)],
+    ['main', rrect(46, 24, 18, 6, 3)],
+    ['grayDark', `${rrect(29, 45, 11, 10, 4)} ${rrect(44.5, 45, 11, 10, 4)} ${rrect(60, 45, 11, 10, 4)} ${rrect(29, 60, 11, 10, 4)} ${rrect(44.5, 60, 11, 10, 4)} ${rrect(29, 75, 11, 10, 4)} ${rrect(44.5, 75, 11, 10, 4)}`],
+    ['main', rrect(60, 60, 11, 25, 4)],
+  ],
+  gift: [ // 선물 상자 (이벤트·무료 체험·혜택)
+    ['gray', rrect(16, 46, 68, 44, 8)],
+    ['main', 'M50 34q-24-24-30-10t30 10Z M50 34q24-24 30-10t-30 10Z', { round: 4 }],
+    ['main', rrect(10, 32, 80, 16, 7)],
+    ['deep', `${rrect(44, 32, 12, 16, 3)} ${rrect(45, 48, 10, 42, 3)}`],
+  ],
+  compass: [ // 나침반 (진로·방향·로드맵)
+    ['gray', circle(50, 50, 42)],
+    ['ink', circle(50, 50, 31)],
+    ['grayDark', `${rrect(48, 21, 4, 6, 2)} ${rrect(48, 73, 4, 6, 2)} ${rrect(21, 48, 6, 4, 2)} ${rrect(73, 48, 6, 4, 2)}`],
+    ['main', 'M50 26l9 24H41Z', { round: 4 }],
+    ['deep', 'M50 74l-9-24h18Z', { round: 4 }],
+    ['gray', circle(50, 50, 5)],
+  ],
+  house: [ // 집 (학부모·가정 학습·우리 학원)
+    ['gray', rrect(20, 44, 60, 46, 6)],
+    ['main', 'M50 12L88 44q2 4-2 4H14q-4 0-2-4Z', { round: 6 }],
+    ['deep', rrect(42, 62, 16, 28, 5)],
+    ['ink', rrect(27, 55, 11, 11, 3)],
+    ['ink', rrect(62, 55, 11, 11, 3)],
+  ],
 };
 export const ICON_NAMES = Object.keys(ICONS_2D);
 
@@ -139,6 +204,7 @@ export function renderIcon(name, color, bg, onMain = false) {
   const tones = { ...grayTones(bg, onMain), main: color, deep: onMain ? shade(bg, -0.3) : shade(color, -0.4), white: '#FFFFFF', ink: onMain ? bg : '#FFFFFF' }; // ink = 메인 조각 위에 놓인 흰 조각 — 메인 표지는 메인 조각이 흰색이라 메인 컬러로(2026-10-17) // 메인 표지의 진한 조각 = 메인을 어둡게(흰 강조색을 어둡게 하면 엉뚱한 회색)
   const parts = (ICONS_2D[name] ?? ICONS_2D.star).map(([tone, pd, o = {}]) => {
     const c = tones[tone];
+    if (o.line) return `<path d="${pd}" fill="none" stroke="${c}" stroke-width="${o.line}" stroke-linecap="round" stroke-linejoin="round"${o.t ? ` transform="${o.t}"` : ''}/>`; // 선 그리기(끝 둥글게) — 2026-10-19 지구본 곡선
     const round = o.round ? ` stroke="${c}" stroke-width="${o.round}" stroke-linejoin="round"` : '';
     return `<path d="${pd}" fill="${c}"${round}${o.t ? ` transform="${o.t}"` : ''}/>`;
   }).join('');
