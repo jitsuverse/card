@@ -196,12 +196,12 @@ export const COLOR_PRESETS = [
 // 칸 순서대로 { name, opts } — opts는 DEFAULT_OPTIONS에서 바꾼 값만(내 스타일 저장값과 같은 모양). 홈페이지는 lib/cardkit/defaultStyles로 가져간다.
 // 바꾸는 법: 웹앱에서 옵션을 맞춰 '내 스타일' 칸에 저장 → '스타일 코드 복사' → 여기에 붙여 넣기.
 export const PRESET_STYLES = [
-  { name: "미니멀 스타일", opts: {"colors":{"main":"#3B5BFD","bg":"#f2f2f2","title":"#111111","body":"#45464D"},"shapeStyle":"basic"} },
-  { name: "기본 스타일", opts: {"colors":{"main":"#3B5BFD","bg":"#f2f2f2","title":"#111111","body":"#45464D"},"shapeStyle":"basic","cardStyle":"panel","coverAlign":"center"} },
-  { name: "라인 스타일", opts: {"fontTitle":"paperlogy","fontBody":"paperlogy","colors":{"main":"#3B5BFD","bg":"#f2f2f2","title":"#111111","body":"#45464D"},"shape":"square","shapeStyle":"line","shapeLine":{"width":3,"color":"#000000"},"cardStyle":"outline","panelLine":{"width":3,"color":"#000000"}} },
-  { name: "상단 스타일", opts: {"fontTitle":"tmoney-round","colors":{"main":"#3B5BFD","bg":"#f2f2f2","title":"#111111","body":"#45464D"},"cardStyle":"split","coverAlign":"center"} },
+  { name: "미니멀 스타일", opts: {"colors":{"main":"#3B5BFD","bg":"#f4f4f4","title":"#111111","body":"#45464D"},"shapeStyle":"basic"} },
+  { name: "기본 스타일", opts: {"colors":{"main":"#3B5BFD","bg":"#f4f4f4","title":"#111111","body":"#45464D"},"shapeStyle":"basic","cardStyle":"panel","coverAlign":"center"} },
+  { name: "라인 스타일", opts: {"fontTitle":"paperlogy","fontBody":"paperlogy","colors":{"main":"#3B5BFD","bg":"#f4f4f4","title":"#111111","body":"#45464D"},"shape":"square","shapeStyle":"line","shapeLine":{"width":3,"color":"#000000"},"cardStyle":"outline","panelLine":{"width":3,"color":"#000000"}} },
+  { name: "상단 스타일", opts: {"fontTitle":"tmoney-round","colors":{"main":"#3B5BFD","bg":"#f4f4f4","title":"#111111","body":"#45464D"},"cardStyle":"split","coverAlign":"center"} },
   { name: "다크 스타일", opts: {"colors":{"main":"#3B5BFD","bg":"#000000","title":"#ffffff","body":"#c2c2c2"},"coverAlign":"center"} },
-  { name: "사진 스타일", opts: {"colors":{"main":"#3B5BFD","bg":"#f2f2f2","title":"#111111","body":"#45464D"},"shape":"square","coverAlign":"bottom","photo":true} }, // 배경 #f2f2f2(2026-10-19 사용자 — 기본값 #F1F3F8 대신, 다른 스타일과 같은 회색)
+  { name: "사진 스타일", opts: {"colors":{"main":"#3B5BFD","bg":"#f4f4f4","title":"#111111","body":"#45464D"},"shape":"square","coverAlign":"bottom","photo":true} }, // 배경 #f4f4f4(2026-10-20 사용자, 10-19엔 #f2f2f2 — 기본값 #F1F3F8 대신, 다른 스타일과 같은 회색)
 ];
 
 export const DEFAULT_OPTIONS = {
